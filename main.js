@@ -1,3 +1,1 @@
-//Command to run: node main.js (for a file called "main.js")
-
-//console.log([Message]);
+//Leave this blank, this is for later. Use test.js as the main section for experimenting
