@@ -1,0 +1,16 @@
+.head {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 5px solid white;
+  text-align: center;
+}
+
+.navBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 200px; 
+  padding: 20px;
+}
