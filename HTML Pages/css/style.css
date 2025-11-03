@@ -30,6 +30,10 @@ nav ul li a {
     font-weight: light;
 }
 
+a {
+    text-decoration: none;
+}
+
 .hero {
     background-color: black;
     height: 90vh;
