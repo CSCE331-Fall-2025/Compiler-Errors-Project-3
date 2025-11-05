@@ -1,0 +1,60 @@
+.hero {
+    background-color: black;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #d51818;
+    padding: 0px;
+    height: 10vh;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav ul li {
+    padding-right: 5vw;
+    padding-top: 3vh;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    font-weight: light;
+}
+
+a {
+    text-decoration: none;
+}
+
+.hero {
+    background-color: black;
+    height: 90vh;
+}
+
+.order-button a {
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.order-button {
+    display: flex;
+    background-color: #d51818;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+    width: 35vw;
+    height: 5vh;
+    margin-top: 72vh;
+    margin-left: 55vw;
+    text-align: center;
+    font-size: 36px;
+    line-height: 4vh;
+}
