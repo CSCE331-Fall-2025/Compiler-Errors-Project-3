@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+
+    <!-- keep local styles if present, then load the checkout theme used by Checkout page -->
+    <link rel="stylesheet" href="styles.css" id="stylesheet1">
+    <link rel="stylesheet" href="styles2.css" id="stylesheet2">
+    <!-- use same checkout.css as Checkout page (relative path from this folder) -->
+    <link rel="stylesheet" href="../Menu/checkout.css" id="themeStylesheet">
+  </head>
+  <body>
+
+    <header class="checkout-header">
+      <!-- brand intentionally empty / hidden to avoid showing 'CSE331 Project' -->
+      <div class="brand" aria-hidden="true"></div>
+      <nav class="top-nav">
+        <a href="../index.html">Home</a>
+        <a href="../HTML Pages/Inventory.html">Menu</a>
+        <a href="../HTML Pages/EmployeeManager.html">Admin</a>
+      </nav>
+    </header>
+
+    <main class="login-wrap">
+      <section class="login-card" role="region" aria-label="Sign in">
+        <h1>Sign in to your account</h1>
+
+        <form>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="form-row">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Password" required />
+          </div>
+
+          <div class="actions">
+            <div><label style="font-weight:500"><input type="checkbox" checked style="margin-right:8px"> Remember me</label></div>
+            <div><a href="#" style="color:#777;text-decoration:underline">Forgot password?</a></div>
+          </div>
+
+          <div style="margin-top:18px">
+            <button type="submit" class="btn-sign">Sign In</button>
+          </div>
+        </form>
+
+        <div class="muted">Don't have an account? <a href="#">Register</a></div>
+      </section>
+    </main>
+
+    <script>
+      // accessible toggle for the panel
+      const btn = document.getElementById('menuToggle');
+      const panel = document.getElementById('buttonPanel');
+      btn.addEventListener('click', () => {
+        const willOpen = panel.hidden;
+        panel.hidden = !willOpen;
+        btn.setAttribute('aria-expanded', String(willOpen));
+      });
+    </script>
+  </body>
+</html>
