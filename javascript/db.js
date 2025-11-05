@@ -27,8 +27,11 @@ async function connectDB() {
         console.log('Row 1:', res.rows[0]);
         //From rows, map each element "row" and apply the transform "row.name" (getting row name)
         //Might be missing a thing, but this method can be used for a lot of things it seems
+        //Unneccessary. Can directly access the attribute name it seems
         const extractedData = res.rows.map(row => row.name);
-        console.log('Extracted name only: ', extractedData[0]);
+        console.log('Extracted names only: ', extractedData[0]);
+        //Works
+        console.log('Directedly extracted name: ', res.rows[0].name);
     } catch (err) {
         console.error('❌ Connection error:', err.stack);
     } finally {
@@ -38,8 +41,6 @@ async function connectDB() {
 
 function validateUser(username, password){
     const res = pool.query('SELECT * FROM usersce');
-    const names = res.rows.map(row => row.name);
-    const passwords = res.rows.map(row => row.password);
     
     //Force convert since no way to be sure?
     username = toString(username);
@@ -48,16 +49,17 @@ function validateUser(username, password){
     for(i = 0; i < names.length; i++)
     {
         //Return "usertype" eventually
-        if(names[i].localeCompare(username) == 0 && passwords[i].localeCompare(password) == 0)
+        if(res.rows[i].name.localeCompare(username) == 0 && res.rows[i].password.localeCompare(password) == 0)
         {
-            return true;
+            return res.rows[i].usertype;
         }
     }
-    return false;
+    return 'FAIL';
 }
 
 
 module.exports = {
     query: (text, params) => pool.query(text, params), // generic helper
-    connectDB
+    connectDB,
+    validateUser
 };
