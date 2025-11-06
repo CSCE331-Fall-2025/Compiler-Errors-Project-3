@@ -1,0 +1,154 @@
+.hero {
+    background-color: black;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(232, 232, 232);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav {
+    background-color: #d51818;
+    padding: 0px;
+    height: 75px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav ul li {
+    padding-top: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: light;
+    padding: 24px 60px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.subtitle {
+    width: 100%;
+    text-align: center;
+    margin-top: -10px;
+    font-weight: lighter;
+}
+
+.hero {
+    background-color: black;
+    height: 90vh;
+    justify-content: right;
+    display: flex;
+}
+
+.order-button a {
+    color: white;
+}
+
+.order-button {
+    background-color: #d51818;
+    border-radius: 8px;
+    padding: 10px;
+    display: inline-block;
+    width: 550px;
+    height: 40px;
+    margin-top: 520px;
+    margin-right: 40px;
+    text-align: center;
+    font-size: 36px;
+    line-height: 32px;
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding-top: 25px;
+    padding-left: 40px;
+    padding-right: 150px;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    width: 350;
+    height: 450px;
+    background-color: white;
+    border-radius: 9px;
+}
+
+.menu-item-img-container {
+    height: 400px;
+    text-align: right;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.menu-item-img-container img {
+    border-radius: 9px;
+    height: 95%;
+    width: 100%;
+    object-position: center;
+    object-fit: cover;
+}
+
+.menu-item-button-container {
+    width: 97%;
+    height:8%;
+    border-radius: 10px;
+    border: 3px solid #d51818;
+    background-color: #d51818;
+    text-align: center;
+    line-height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 40px;
+    margin-left: 4px;
+}
+
+
+.menu-item-button-container a {
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+.menu-info {
+    display: inline-flex;
+    flex-direction: row;
+    padding-left: 10px;
+    text-align: right;
+    margin-bottom: -30px;
+    width: 100%;
+}
+
+.item-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: -10px;
+    padding-left: 10px;
+
+}
+
+.calories {
+    margin-left: 10px;
+}
+
+.price {
+    margin-right: 10px;
+    padding-left: 225px;
+}
