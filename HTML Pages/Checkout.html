@@ -1,32 +1,53 @@
-<!DOCTYPE HTML PUBLIC<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-   <title>Menu</title>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkout</title>
+    <link rel="stylesheet" href="../Menu/checkout.css">
+  </head>
+  <body>
+    <header class="checkout-header">
+      <div class="brand" aria-hidden="true"></div>
+      <nav class="top-nav">
+        <a href="../index.html">Home</a>
+        <a href="../HTML Pages/Inventory.html">Menu</a>
+        <a href="../HTML Pages/EmployeeManager.html">Admin</a>
+      </nav>
+    </header>
 
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
-    <link rel="stylesheet" href="styles.css" id="stylesheet1">
-    <link rel="stylesheet" href="styles2.css" id="stylesheet2">
-</head>
-<body>
-<table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-    <td style="vertical-align: middle; text-align: center;">
-      <span class="menuIntro"><h3>This is the Checkout page</h3></span>
-    </td>
-  </tr>
-</table>
+    <main class="checkout-main">
+      <section class="order-panel">
+        <h2>Your Order</h2>
+        <div id="order-items" class="order-items">
+          <!-- items will be added here or served by server side -->
+          <div class="empty">Your cart is empty.</div>
+        </div>
+      </section>
 
-<button id="menuToggle" style="position: fixed; top: 10px; left: 10px; z-index: 1100;">Menu</button>
+      <aside class="summary-card">
+        <h3>Order Summary</h3>
+        <div class="summary-row"><span>Items</span><span id="summary-count">0</span></div>
+        <div class="summary-row"><span>Subtotal</span><span id="summary-sub">$0.00</span></div>
+        <div class="summary-row"><span>Sales Tax</span><span id="summary-tax">$0.00</span></div>
+        <hr>
+        <div class="summary-total"><span>Total</span><strong id="summary-total">$0.00</strong></div>
+        <button id="place-order" class="btn checkout-btn">Place Order</button>
+      </aside>
+    </main>
 
-<div class = "head" id = "buttonPanel">
-    <div class = "navBar">
-        <h1>Nav bar is here</h1>
-    </div>
-</div>
+    <section class="recommend-bar">
+      <div class="recommend-inner">
+        <div class="rec-title">You might also like</div>
+        <div class="rec-list">
+          <div class="rec-item"></div>
+          <div class="rec-item"></div>
+          <div class="rec-item"></div>
+          <div class="rec-item"></div>
+          <div class="rec-item"></div>
+        </div>
+      </div>
+    </section>
 
-</body>
+  </body>
 </html>
