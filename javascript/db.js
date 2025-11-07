@@ -12,7 +12,8 @@ var isConnected = false;
  * Establishes connection to the database
  */
 function connectDB() {
-    try {
+    try
+    {
         //Try to connect
         pool = new Pool({
             host: 'csce-315-db.engr.tamu.edu',
@@ -26,7 +27,9 @@ function connectDB() {
         pool.query('SELECT 1');
         console.log('✅ Connected to PostgreSQL database');
         isConnected = true;
-    } catch (err) {
+    } 
+    catch(err)
+    {
         console.error('❌ Connection error:', err.stack);
     }
 }
@@ -119,14 +122,26 @@ function deleteMenuItem(authKey, itemName)
 
 function getMenuItems()
 {
-    const res = pool.query('SELECT name, price, ingredients FROM menuce ORDER BY name');
+    try
+    {
+        return pool.query('SELECT name, price, ingredients FROM menuce ORDER BY name');
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
 }
 
 function addEmployee(name, employeetype, email, phonenum)
 {
-    const res = pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1,$2,$3,$4)',
-        [name,employeetype,email,phonenum]
-    );
+    try
+    {
+        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1,$2,$3,$4)',[name,employeetype,email,phonenum]);
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
 }
 
 function updateEmployee(targetName, name = '', employeetype = '', email = '', phonenum = '')
@@ -166,21 +181,32 @@ function getReport(reportName)
     {
         qry = "SELECT item, COUNT(*) AS sales FROM orderhistoryce GROUP BY item ORDER BY sales DESC LIMIT 5";
     }
-
     if(reportName.localeCompare("Top 10 Sales Days"))
     {
         qry = "SELECT date, COUNT(*) AS sales FROM orderhistoryce GROUP BY date ORDER BY sales DESC LIMIT 10";
     }
-
     if(reportName.localeCompare("All time profit")) {
         qry = "SELECT SUM(price * qty) AS profit FROM orderhistoryce";
     }
-    const res = pool.query(qry);
+    try{
+        return pool.query(qry);
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
 }
 
 function filterOrderHistory(startDate,endDate)
 {
-    pool.query('SELECT item, SUM(qty) AS total_sales FROM orderhistoryce WHERE date BETWEEN $1 AND $2 GROUP BY item', [startDate,endDate]);
+    try
+    {
+        return pool.query('SELECT item, SUM(qty) AS total_sales FROM orderhistoryce WHERE date BETWEEN $1 AND $2 GROUP BY item', [startDate,endDate]);
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
 }
 
 module.exports = {
