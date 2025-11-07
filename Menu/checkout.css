@@ -1,6 +1,6 @@
 :root{
   --accent:#e21b1b; /* strong red */
-  --dark:#0b0b0b;   /* near black */
+  --dark:#0b0b0b;   /* near black  */ 
   --muted:#f6f6f6;
 }
 *{box-sizing:border-box}
