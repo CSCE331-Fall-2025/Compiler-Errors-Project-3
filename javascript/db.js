@@ -11,7 +11,7 @@ var isConnected = false;
 /**
  * Establishes connection to the database
  */
-async function connectDB() {
+function connectDB() {
     try {
         //Try to connect
         pool = new Pool({
@@ -23,13 +23,11 @@ async function connectDB() {
             ssl: { rejectUnauthorized: false }
         });
         console.log('Pool created. Testing connection');
-        await pool.query('SELECT 1');
+        pool.query('SELECT 1');
         console.log('✅ Connected to PostgreSQL database');
         isConnected = true;
     } catch (err) {
         console.error('❌ Connection error:', err.stack);
-    } finally {
-        await pool.end();
     }
 }
 
@@ -43,15 +41,17 @@ async function testQuery()
     // Example query
     //Logic: each row is literally 1 entry in the table
     //KeyValue Pairs. Or just output the row directly I guess
-    const res = await pool.query('SELECT * FROM menuce');
+    
+    const res = await pool.query('SELECT * FROM inventoryce WHERE name = $1',['toast']);
     console.log('Row 1:', res.rows[0]);
+    
     //From rows, map each element "row" and apply the transform "row.name" (getting row name)
     //Might be missing a thing, but this method can be used for a lot of things it seems
     //Unneccessary. Can directly access the attribute name it seems
-    const extractedData = res.rows.map(row => row.name);
-    console.log('Extracted names only: ', extractedData[0]);
+    //const extractedData = res.rows.map(row => row.name);
+    //console.log('Extracted names only: ', extractedData[0]);
     //Works
-    console.log('Directedly extracted name: ', res.rows[0].name);
+    //console.log('Directedly extracted name: ', res.rows[0].name);
 }
 
 /**
@@ -93,14 +93,8 @@ function addOrders(orderArray)
 {
     for(i = 0; i < orderArray.length; i++)
     {
-        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES (',
-            orderArray[i].id,
-            orderArray[i].date,
-            orderArray[i].time,
-            orderArray[i].item,
-            orderArray[i].qty,
-            orderArray[i].price,
-            ')'
+        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1,$2,$3,$4,$5,$6)',
+            [orderArray[i].id,orderArray[i].date,orderArray[i].time,orderArray[i].item,orderArray[i].qty,orderArray[i].price]
         );
     }
 }
@@ -119,20 +113,88 @@ function deleteMenuItem(authKey, itemName)
     }
     else
     {
-        pool.query('DELETE FROM menuce WHERE name == ', itemName);
+        pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
     }
 }
 
+function getMenuItems()
+{
+    const res = pool.query('SELECT name, price, ingredients FROM menuce ORDER BY name');
+}
 
+function addEmployee(name, employeetype, email, phonenum)
+{
+    const res = pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1,$2,$3,$4)',
+        [name,employeetype,email,phonenum]
+    );
+}
 
+function updateEmployee(targetName, name = '', employeetype = '', email = '', phonenum = '')
+{
+    if(name.localeCompare('') != 0)
+    {
+        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name,targetName]);
+    }
+    if(employeetype.localeCompare('') != 0)
+    {
+        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [employeetype,targetName]);
+    }
+    if(email.localeCompare('') != 0)
+    {
+        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [email,targetName]);
+    }
+    if(phonenum.localeCompare('') != 0)
+    {
+        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [phonenum,targetName]);
+    }
+}
 
+function addInventoryItem(name, qty, unit_price)
+{
+    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2 ,$3)', [name,qty,unit_price]);
+}
 
+function addMenuItem(name,price,ingredients)
+{
+    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2 ,$3)', [name,price,ingredients]);
+}
 
+function getReport(reportName)
+{
+    var qry;
+    if(reportName.localeCompare('Top 5 Menu items')) 
+    {
+        qry = "SELECT item, COUNT(*) AS sales FROM orderhistoryce GROUP BY item ORDER BY sales DESC LIMIT 5";
+    }
+
+    if(reportName.localeCompare("Top 10 Sales Days"))
+    {
+        qry = "SELECT date, COUNT(*) AS sales FROM orderhistoryce GROUP BY date ORDER BY sales DESC LIMIT 10";
+    }
+
+    if(reportName.localeCompare("All time profit")) {
+        qry = "SELECT SUM(price * qty) AS profit FROM orderhistoryce";
+    }
+    const res = pool.query(qry);
+}
+
+function filterOrderHistory(startDate,endDate)
+{
+    pool.query('SELECT item, SUM(qty) AS total_sales FROM orderhistoryce WHERE date BETWEEN $1 AND $2 GROUP BY item', [startDate,endDate]);
+}
 
 module.exports = {
     query: (text, params) => pool.query(text, params), // generic helper
     connectDB,
     validateUser,
     addOrders,
-    deleteMenuItem
+    deleteMenuItem,
+    getMenuItems,
+    addMenuItem,
+    addEmployee,
+    updateEmployee,
+    addInventoryItem,
+    getReport,
+    filterOrderHistory, 
+    testQuery
 };

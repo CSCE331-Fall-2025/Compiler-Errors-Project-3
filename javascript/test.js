@@ -2,7 +2,11 @@
 
 //Object that contains the connection protocol
 //This is the testing site.
-const dbConn = require('./db');
+var dbConn = require('./db');
 dbConn.connectDB();
+//dbConn.addInventoryItem('toast', 3, 2.04);
+dbConn.testQuery();
+//console.log(dbConn.query('SELECT * FROM inventoryce WHERE name = "toast"'));
+
 
 //console.log("completion:");
