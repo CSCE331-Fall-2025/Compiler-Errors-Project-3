@@ -1,3 +1,26 @@
+nav {
+    background-color: #d51818;
+    padding: 0px;
+    height: 10vh;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+}
+
+nav ul li {
+    padding-right: 5vw;
+    padding-top: 3vh;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    font-weight: light;
+}
+
 body {
       font-family: Arial, sans-serif;
       background-color: #f7f7f7;
