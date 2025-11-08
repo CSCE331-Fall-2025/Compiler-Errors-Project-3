@@ -18,7 +18,7 @@ function ManagerPage() {
             <NavBar></NavBar>
 
             <div className={styles["container"]}>
-                <h1>Employee Manager</h1>
+                <h1 className={styles["managerH1"]}>Employee Manager</h1>
                 <EmployeeAddForm></EmployeeAddForm>
                 <EmployeeUpdateForm></EmployeeUpdateForm>
                 <EmployeeDeleteForm></EmployeeDeleteForm>
