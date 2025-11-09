@@ -1,3 +1,0 @@
-DBUSER = "compiler_errors"
-DBPASSWORD = "root"
-DBCONN = "jdbc:postgresql://csce-315-db.engr.tamu.edu/CSCE315Database"
