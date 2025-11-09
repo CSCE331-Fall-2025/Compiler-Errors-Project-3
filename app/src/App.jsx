@@ -4,6 +4,7 @@ import HomePage from "./components/HomePage";
 import OrderPage from "./components/OrderPage";
 import StaticMenuPage from "./components/StaticMenuPage";
 import ManagerPage from "./components/ManagerPage";
+import CheckoutPage from "./components/CheckoutPage";
 import "./css/style.css";
 
 
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/order" element={<OrderPage/>}></Route>
                 <Route path="/menu" element={<StaticMenuPage/>}></Route>
                 <Route path="/Employee/Manager" element={<ManagerPage/>}></Route>
+                <Route path="/checkout" element={<CheckoutPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );
