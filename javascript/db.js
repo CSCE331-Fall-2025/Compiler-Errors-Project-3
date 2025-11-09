@@ -1,5 +1,7 @@
-const { Pool } = require('pg');
-require('dotenv').config({path: require('path').resolve(__dirname, '../.env')});
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+import findConfig from 'find-config';
+dotenv.config({ path: findConfig('.env') });
 
 //Dedicated file for all database connections (until further notice)
 
@@ -212,7 +214,8 @@ function filterOrderHistory(startDate,endDate)
     }
 }
 
-module.exports = {
+
+export default {
     query: (text, params) => pool.query(text, params), // generic helper
     connectDB,
     validateUser,

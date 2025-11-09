@@ -1,4 +1,5 @@
-const dbConn = require('./db');
+import React from 'react';
+import dbConn from './db.js';
 
 function addEmployeeBtn()
 {
@@ -85,6 +86,6 @@ function deleteMenuItemBtn()
     dbConn.deleteMenuItem(true, targetName);
 }
 
-module.exports = {
+export default {
     createMenuItemArray
 }
