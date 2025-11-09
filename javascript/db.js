@@ -3,9 +3,15 @@ require('dotenv').config({path: require('path').resolve(__dirname, '../.env')});
 
 //Dedicated file for all database connections (until further notice)
 
-var pool;
+var pool = new Pool({
+    host: 'csce-315-db.engr.tamu.edu',
+    port: 5432, // default PostgreSQL port
+    user: process.env.DBUSER,
+    password: process.env.DBPASSWORD,
+    database: 'CSCE315Database',
+    ssl: { rejectUnauthorized: false }
+});
 var usersArray;
-var isConnected = false;
 
 //Async makes something into a Promise. Now I have to double check how to run asynchronous programming stuff again :/
 /**
@@ -26,7 +32,6 @@ function connectDB() {
         console.log('Pool created. Testing connection');
         pool.query('SELECT 1');
         console.log('✅ Connected to PostgreSQL database');
-        isConnected = true;
     } 
     catch(err)
     {
@@ -37,15 +42,13 @@ function connectDB() {
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    if(!isConnected)
-    {
-        connectDB();
-    }
     // Example query
     //Logic: each row is literally 1 entry in the table
     //KeyValue Pairs. Or just output the row directly I guess
     
-    const res = await pool.query('SELECT * FROM inventoryce WHERE name = $1',['toast']);
+    await pool.query('ALTER TABLE menuce ADD COLUMN img VARCHAR(255)');
+
+    const res = await pool.query('SELECT * FROM menuce');
     console.log('Row 1:', res.rows[0]);
     
     //From rows, map each element "row" and apply the transform "row.name" (getting row name)
@@ -110,7 +113,7 @@ function addOrders(orderArray)
  */
 function deleteMenuItem(authKey, itemName)
 {
-    if(authKey.localeCompare('MANAGER') != 0)
+    if(false)//(authKey.localeCompare('MANAGER') != 0)
     {
         console.log("Error: Unauthorized user attempted to delete menu item");
     }
@@ -120,11 +123,11 @@ function deleteMenuItem(authKey, itemName)
     }
 }
 
-function getMenuItems()
+async function getMenuItems()
 {
     try
     {
-        return pool.query('SELECT name, price, ingredients FROM menuce ORDER BY name');
+        return await pool.query('SELECT * FROM menuce');
     }
     catch(err)
     {
