@@ -11,6 +11,11 @@ async function updateEmployee(targetName, name, employeetype, email, phonenum)
     dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
 }
 
+async function deleteEmployee(name) 
+{
+    dbConn.deleteEmployee(name);
+}
+
 async function createMenuItemArray()
 {
     //res.rows[i]."type" gets the value of that field
@@ -29,14 +34,19 @@ async function createMenuItemArray()
     return menuItemArray;
 }
 
-function addMenuItemBtn()
+async function addMenuItem(name, price, ingredients)
 {
-    //Get variables
-    var name;
-    var price;
-    var ingredients;
-
     dbConn.addMenuItem(name,price,ingredients);
+}
+
+async function updateMenuItem(name, newName, price, ingredients)
+{
+    dbConn.updateMenuItem(name, newName, price,ingredients);
+}
+
+async function updateInventoryItem(name, newName, qty, uprice)
+{
+    dbConn.updateInventoryItem(name, newName, qty, uprice);
 }
 
 function getReportBtn()
@@ -76,5 +86,8 @@ function deleteMenuItemBtn()
 export default {
     createMenuItemArray,
     addEmployee,
-    updateEmployee
+    updateEmployee,
+    addMenuItem,
+    updateMenuItem,
+    updateInventoryItem
 }
