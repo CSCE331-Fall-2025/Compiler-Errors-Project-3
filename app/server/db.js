@@ -113,16 +113,14 @@ function addOrders(orderArray)
  * @param {*} authKey Required to prevent unauthorized users from deleting
  * @param {*} itemName Name of item to be deleted
  */
-function deleteMenuItem(authKey, itemName)
+function deleteMenuItem(itemName)
 {
-    if(false)//(authKey.localeCompare('MANAGER') != 0)
-    {
-        console.log("Error: Unauthorized user attempted to delete menu item");
-    }
-    else
-    {
-        pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
-    }
+    pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
+}
+
+function deleteEmployee(name)
+{
+    pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
 async function getMenuItems()
@@ -262,5 +260,6 @@ export default {
     updateInventoryItem,
     getReport,
     filterOrderHistory, 
-    testQuery
+    testQuery,
+    deleteEmployee
 };

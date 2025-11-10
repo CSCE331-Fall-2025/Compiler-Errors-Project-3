@@ -7,9 +7,9 @@ function MenuDeleteForm() {
     const [name, setName] = useState("");
     
     async function submitForm(e) {
-                    e.preventDefault(); 
-                    
-                    await fetch("http://localhost:3000/api/Manager/deleteMenuItem", deleteMenuItem(name));
+        e.preventDefault(); 
+        
+        await fetch("http://localhost:3000/api/Manager/deleteMenuItem", deleteMenuItem(name));
     }
     return (
         <form onSubmit={submitForm} id = "deleteMenuItem">

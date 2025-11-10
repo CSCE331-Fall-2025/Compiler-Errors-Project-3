@@ -9,9 +9,9 @@ function InventoryAddForm() {
     const [unit_price, setunitPrice] = useState("");
         
     async function submitForm(e) {
-                        e.preventDefault(); 
-                        
-                        await fetch("http://localhost:3000/api/Manager/addInventoryItem", addInventoryItem(name, qty, unit_price));
+        e.preventDefault(); 
+        
+        await fetch("http://localhost:3000/api/Manager/addInventoryItem", addInventoryItem(name, qty, unit_price));
     }
     
     return (
