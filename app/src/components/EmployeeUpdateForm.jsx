@@ -27,8 +27,6 @@ function EmployeeUpdateForm() {
 
     async function submitForm(e) {
         e.preventDefault(); 
-        
-        console.log(name, newName, role, email, phone);
 
         await fetch("http://localhost:3000/api/Manager/updateEmployee", updateEmployee(name, newName, role, email, phone));
     }
