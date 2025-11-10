@@ -149,7 +149,7 @@ async function addEmployee(name, employeetype, email, phonenum)
     }
 }
 
-function updateEmployee(targetName, name = '', employeetype = '', email = '', phonenum = '')
+async function updateEmployee(targetName, name = '', employeetype = '', email = '', phonenum = '')
 {
     if(name.localeCompare('') != 0)
     {
@@ -157,15 +157,15 @@ function updateEmployee(targetName, name = '', employeetype = '', email = '', ph
     }
     if(employeetype.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [employeetype,targetName]);
+        pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype,targetName]);
     }
     if(email.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [email,targetName]);
+        pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email,targetName]);
     }
     if(phonenum.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [phonenum,targetName]);
+        pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum,targetName]);
     }
 }
 

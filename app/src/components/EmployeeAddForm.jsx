@@ -28,7 +28,6 @@ function EmployeeAddForm() {
         e.preventDefault(); 
         
         await fetch("http://localhost:3000/api/Manager/addEmployee", addEmployee(name, role, email, phone));
-        // window.location.href = "/";
     }
 
 

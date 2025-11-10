@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import functions from './function.js';
-const { createMenuItemArray, addEmployee } = functions;
+const { createMenuItemArray, addEmployee, updateEmployee } = functions;
 
 console.log("Server.js starting");
 
@@ -30,6 +30,25 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
             console.error("add error: ", err);
             throw err;
         }
+        console.log("Succeeded");
+        res.status(200).json({ message: "Employee added successfully" });
+    } catch (err) {
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.post("/api/Manager/updateEmployee", async (req, res) => {
+    try {
+        const { name, newName, role, email, phone } = req.body;
+        console.log("Attempting: ", name, newName, role, email, phone);
+
+        try {
+            await updateEmployee(name, newName, role, email, phone);
+        } catch (err) {
+            console.error("add error: ", err);
+            throw err;
+        }
+
         console.log("Succeeded");
         res.status(200).json({ message: "Employee added successfully" });
     } catch (err) {
