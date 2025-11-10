@@ -1,7 +1,7 @@
 import React from 'react';
 import dbConn from './db.js';
 
-function addEmployee(name, employeetype, email, phonenum)
+async function addEmployee(name, employeetype, email, phonenum)
 {
     //Get variables
 
@@ -83,5 +83,6 @@ function deleteMenuItemBtn()
 }
 
 export default {
-    createMenuItemArray
+    createMenuItemArray,
+    addEmployee
 }
