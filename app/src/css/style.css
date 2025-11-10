@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+.vspacer {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
 :root {
     --primary: #d51818;
     --text: #333;
@@ -190,10 +195,15 @@ a {
     align-items: center;
 }
 
+.menu-text {
+    text-align: center;
+}
+
 .item-title {
     font-weight: 600;
     font-size: 1.1rem;
     margin-bottom: 4px;
+    width: 100%;
 }
 
 .calories {

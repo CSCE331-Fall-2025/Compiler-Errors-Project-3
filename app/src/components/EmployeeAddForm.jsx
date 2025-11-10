@@ -40,7 +40,7 @@ function EmployeeAddForm() {
                 <option value="Cashier">Cashier</option>
             </select>
             <input type="text" value={email} onChange={e => setEmail(e.target.value)} id="email" placeholder="Email" required/>
-            <input type="text" value={phone} onChange={handleChange} maxLength={14} id="phone" placeholder="Phone number" required/>
+            <input type="text" value={phone} onChange={handleChange} maxLength={14} minLength={14} id="phone" placeholder="Phone number" required/>
             <button type="submit">Add Employee</button>
         </form>
     );
