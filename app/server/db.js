@@ -6,12 +6,12 @@ dotenv.config({ path: findConfig('.env') });
 //Dedicated file for all database connections (until further notice)
 
 var pool = new Pool({
-    host: 'csce-315-db.engr.tamu.edu',
-    port: 5432, // default PostgreSQL port
-    user: "process.env.DBUSER",
+    user: process.env.DBUSER,
+    host: process.env.DBHOST,
+    database: process.env.DBNAME,
     password: process.env.DBPASSWORD,
-    database: 'CSCE315Database',
-    ssl: { rejectUnauthorized: false }
+    port: process.env.DBPORT,
+    ssl: false,
 });
 var usersArray;
 
@@ -24,12 +24,12 @@ function connectDB() {
     {
         //Try to connect
         pool = new Pool({
-            host: 'csce-315-db.engr.tamu.edu',
-            port: 5432, // default PostgreSQL port
             user: process.env.DBUSER,
+            host: process.env.DBHOST,
+            database: process.env.DBNAME,
             password: process.env.DBPASSWORD,
-            database: 'CSCE315Database',
-            ssl: { rejectUnauthorized: false }
+            port: process.env.DBPORT,
+            ssl: false,
         });
         console.log('Pool created. Testing connection');
         pool.query('SELECT 1');
