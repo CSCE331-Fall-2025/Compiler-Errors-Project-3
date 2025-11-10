@@ -1,14 +1,14 @@
 import express from "express";
 import cors from "cors";
 import functions from './function.js';
-import {addEmployee} from "./db.js";
-const { createMenuItemArray } = functions;
+const { createMenuItemArray, addEmployee } = functions;
 
 console.log("Server.js starting");
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
   try {
@@ -19,20 +19,22 @@ app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
   }
 });
 
-//addEmployee 
-app.post("/api/employees/add", async (req,res) => {
-  try{
-    const {name, employeetype, email, phonenum} = req.body;
-    if(!name || !employeetype || !email || !phonenum){
-      return res.status(400).json({error: "Missing required info"});
+app.post("/api/Manager/addEmployee", async (req, res) => {
+    try {
+        const { name, role, email, phone } = req.body;
+        console.log("Attempting");
+
+        try {
+            await addEmployee(name, role, email, phone);
+        } catch (err) {
+            console.error("add error: ", err);
+            throw err;
+        }
+        console.log("Succeeded");
+        res.status(200).json({ message: "Employee added successfully" });
+    } catch (err) {
+        res.status(500).json({error: err.message});
     }
-    await addEmployee(name, employeetype, email, phonenum);
-    res.status(201).json({message: "Employee added successfully"});
-  }
-  catch(err){
-    console.error("Error adding employee", err);
-    res.status(500).json({error: "Failed to add employee"});
-  }
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));

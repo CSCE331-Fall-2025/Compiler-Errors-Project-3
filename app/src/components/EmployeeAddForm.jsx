@@ -1,56 +1,48 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { addEmployee } from "../js/utils";
 
 function EmployeeAddForm() {
-    const [name, setName] = React.useState("");
-    const [role, setRole] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [phone, setPhone] = React.useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
+    const [phone, setPhone] = useState("");
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        const employeeData = {
-            name,
-            employeetype: role,
-            email,
-            phonenum: phone
-        };
-        try{
-            const response = await fetch("http://localhost:3000/api/Employee/addEmployee", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(employeeData),
-            });
+    const formatPhone = (value) => {
+        const digits = value.replace(/\D/g, "");
 
-            if (!response.ok){
-                alert("Failed to add employee");
-            }
-            
-            alert("Employee added successfully");
-            setName("");
-            setRole("");
-            setEmail("");
-            setPhone("");
-        }
-        catch (error)
-        {
-            console.error("Error adding employee:", error);
-            alert("Unable to add employee");
-        }
+        if (digits.length === 0) return "";
+        if (digits.length < 4) return `(${digits}`;
+        if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+
+        return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
     };
 
+    const handleChange = (e) => {
+        const formatted = formatPhone(e.target.value);
+        setPhone(formatted);
+    };
+
+    async function submitForm(e) {
+        e.preventDefault(); 
+        
+        await fetch("http://localhost:3000/api/Manager/addEmployee", addEmployee(name, role, email, phone));
+        // window.location.href = "/";
+    }
+
+
     return (
-        <form id="employeeForm" onSubmit = {submitHandler}>
-        <input type="text" id="name" placeholder="Employee Name"  value = {name} onChange={(e) => setName(e.target.value)} required/>
-        <select value={role} onChange={(e) => setRole(e.target.value)} required>
-            <option value="">Select Role</option>
-            <option value="Manager">Manager</option>
-            <option value="Cashier">Cashier</option>
-        </select>
-        <input type="text" placeholder="Email" value={email} onChange = {(e) => setEmail(e.target.value)} required/>
-        <input type="number" id="phone" placeholder="Phone number" value = {phone} onChange={(e) => setPhone(e.target.value)} required/>
-        <button type="submit">Add Employee</button>
+        <form onSubmit={submitForm} id="employeeForm">
+            <input type="text" value={name} onChange={e => setName(e.target.value)} id="name" placeholder="Employee Name" required/>
+            <select value={role} onChange={e => setRole(e.target.value)} id="role" required>
+                <option value="">Select Role</option>
+                <option value="Manager">Manager</option>
+                <option value="Cashier">Cashier</option>
+            </select>
+            <input type="text" value={email} onChange={e => setEmail(e.target.value)} id="email" placeholder="Email" required/>
+            <input type="text" value={phone} onChange={handleChange} maxLength={14} id="phone" placeholder="Phone number" required/>
+            <button type="submit">Add Employee</button>
         </form>
     );
 }

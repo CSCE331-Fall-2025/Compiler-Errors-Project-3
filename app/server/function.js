@@ -1,13 +1,9 @@
 import React from 'react';
 import dbConn from './db.js';
 
-function addEmployeeBtn()
+function addEmployee(name, employeetype, email, phonenum)
 {
     //Get variables
-    var name;
-    var employeetype;
-    var email;
-    var phonenum;
 
     dbConn.addEmployee(name,employeetype,email,phonenum);
 }
