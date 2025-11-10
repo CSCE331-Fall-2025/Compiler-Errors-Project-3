@@ -16,6 +16,16 @@ async function deleteEmployee(name)
     dbConn.deleteEmployee(name);
 }
 
+async function deleteMenuItem(name)
+{
+    dbConn.deleteMenuItem(name);
+}
+
+async function addInventoryItem(name, qty, unit_price)
+{
+    dbConn.addInventoryItem(name, qty, unit_price);
+}
+
 async function createMenuItemArray()
 {
     //res.rows[i]."type" gets the value of that field
@@ -48,6 +58,7 @@ async function updateInventoryItem(name, newName, qty, uprice)
 {
     dbConn.updateInventoryItem(name, newName, qty, uprice);
 }
+
 
 function getReportBtn()
 {
@@ -83,11 +94,16 @@ function deleteMenuItemBtn()
     dbConn.deleteMenuItem(true, targetName);
 }
 
+//Need addInventoryItem function
+
 export default {
     createMenuItemArray,
     addEmployee,
     updateEmployee,
     addMenuItem,
     updateMenuItem,
-    updateInventoryItem
+    updateInventoryItem,
+    deleteEmployee,
+    deleteMenuItem,
+    addInventoryItem
 }

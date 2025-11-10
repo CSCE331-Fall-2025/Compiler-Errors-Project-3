@@ -1,16 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { deleteMenuItem } from "../js/utils";
 
 function MenuDeleteForm() {
+    const [name, setName] = useState("");
+    
+    async function submitForm(e) {
+        e.preventDefault(); 
+        
+        await fetch("http://localhost:3000/api/Manager/deleteMenuItem", deleteMenuItem(name));
+    }
     return (
-        <form id = "deleteMenuItem">
-            <input type = "text" id = "name" placeholder = "Menu Item Name" required/>
-            <select id = "category" required>
-                <option value = "">Select Category</option>
-                <option value = "Entree">Entree</option>
-                <option value = "Sides">Sides</option>
-                <option value = "Beverages">Beverages</option>
-                <option value = "Seasonal">Seasonal</option>
-            </select>
+        <form onSubmit={submitForm} id = "deleteMenuItem">
+            <input type="text" value={name} onChange={e => setName(e.target.value)} id="name" placeholder="Menu item you wish to delete" required/>
             <button type = "submit">Delete Menu Item</button>
         </form>
     );
