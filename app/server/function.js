@@ -48,6 +48,13 @@ async function updateInventoryItem(name, newName, qty, uprice)
 {
     dbConn.updateInventoryItem(name, newName, qty, uprice);
 }
+//Have this here just to try
+// function deleteMenuItem(){
+//     var name;
+
+//     dbConn.deleteMenuItem(name);
+// }
+
 
 function getReportBtn()
 {
@@ -83,6 +90,8 @@ function deleteMenuItemBtn()
     dbConn.deleteMenuItem(true, targetName);
 }
 
+//Need addInventoryItem function
+
 export default {
     createMenuItemArray,
     addEmployee,
@@ -90,4 +99,7 @@ export default {
     addMenuItem,
     updateMenuItem,
     updateInventoryItem
+    //deleteEmployee,
+    //deleteMenuItem,
+    //addInventoryItem
 }
