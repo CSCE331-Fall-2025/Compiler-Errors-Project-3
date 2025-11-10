@@ -21,21 +21,21 @@ function StaticMenuPage() {
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="Images for HTML/Chicken_GrilledTeriyakiChicken.png" alt="Grilled Teriyaki Chicken"/>
+                        <img src="/images/Chicken_GrilledTeriyakiChicken.png" alt="Grilled Teriyaki Chicken"/>
                         <h3>Grilled Teriyaki Chicken</h3>
                         <p>Chicken covered in delicous teriyaki sauce</p>
                         <span className={styles["staticprice"]}>$9.49</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="Images for HTML/Kung Pao Chicken.png" alt="Kung Pao Chicken"/>
+                        <img src="/images/Kung Pao Chicken.png" alt="Kung Pao Chicken"/>
                         <h3>Kung Pao Chicken</h3>
                         <p>Spicy chicken with peanuts, bell peppers, and zucchini.</p>
                         <span className={styles["staticprice"]}>$8.79</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="Images for HTML/Beef-&-Broccoli.png" alt="Broccoli Beef"/>
+                        <img src="/images/Beef-&-Broccoli.png" alt="Broccoli Beef"/>
                         <h3>Broccoli Beef</h3>
                         <p>Tender beef and fresh broccoli in savory ginger soy sauce.</p>
                         <span className={styles["staticprice"]}>$8.99</span>
