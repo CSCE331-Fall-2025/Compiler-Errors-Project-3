@@ -15,3 +15,21 @@ export function addEmployee(name, role, email, phone) {
 
     return json;
 }
+
+export function updateEmployee(name, newName, role, email, phone) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            role,
+            email,
+            phone
+        }),
+    };
+
+    console.log(json);
+
+    return json;
+}
