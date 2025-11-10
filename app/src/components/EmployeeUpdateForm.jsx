@@ -42,7 +42,7 @@ function EmployeeUpdateForm() {
                 <option value="Cashier">Cashier</option>
             </select>
             <input value={email} onChange={e => setEmail(e.target.value)} type="text" id="email" placeholder="New Email"/>
-            <input value={phone} onChange={handleChange} type="text" id="phone" placeholder="New Phone number"/>
+            <input value={phone} onChange={handleChange} maxLength={14} minLength={14} type="text" id="phone" placeholder="New Phone number"/>
             <button type="submit">Update Employee</button>
         </form>
     );

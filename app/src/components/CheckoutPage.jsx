@@ -7,6 +7,7 @@ function CheckoutPage() {
     return (
         <>
             <NavBar></NavBar>
+            <div class="vspacer"></div>
             <main class = "checkout-main">
                 <section class = "order-panel">
                     <h1>Your order</h1>
