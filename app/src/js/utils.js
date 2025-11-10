@@ -29,7 +29,53 @@ export function updateEmployee(name, newName, role, email, phone) {
         }),
     };
 
-    console.log(json);
+
+    return json;
+}
+
+export function addMenuItem(name, price, ingredients) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            price,
+            ingredients
+        }),
+    };
+
+    return json;
+}
+
+export function updateMenuItem(name, newName, price, ingredients) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            price,
+            ingredients
+        }),
+    };
+
+    return json;
+}
+
+export function updateInventoryItem(name, newName, qty, uprice) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            qty,
+            uprice
+        }),
+    };
 
     return json;
 }
