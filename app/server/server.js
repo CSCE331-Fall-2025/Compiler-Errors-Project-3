@@ -18,7 +18,7 @@ app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
+//addEmployee
 app.post("/api/Manager/addEmployee", async (req, res) => {
     try {
         const { name, role, email, phone } = req.body;
@@ -34,6 +34,26 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
         res.status(200).json({ message: "Employee added successfully" });
     } catch (err) {
         res.status(500).json({error: err.message});
+    }
+});
+//updateEmployee
+app.post("/api/Manager/updateEmployee", async (req, res) => {
+    try{
+      const {targetName, name, role, email, phone} = req.body;
+      console.log("attempting");
+      try{
+        await updateEmployee(targetName, name, role, email, phone);
+      }
+      catch(err){
+        console.error("add error: ", err);
+        throw err;
+      }
+      console.log("Succeeded");
+      res.status(200).json({ message: "Employee updated successfully" });
+    }
+    catch(err){
+      console.error(err);
+      res.status(500).json({error: "Failed to update employee"});
     }
 });
 
