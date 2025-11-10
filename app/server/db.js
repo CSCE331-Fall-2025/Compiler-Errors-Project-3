@@ -8,8 +8,8 @@ dotenv.config({ path: findConfig('.env') });
 var pool = new Pool({
     host: 'csce-315-db.engr.tamu.edu',
     port: 5432, // default PostgreSQL port
-    user: "compiler_errors",
-    password: "root",
+    user: "process.env.DBUSER",
+    password: process.env.DBPASSWORD,
     database: 'CSCE315Database',
     ssl: { rejectUnauthorized: false }
 });
@@ -26,8 +26,8 @@ function connectDB() {
         pool = new Pool({
             host: 'csce-315-db.engr.tamu.edu',
             port: 5432, // default PostgreSQL port
-            user: "compiler_errors",
-            password: "root",
+            user: process.env.DBUSER,
+            password: process.env.DBPASSWORD,
             database: 'CSCE315Database',
             ssl: { rejectUnauthorized: false }
         });
@@ -137,7 +137,7 @@ async function getMenuItems()
     }
 }
 
-function addEmployee(name, employeetype, email, phonenum)
+async function addEmployee(name, employeetype, email, phonenum)
 {
     try
     {
