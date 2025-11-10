@@ -46,6 +46,14 @@ function addMenuItemBtn()
     dbConn.addMenuItem(name,price,ingredients);
 }
 
+//Have this here just to try
+// function deleteMenuItem(){
+//     var name;
+
+//     dbConn.deleteMenuItem(name);
+// }
+
+
 function getReportBtn()
 {
     //Get query type
@@ -80,8 +88,13 @@ function deleteMenuItemBtn()
     dbConn.deleteMenuItem(true, targetName);
 }
 
+//Need addInventoryItem function
+
 export default {
     createMenuItemArray,
     addEmployee,
-    updateEmployee
+    updateEmployee,
+    deleteEmployee,
+    deleteMenuItem
+    //addInventoryItem
 }
