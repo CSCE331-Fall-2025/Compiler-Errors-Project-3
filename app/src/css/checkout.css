@@ -1,0 +1,88 @@
+:root{
+  --accent:#e21b1b; /* strong red */
+  --dark:#0b0b0b;   /* near black  */ 
+  --muted:#f6f6f6;
+}
+*{box-sizing:border-box}
+body{
+  font-family:Segoe UI, Roboto, Arial, sans-serif;
+  margin:0;
+  background:linear-gradient(180deg, #fff 0%, #fff 60%, #fff 100%);
+  color:var(--dark);
+}
+.checkout-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--dark);
+  color:white;
+  padding:16px 24px;
+  border-bottom:6px solid var(--accent);
+}
+.checkout-header .brand{
+  font-weight:800;
+  font-size:20px;
+}
+.top-nav a{color:#fff;text-decoration:none;margin-left:18px}
+.top-nav a:hover{opacity:.9}
+
+.checkout-main{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:24px;
+  padding:28px;
+  align-items:start;
+}
+.order-panel{
+  background:#fff;
+  padding:18px;
+  border-radius:6px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.06);
+}
+.order-panel h2{margin-top:0;color:var(--dark)}
+.order-items{min-height:200px;border:2px dashed #eee;padding:12px;border-radius:6px}
+.order-items .empty{color:#666;padding:36px;text-align:center}
+.order-item{display:flex;justify-content:space-between;align-items:center;padding:10px 6px;border-bottom:1px solid #f0f0f0}
+.order-item .name{font-weight:600}
+.order-item .price{color:#222}
+
+.summary-card{
+  background:var(--dark);
+  color:#fff;
+  padding:18px;
+  border-radius:8px;
+  position:sticky;
+  top:24px;
+}
+.summary-card h3{margin-top:0;color:var(--accent)}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0}
+.summary-total{display:flex;justify-content:space-between;padding-top:6px;font-size:18px}
+.btn{display:inline-block;padding:10px 18px;border-radius:8px;border:0;cursor:pointer}
+.checkout-btn{background:var(--accent);color:#fff;font-weight:700;width:100%;margin-top:12px}
+
+/* Recommendation bar */
+.recommend-bar{background:#fff;padding:18px 28px;border-top:6px solid var(--accent)}
+.recommend-inner{max-width:1100px;margin:0 auto}
+.rec-title{color:var(--dark);font-weight:700;margin-bottom:12px}
+.rec-list{display:flex;gap:12px}
+.rec-item{width:88px;height:64px;background:#f5f5f5;border-radius:6px}
+
+/* Responsive */
+@media (max-width:900px){
+  .checkout-main{grid-template-columns:1fr;}
+  .summary-card{position:static;margin-top:12px}
+}
+/* small form-specific styles to match the checkout look */
+  .login-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  .login-card{width:420px;background:#fff;border-radius:10px;padding:28px;box-shadow:0 12px 30px rgba(0,0,0,0.06)}
+  .login-card h1{margin:0 0 18px;font-size:28px}
+  .form-row{margin-bottom:14px}
+  label{display:block;font-weight:700;margin-bottom:8px}
+  input[type="email"],input[type="password"]{width:100%;padding:12px 14px;border:1px solid #eee;border-radius:8px}
+  .actions{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+  .btn-sign{background:var(--accent);color:#fff;border-radius:10px;padding:12px 18px;border:0;width:100%;font-weight:700}
+  .muted{color:#666;text-align:center;margin-top:12px}
+  .top-links{display:flex;gap:12px}
+  .top-links a{color:#fff;text-decoration:none}
+  /* ensure header brand doesn't show unwanted text */
+  .checkout-header .brand{visibility:hidden}
