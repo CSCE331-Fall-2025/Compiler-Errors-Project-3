@@ -8,16 +8,14 @@ async function addEmployee(name, employeetype, email, phonenum)
     dbConn.addEmployee(name,employeetype,email,phonenum);
 }
 
-function updateEmployeeBtn()
+async function updateEmployee(targetName, name, employeetype, email, phonenum) 
 {
-    //Get variables
-    var name;
-    var employeetype;
-    var email;
-    var phonenum;
-    var targetName;
-
     dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
+}
+
+async function deleteEmployee(name) 
+{
+    dbConn.deleteEmployee(name);
 }
 
 async function createMenuItemArray()
@@ -84,5 +82,6 @@ function deleteMenuItemBtn()
 
 export default {
     createMenuItemArray,
-    addEmployee
+    addEmployee,
+    updateEmployee
 }

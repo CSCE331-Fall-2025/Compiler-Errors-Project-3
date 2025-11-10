@@ -28,4 +28,16 @@ export function updateEmployee(targetName, name, role, email, phone){
             phone
         }),
     }
+    return json;
+}
+
+export function deleteEmployee(name){
+    const json = {
+        method: "POST",
+        header: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
 }

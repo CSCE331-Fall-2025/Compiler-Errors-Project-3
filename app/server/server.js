@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import functions from './function.js';
-const { createMenuItemArray, addEmployee } = functions;
+const { createMenuItemArray, addEmployee, updateEmployee } = functions;
 
 console.log("Server.js starting");
 
@@ -54,6 +54,26 @@ app.post("/api/Manager/updateEmployee", async (req, res) => {
     catch(err){
       console.error(err);
       res.status(500).json({error: "Failed to update employee"});
+    }
+});
+//deleteEmployee
+app.post("/api/Manager/deleteEmployee", async (req, res) => {
+    try{
+      const {name} = req.body;
+      console.log("attempting");
+      try{
+        await deleteEmployee(name);
+      }
+      catch(err){
+        console.error("add error: ", err);
+        throw err;
+      }
+      console.log("Succeeded");
+      res.status(200).json({ message: "Employee fired successfully" });
+    }
+    catch(err){
+      console.error(err);
+      res.status(500).json({error: "Failed to fire employee"});
     }
 });
 
