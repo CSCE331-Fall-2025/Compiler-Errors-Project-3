@@ -1,12 +1,8 @@
 import React from "react";
 import "../css/locations.css";
-import NavBar from "./NavBar";
 
 function LocationsPage() {
   return (
-    <>
-    <NavBar></NavBar>
-    <h1>.</h1>
     <div className="locations-page">
       <header className="locations-hero">
         <div className="hero-inner">
@@ -53,7 +49,6 @@ function LocationsPage() {
         </div>
       </main>
     </div>
-    </>
   );
 }
 
