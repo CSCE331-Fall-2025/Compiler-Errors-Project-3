@@ -1,10 +1,8 @@
 import React from 'react'
 import NavBar from "./NavBar"
-import Hero from "./Hero"
-import { Link } from "react-router-dom";
 import "../css/checkout.css"
 
-function LoginPage(){
+function EmployeeLoginPage(){
     return(
         <>
             <NavBar></NavBar> 
@@ -32,12 +30,10 @@ function LoginPage(){
                             <button type="submit" class="btn-sign">Sign In</button>
                         </div>
                     </form>
-                    <div class="muted">Are you an employee?<a href = "#"> <Link to="/employee/login">Login</Link></a></div>
-                    <div class="muted">Don't have an account? <a href="#"> Register</a></div>
                 </section>
             </main>
         </>
     );
 }
 
-export default LoginPage;
+export default EmployeeLoginPage;
