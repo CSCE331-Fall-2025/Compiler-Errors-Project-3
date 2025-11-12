@@ -6,6 +6,7 @@ import StaticMenuPage from "./components/StaticMenuPage";
 import ManagerPage from "./components/ManagerPage";
 import CheckoutPage from "./components/CheckoutPage";
 import LocationsPage from "./components/LocationsPage";
+import LoginPage from "./components/LoginPage";
 import "./css/style.css";
 
 
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/Employee/Manager" element={<ManagerPage/>}></Route>
                 <Route path="/checkout" element={<CheckoutPage/>}></Route>
                 <Route path="/locations" element={<LocationsPage/>}></Route>
+                <Route path="/login" element={<LoginPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );
