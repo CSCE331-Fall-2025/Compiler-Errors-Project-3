@@ -7,9 +7,9 @@ function EmployeeDeleteForm() {
     const [name, setName] = useState("");
 
     async function submitForm(e) {
-                e.preventDefault(); 
-                
-                await fetch("http://localhost:3000/api/Manager/deleteEmployee", deleteEmployee(name));
+        e.preventDefault(); 
+        
+        await fetch("http://localhost:3000/api/Manager/deleteEmployee", deleteEmployee(name));
     }
 
     return (

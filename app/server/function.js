@@ -3,12 +3,10 @@ import dbConn from './db.js';
 
 async function addEmployee(name, employeetype, email, phonenum)
 {
-    //Get variables
-
     dbConn.addEmployee(name,employeetype,email,phonenum);
 }
 
-async function updateEmployee(targetName, name, employeetype, email, phonenum) 
+async function updateEmployee(targetName, name, employeetype, email, phonenum)
 {
     dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
 }
@@ -16,6 +14,16 @@ async function updateEmployee(targetName, name, employeetype, email, phonenum)
 async function deleteEmployee(name) 
 {
     dbConn.deleteEmployee(name);
+}
+
+async function deleteMenuItem(name)
+{
+    dbConn.deleteMenuItem(name);
+}
+
+async function addInventoryItem(name, qty, unit_price)
+{
+    dbConn.addInventoryItem(name, qty, unit_price);
 }
 
 async function createMenuItemArray()
@@ -36,22 +44,20 @@ async function createMenuItemArray()
     return menuItemArray;
 }
 
-function addMenuItemBtn()
+async function addMenuItem(name, price, ingredients)
 {
-    //Get variables
-    var name;
-    var price;
-    var ingredients;
-
     dbConn.addMenuItem(name,price,ingredients);
 }
 
-//Have this here just to try
-// function deleteMenuItem(){
-//     var name;
+async function updateMenuItem(name, newName, price, ingredients)
+{
+    dbConn.updateMenuItem(name, newName, price,ingredients);
+}
 
-//     dbConn.deleteMenuItem(name);
-// }
+async function updateInventoryItem(name, newName, qty, uprice)
+{
+    dbConn.updateInventoryItem(name, newName, qty, uprice);
+}
 
 
 function getReportBtn()
@@ -94,7 +100,10 @@ export default {
     createMenuItemArray,
     addEmployee,
     updateEmployee,
+    addMenuItem,
+    updateMenuItem,
+    updateInventoryItem,
     deleteEmployee,
-    deleteMenuItem
-    //addInventoryItem
+    deleteMenuItem,
+    addInventoryItem
 }

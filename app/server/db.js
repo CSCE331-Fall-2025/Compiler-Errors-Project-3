@@ -101,8 +101,8 @@ function addOrders(orderArray)
 {
     for(i = 0; i < orderArray.length; i++)
     {
-        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1,$2,$3,$4,$5,$6)',
-            [orderArray[i].id,orderArray[i].date,orderArray[i].time,orderArray[i].item,orderArray[i].qty,orderArray[i].price]
+        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
+            [orderArray[i].id, orderArray[i].date, orderArray[i].time, orderArray[i].item, orderArray[i].qty, orderArray[i].price]
         );
     }
 }
@@ -113,16 +113,14 @@ function addOrders(orderArray)
  * @param {*} authKey Required to prevent unauthorized users from deleting
  * @param {*} itemName Name of item to be deleted
  */
-function deleteMenuItem(authKey, itemName)
+function deleteMenuItem(itemName)
 {
-    if(false)//(authKey.localeCompare('MANAGER') != 0)
-    {
-        console.log("Error: Unauthorized user attempted to delete menu item");
-    }
-    else
-    {
-        pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
-    }
+    pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
+}
+
+function deleteEmployee(name)
+{
+    pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
 async function getMenuItems()
@@ -141,7 +139,7 @@ async function addEmployee(name, employeetype, email, phonenum)
 {
     try
     {
-        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1,$2,$3,$4)',[name,employeetype,email,phonenum]);
+        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1, $2, $3, $4)', [name, employeetype, email, phonenum]);
     }
     catch(err)
     {
@@ -153,30 +151,62 @@ async function updateEmployee(targetName, name = '', employeetype = '', email = 
 {
     if(name.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name,targetName]);
+        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name, targetName]);
     }
     if(employeetype.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype,targetName]);
+        pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype, targetName]);
     }
     if(email.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email,targetName]);
+        pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email, targetName]);
     }
     if(phonenum.localeCompare('') != 0)
     {
-        pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum,targetName]);
+        pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
     }
 }
 
 function addInventoryItem(name, qty, unit_price)
 {
-    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2 ,$3)', [name,qty,unit_price]);
+    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2, $3)', [name, qty, unit_price]);
 }
 
-function addMenuItem(name,price,ingredients)
+function addMenuItem(name, price, ingredients)
 {
-    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2 ,$3)', [name,price,ingredients]);
+    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2, $3)', [name, price, ingredients]);
+}
+
+function updateMenuItem(name, newName, price, ingredients)
+{
+    if(newName.localeCompare('') != 0)
+    {
+        pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
+    }
+    if(typeof price !== 'string')
+    {
+        pool.query('UPDATE menuce SET price = $1 WHERE name = $2', [price, name]);
+    }
+    if(ingredients.localeCompare('') != 0)
+    {
+        pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [ingredients, name]);
+    }
+}
+
+function updateInventoryItem(name, newName, qty, uprice)
+{
+    if(newName.localeCompare('') != 0)
+    {
+        pool.query('UPDATE inventoryce SET name = $1 WHERE name = $2', [newName, name]);
+    }
+    if(typeof qty !== 'string')
+    {
+        pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [qty, name]);
+    }
+    if(typeof uprice !== 'string')
+    {
+        pool.query('UPDATE inventoryce SET unit_price = $1 WHERE name = $2', [uprice, name]);
+    }
 }
 
 function getReport(reportName)
@@ -202,11 +232,11 @@ function getReport(reportName)
     }
 }
 
-function filterOrderHistory(startDate,endDate)
+function filterOrderHistory(startDate, endDate)
 {
     try
     {
-        return pool.query('SELECT item, SUM(qty) AS total_sales FROM orderhistoryce WHERE date BETWEEN $1 AND $2 GROUP BY item', [startDate,endDate]);
+        return pool.query('SELECT item, SUM(qty) AS total_sales FROM orderhistoryce WHERE date BETWEEN $1 AND $2 GROUP BY item', [startDate, endDate]);
     }
     catch(err)
     {
@@ -223,10 +253,13 @@ export default {
     deleteMenuItem,
     getMenuItems,
     addMenuItem,
+    updateMenuItem,
     addEmployee,
     updateEmployee,
     addInventoryItem,
+    updateInventoryItem,
     getReport,
     filterOrderHistory, 
-    testQuery
+    testQuery,
+    deleteEmployee
 };

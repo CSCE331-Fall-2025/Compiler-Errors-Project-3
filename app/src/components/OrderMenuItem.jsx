@@ -9,10 +9,12 @@ function OrderMenuitem({ img, alt, title, cal, price }) {
                 <img src={img} alt={alt} class="menu-item-img"></img>
             </div>
 
-            <span class="item-title">{title}</span>
-            <div class="menu-info">
-                <span class="calories">{cal}</span>
-                <span class="price">{price}</span>
+            <div class="menu-text">
+                <span class="item-title">{title}</span>
+                <div class="menu-info">
+                    <span class="calories">{cal}</span>
+                    <span class="price">{price}</span>
+                </div>
             </div>
             
             <div class="menu-item-button-container">

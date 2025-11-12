@@ -7,10 +7,7 @@ function OrderPage() {
     return (
         <>
             <NavBar></NavBar>
-            <h1 class="title">
-                MENU
-                <h2 class="subtitle">Select your item(s)</h2>
-            </h1>
+            <div class="vspacer"></div>
             <OrderMenu></OrderMenu>
 
         </>

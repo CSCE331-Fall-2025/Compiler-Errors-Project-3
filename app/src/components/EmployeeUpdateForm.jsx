@@ -4,10 +4,10 @@ import { useState } from "react";
 import { updateEmployee } from "../js/utils";
 
 function EmployeeUpdateForm() {
-    const [targetName, setTargetName] = useState("");
     const [name, setName] = useState("");
-    const [role, setRole] = useState("");
+    const [newName, setNewName] = useState("");
     const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
     const [phone, setPhone] = useState("");
 
     const formatPhone = (value) => {
@@ -21,27 +21,28 @@ function EmployeeUpdateForm() {
     };
 
     const handleChange = (e) => {
-        setPhone(formatPhone(e.target.value));
+        const formatted = formatPhone(e.target.value);
+        setPhone(formatted);
     };
 
     async function submitForm(e) {
-            e.preventDefault(); 
-            
-            await fetch("http://localhost:3000/api/Manager/updateEmployee", updateEmployee(targetName, name, role, email, phone));
-            // window.location.href = "/";
+        e.preventDefault(); 
+
+        await fetch("http://localhost:3000/api/Manager/updateEmployee", updateEmployee(name, newName, role, email, phone));
     }
 
+
     return (
-        <form onSubmit={submitForm} id="employeeForm">
-            <input type="text" value={targetName} onChange={e => setTargetName(e.target.value)} id = "targetName" placeholder = "Current Employee Name" required/>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} id="name" placeholder="New employee Name" required/>
-            <select value={role} onChange={e => setRole(e.target.value)} id="role" required>
+        <form onSubmit={submitForm} id = "updateEmployeeForm">
+            <input value={name} onChange={e => setName(e.target.value)} type="text" id="name" placeholder="Employee Name" required/>
+            <input value={newName} onChange={e => setNewName(e.target.value)} type="text" id="targetName" placeholder="New Name"/>
+            <select value={role} onChange={e => setRole(e.target.value)} id="role">
                 <option value="">Select Role</option>
                 <option value="Manager">Manager</option>
                 <option value="Cashier">Cashier</option>
             </select>
-            <input type="text" value={email} onChange={e => setEmail(e.target.value)} id="email" placeholder="New email" required/>
-            <input type="text" value={phone} onChange={handleChange} maxLength={14} id="phone" placeholder="New Phone number" required/>
+            <input value={email} onChange={e => setEmail(e.target.value)} type="text" id="email" placeholder="New Email"/>
+            <input value={phone} onChange={handleChange} maxLength={14} minLength={14} type="text" id="phone" placeholder="New Phone number"/>
             <button type="submit">Update Employee</button>
         </form>
     );

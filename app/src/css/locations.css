@@ -1,0 +1,27 @@
+.locations-hero{
+  background: linear-gradient(180deg,#8b0b0b,#6b0a0a);
+  color: #fff;
+  padding: 60px 0 40px;
+  text-align: center;
+}
+.hero-inner{max-width:1100px;margin:0 auto;padding:10px}
+.hero-sub{font-size:18px;letter-spacing:2px;margin:0 0 8px}
+.hero-title{font-size:42px;margin:0 0 16px}
+
+
+.locations-content{max-width:1100px;margin:30px auto;padding:0 16px}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.card{background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.info-card h3,.hours-card h3{margin:0 0 12px}
+.status.open{color:#279d4c;font-weight:600}
+.address{font-weight:600;margin:10px 0}
+.phone{color:#ff1900;font-weight:600}
+.directions-btn{margin-top:12px;background:#333;border:none;color:#fff;padding:10px 14px;border-radius:6px}
+.hours-list{list-style:none;padding:0;margin:0}
+.hours-list li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.map-card iframe{border-radius:6px}
+
+@media (max-width:900px){
+  .cards{grid-template-columns:1fr;}
+  .hero-title{font-size:28px}
+}
