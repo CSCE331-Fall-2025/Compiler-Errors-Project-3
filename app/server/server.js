@@ -208,57 +208,49 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 });
 
 //addOrders
-//FEW CHECKS FOR VALIDITY HERE
-//Plan: If stock of ingredients is too low, don't show on the menu for that day
-//Checks here: If the quantity exceeds current stock, forbid order
 app.post("/api/Cashier/addOrders", async (req, res) => {
+    //Gets inventory
     const res = await dbConn.getStock();
     const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
-    //Helper for addOrders [UPDATE: Return T if valid, F is invalid]
-    async function validateOrder(value, key, map) {
-        //Get the ingredients in a string array format
-        //** Double check if ingredients are correctly formatted in db. Reformat if not
-        const ingrList = getIngredientsList(key);
-        
-        //Create mapping
-        const ingredientsMap = new Map();
-
-        //Loops ingredients
-        for(let i = 0; i < ingrList.length; i++)
-        {
-            //If the ingredient hasn't been used before, set it as the total, else add onto the original amount
-            const check = ingredientsMap.get(ingrList[i]);
-            if(check === undefined)
-            {
-                ingredientsMap.set(ingrList[i], 1 * value);
-            }
-            else
-            {
-                ingredientsMap.set(ingrList[i], ingredientsMap.get(ingrList[i]) + (1 * value));
-            }
-        }
-
-        ingredientsMap.keys
-
-        const temp = ingredientsMap.keys();
-        
-        while(temp.next().value !== undefined)
-        {
-            
-        }
-    }
+    const usedIngrMap = new Map();
     try {
         //Get the orders
         const { orders } = req.body; 
         
         //Check if all orders are valid
-        for order in orders
-        {
-            
+        flag = true;
+        orders.forEach((order) => {
+            const quantity = order.quantity;
+            //If no item ordered is invalid, check
+            if(flag){
+            //Gets ingredients for order
+                var ingrList = getIngredientsList(order.name);
+                //For each ingredient
+                for(let i = 0; i < ingrList.length; i++){
+                    //If ingredient hasn't been used, initialize
+                    if(usedIngrMap.get(ingrList[i]) === undefined){
+                        usedIngrMap.set(ingrList[i], 0);
+                    }
+
+                    //If it uses too much ingredients, skip ordering entirely
+                    if(order.quantity > inventoryMap.get(order.name)){
+                        flag = false;
+                        break;
+                    }
+                    //Else add ingredients to the used list
+                    else{
+                        usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+                    }
+                }
+            }
+        });
+
+        if(!flag){
+            throw new TypeError('Quantity Exceeds Inventory Stock');
         }
-        while(true)
-        {
-            orders.forEach(trackIngredients);
+        else{
+            dbConn.addOrders(orders);
+            dbConn.updateInventory(usedIngrMap,inventoryMap);
         }
 
     } catch (err) {

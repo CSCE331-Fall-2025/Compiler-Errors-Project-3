@@ -84,14 +84,34 @@ function validateUser(username, password){
  * 
  * @param {*} orderArray Array of orders
  */
-function addOrders(orderArray)
-{
-    for(i = 0; i < orderArray.length; i++)
-    {
+function addOrders(orderArray){
+    var id = pool.query('SELECT MAX(id) FROM ordehistoryce');
+    const now = new Date();
+    
+    var date = now.getFullYear();
+    date += '-';
+    date += now.getMonth();
+    date += '-';
+    date += now.getDay();
+    
+    var time = now.getHours();
+    time += ':';
+    time += now.getMinutes();
+    time += ':';
+    time += now.getSeconds();
+
+    orderArray.forEach(async (order) => {
+        var price = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
         pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
-            [orderArray[i].id, orderArray[i].date, orderArray[i].time, orderArray[i].item, orderArray[i].qty, orderArray[i].price]
+            [id+i, date, time, order.name, order.quantity, price]
         );
-    }
+    });
+}
+
+async function updateInventory(usedIngrMap,inventoryMap){
+    usedIngrMap.forEach((key, value, map) => {
+        pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
+    });
 }
 
 /**
