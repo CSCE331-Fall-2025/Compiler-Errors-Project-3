@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import functions from './function.js';
+import dbConn from './db.js';
 const { 
     createMenuItemArray, 
     addEmployee, 
@@ -13,6 +14,9 @@ const {
     deleteEmployee,
     } = functions;
 
+//Inside App, npm run dev
+//Inside App/server, node server.js
+    
 console.log("Server.js starting");
 
 const app = express();
@@ -21,12 +25,12 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
-  try {
-    const menu = await createMenuItemArray();
-    res.json(menu);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const menu = await createMenuItemArray();
+        res.json(menu);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 //addEmployee
 app.post("/api/Manager/addEmployee", async (req, res) => {
@@ -49,79 +53,79 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
 //updateEmployee
 app.post("/api/Manager/updateEmployee", async (req, res) => {
     try{
-      const {targetName, name, role, email, phone} = req.body;
-      console.log("attempting");
-      try{
-        await updateEmployee(targetName, name, role, email, phone);
-      }
-      catch(err){
-        console.error("add error: ", err);
-        throw err;
-      }
-      console.log("Succeeded");
-      res.status(200).json({ message: "Employee updated successfully" });
+        const {targetName, name, role, email, phone} = req.body;
+        console.log("attempting");
+        try{
+            await updateEmployee(targetName, name, role, email, phone);
+        }
+        catch(err){
+            console.error("add error: ", err);
+            throw err;
+        }
+        console.log("Succeeded");
+        res.status(200).json({ message: "Employee updated successfully" });
     }
     catch(err){
-      console.error(err);
-      res.status(500).json({error: "Failed to update employee"});
+        console.error(err);
+        res.status(500).json({error: "Failed to update employee"});
     }
 });
 //deleteEmployee
 app.post("/api/Manager/deleteEmployee", async (req, res) => {
     try{
-      const {name} = req.body;
-      console.log("attempting");
-      try{
-        await deleteEmployee(name);
-      }
-      catch(err){
-        console.error("add error: ", err);
-        throw err;
-      }
-      console.log("Succeeded");
-      res.status(200).json({ message: "Employee fired successfully" });
+        const {name} = req.body;
+        console.log("attempting");
+        try{
+            await deleteEmployee(name);
+        }
+        catch(err){
+            console.error("add error: ", err);
+            throw err;
+        }
+        console.log("Succeeded");
+        res.status(200).json({ message: "Employee fired successfully" });
     }
     catch(err){
-      console.error(err);
-      res.status(500).json({error: "Failed to fire employee"});
+        console.error(err);
+        res.status(500).json({error: "Failed to fire employee"});
     }
 });
 
 //deleteMenuItem
 app.post("/api/Manager/deleteMenuItem", async (req, res) => {
     try{
-      const {name} = req.body;
-      console.log("Attempting: ", name);
-      try{
-        await deleteMenuItem(name);
-      }
-      catch(err){
-        console.error("add error: ", err);
-        throw err;
-      }
-      console.log("Succeeded");
+        const {name} = req.body;
+        console.log("Attempting: ", name);
+        try{
+            await deleteMenuItem(name);
+        }
+        catch(err){
+            console.error("add error: ", err);
+            throw err;
+        }
+        console.log("Succeeded");
       res.status(200).json({ message: "Menu item deleted" });
     }
     catch(err){
-      console.error(err);
-      res.status(500).json({error: "Failed to delete menu item"});
+        console.error(err);
+        res.status(500).json({error: "Failed to delete menu item"});
     }
 });
 
 //addInventoryItem
 app.post("/api/Manager/addInventoryItem", async (req, res) => {
     try{
-      const {name, qty, unit_price} = req.body;
-      console.log("attempting");
-      try{
-        await addInventoryItem(name, qty, unit_price);
-      }
-      catch(err){
-        console.error("add error: ", err);
-        throw err;
-      }
-      console.log("Succeeded");
-      res.status(200).json({ message: "Inventory item added" });
+        const {name, qty, unit_price} = req.body;
+        console.log("attempting");
+        try{
+            await addInventoryItem(name, qty, unit_price);
+        }
+        catch(err){
+            console.error("add error: ", err);
+            throw err;
+        }
+        console.log("Succeeded");
+        res.status(200).json({ message: "Inventory item added" });
     }
     catch(err){
       console.error(err);
@@ -203,4 +207,76 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
     }
 });
 
+//addOrders
+//FEW CHECKS FOR VALIDITY HERE
+//Plan: If stock of ingredients is too low, don't show on the menu for that day
+//Checks here: If the quantity exceeds current stock, forbid order
+app.post("/api/Cashier/addOrders", async (req, res) => {
+    const res = await dbConn.getStock();
+    const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
+    //Helper for addOrders [UPDATE: Return T if valid, F is invalid]
+    async function validateOrder(value, key, map) {
+        //Get the ingredients in a string array format
+        //** Double check if ingredients are correctly formatted in db. Reformat if not
+        const ingrList = getIngredientsList(key);
+        
+        //Create mapping
+        const ingredientsMap = new Map();
+
+        //Loops ingredients
+        for(let i = 0; i < ingrList.length; i++)
+        {
+            //If the ingredient hasn't been used before, set it as the total, else add onto the original amount
+            const check = ingredientsMap.get(ingrList[i]);
+            if(check === undefined)
+            {
+                ingredientsMap.set(ingrList[i], 1 * value);
+            }
+            else
+            {
+                ingredientsMap.set(ingrList[i], ingredientsMap.get(ingrList[i]) + (1 * value));
+            }
+        }
+
+        ingredientsMap.keys
+
+        const temp = ingredientsMap.keys();
+        
+        while(temp.next().value !== undefined)
+        {
+            
+        }
+    }
+    try {
+        //Get the orders
+        const { orders } = req.body; 
+        
+        //Check if all orders are valid
+        for order in orders
+        {
+            
+        }
+        while(true)
+        {
+            orders.forEach(trackIngredients);
+        }
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+})
+
 app.listen(3000, () => console.log("Server running on port 3000"));
+
+/*
+Template post
+app.post("", async (req, res) => {
+    try {
+  
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message}); 
+    }
+})
+*/

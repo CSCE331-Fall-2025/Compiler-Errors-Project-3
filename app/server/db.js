@@ -44,22 +44,9 @@ function connectDB() {
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    // Example query
-    //Logic: each row is literally 1 entry in the table
-    //KeyValue Pairs. Or just output the row directly I guess
-    
-    await pool.query('ALTER TABLE menuce ADD COLUMN img VARCHAR(255)');
+    const res = await pool.query('SELECT name, ingredients FROM menuce');
+    console.log('Row 0:', res.rows[0]);
 
-    const res = await pool.query('SELECT * FROM menuce');
-    console.log('Row 1:', res.rows[0]);
-    
-    //From rows, map each element "row" and apply the transform "row.name" (getting row name)
-    //Might be missing a thing, but this method can be used for a lot of things it seems
-    //Unneccessary. Can directly access the attribute name it seems
-    //const extractedData = res.rows.map(row => row.name);
-    //console.log('Extracted names only: ', extractedData[0]);
-    //Works
-    //console.log('Directedly extracted name: ', res.rows[0].name);
 }
 
 /**
@@ -244,6 +231,41 @@ function filterOrderHistory(startDate, endDate)
     }
 }
 
+async function getIngredients(name)
+{
+    try
+    {
+        return pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+}
+
+async function checkStock(name)
+{
+    try
+    {
+        return pool.query('SELECT qty FROM inventoryce WHERE name = $1', [name]);
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+}
+
+async function getStock()
+{
+    try
+    {
+        return pool.query('SELECT name, qty FROM inventoryce');
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+}
 
 export default {
     query: (text, params) => pool.query(text, params), // generic helper
@@ -261,5 +283,8 @@ export default {
     getReport,
     filterOrderHistory, 
     testQuery,
-    deleteEmployee
+    deleteEmployee,
+    getIngredients,
+    checkStock,
+    getStock
 };

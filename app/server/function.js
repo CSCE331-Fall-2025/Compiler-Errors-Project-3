@@ -94,6 +94,12 @@ function deleteMenuItemBtn()
     dbConn.deleteMenuItem(true, targetName);
 }
 
+async function getIngredientList(name)
+{
+    const res = await dbConn.getIngredients();
+    return res.rows[0].split(", ");
+}
+
 //Need addInventoryItem function
 
 export default {
@@ -105,5 +111,6 @@ export default {
     updateInventoryItem,
     deleteEmployee,
     deleteMenuItem,
-    addInventoryItem
+    addInventoryItem,
+    getIngredientList
 }
