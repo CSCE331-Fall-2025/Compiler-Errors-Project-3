@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "./NavBar"
 import OrderMenu from "./OrderMenu"
+import OrderPreviewPane from "./OrderPreviewPane";
 import "../css/style.css"
 
 function OrderPage() {
@@ -8,7 +9,11 @@ function OrderPage() {
         <>
             <NavBar></NavBar>
             <div class="vspacer"></div>
-            <OrderMenu></OrderMenu>
+
+            <div class="order-page-container">
+                <OrderMenu></OrderMenu>
+                <OrderPreviewPane></OrderPreviewPane>
+            </div>
 
         </>
     );

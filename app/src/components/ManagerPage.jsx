@@ -16,7 +16,7 @@ function ManagerPage() {
     return (
         <>
             <NavBar></NavBar>
-
+            <div class="vspacer"></div>
             <div className={styles["container"]}>
                 <h1 className={styles["managerH1"]}>Employee Manager</h1>
                 <EmployeeAddForm></EmployeeAddForm>
