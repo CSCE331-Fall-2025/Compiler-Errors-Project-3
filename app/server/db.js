@@ -13,7 +13,6 @@ var pool = new Pool({
     port: process.env.DBPORT,
     ssl: false,
 });
-var usersArray;
 
 //Async makes something into a Promise. Now I have to double check how to run asynchronous programming stuff again :/
 /**
@@ -44,35 +43,72 @@ function connectDB() {
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
+    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
+    id = id.rows[0].max;
     const res = await pool.query('SELECT name, ingredients FROM menuce');
-    console.log('Row 0:', res.rows[0]);
+    console.log('Row 0:', id);
 
 }
 
 /**
  * Validates users
- * @param {*} username inputted username
+ * @param {*} username inputted username/email
  * @param {*} password inputted password
  * @returns usertype of verified user or FAIL in case of invalid validation
  */
-function validateUser(username, password){
-    if(usersArray.length == 0)
-    {
-        usersArray = pool.query('SELECT * FROM usersce');
-    }
-    //Force convert since no way to be sure?
-    username = toString(username);
-    password = toString(password);
+async function validateEmployee(username, password){
+    const res = await pool.query('SELECT * FROM usersce');
 
-    for(i = 0; i < names.length; i++)
-    {
-        //Return "usertype" eventually
-        if(usersArray.rows[i].name.localeCompare(username) == 0 && usersArray.rows[i].password.localeCompare(password) == 0)
+    flag = false;
+    var userType = 'FAIL';
+    res.rows.forEach(row => {
+        if(!flag)
         {
-            return usersArray.rows[i].usertype;
+            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0)
+            {
+                userType = row.usertype;
+                flag = true;
+            }
         }
+    });
+
+    return userType;
+}
+
+async function validateCustomer(username, password){
+    const res = await pool.query('SELECT * FROM customersce');
+
+    flag = false;
+    res.rows.forEach(row => {
+        if(!flag)
+        {
+            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0)
+            {
+                flag = true;
+            }
+        }
+    });
+
+    return flag;
+}
+
+async function addCustomer(name, email, password){
+    try{
+        var id = await pool.query('SELECT MAX(id) FROM customersce');
+        id = id.rows[0].max;
+        
+        pool.query('INSERT INTO customersce (id, email, password, name) VALUES ($1, $2, $3, $4)', [id+1, email, password, name]);
+    }catch(err){
+        console.log(err);
     }
-    return 'FAIL';
+}
+
+async function addUser(username, password, usertype, email){
+    try{
+        pool.query('INSERT INTO  (username, password, usertype, email) VALUES ($1, $2, $3, $4)', [username, password, usertype, email]);
+    }catch(err){
+        console.log(err);
+    }
 }
 
 /**
@@ -84,8 +120,9 @@ function validateUser(username, password){
  * 
  * @param {*} orderArray Array of orders
  */
-function addOrders(orderArray){
-    var id = pool.query('SELECT MAX(id) FROM ordehistoryce');
+async function addOrders(orderArray){
+    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
+    id = id.rows[0].max;
     const now = new Date();
     
     var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
@@ -164,8 +201,6 @@ async function updateEmployeePhoneNum(targetName, phonenum)
 {
     pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
 }
-
-
 
 function addInventoryItem(name, qty, unit_price)
 {
@@ -283,8 +318,11 @@ async function getStock()
 export default {
     query: (text, params) => pool.query(text, params), // generic helper
     connectDB,
-    validateUser,
     addOrders,
+    addUser,
+    addCustomer,
+    validateCustomer,
+    validateEmployee,
     deleteMenuItem,
     getMenuItems,
     addMenuItem,
