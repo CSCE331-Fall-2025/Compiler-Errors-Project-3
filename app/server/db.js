@@ -88,17 +88,8 @@ function addOrders(orderArray){
     var id = pool.query('SELECT MAX(id) FROM ordehistoryce');
     const now = new Date();
     
-    var date = now.getFullYear();
-    date += '-';
-    date += now.getMonth();
-    date += '-';
-    date += now.getDay();
-    
-    var time = now.getHours();
-    time += ':';
-    time += now.getMinutes();
-    time += ':';
-    time += now.getSeconds();
+    var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
+    var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
 
     orderArray.forEach(async (order) => {
         var price = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
@@ -142,7 +133,7 @@ async function getMenuItems()
     }
 }
 
-async function addEmployee(name, employeetype, email, phonenum)
+async function addEmployee(name = '', employeetype = '', email = '', phonenum = '')
 {
     try
     {
@@ -154,25 +145,27 @@ async function addEmployee(name, employeetype, email, phonenum)
     }
 }
 
-async function updateEmployee(targetName, name = '', employeetype = '', email = '', phonenum = '')
+async function updateEmployeeName(targetName, name = '')
 {
-    if(name.localeCompare('') != 0)
-    {
-        pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name, targetName]);
-    }
-    if(employeetype.localeCompare('') != 0)
-    {
-        pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype, targetName]);
-    }
-    if(email.localeCompare('') != 0)
-    {
-        pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email, targetName]);
-    }
-    if(phonenum.localeCompare('') != 0)
-    {
-        pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
-    }
+    pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name, targetName]);
 }
+
+async function updateEmployeeType(targetName, employeetype = '')
+{
+    pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype, targetName]);
+}
+
+async function updateEmployeeEmail(targetName, email = '', phonenum = '')
+{
+    pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email, targetName]);
+}
+
+async function updateEmployeePhoneNum(targetName, phonenum)
+{
+    pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
+}
+
+
 
 function addInventoryItem(name, qty, unit_price)
 {
@@ -297,7 +290,6 @@ export default {
     addMenuItem,
     updateMenuItem,
     addEmployee,
-    updateEmployee,
     addInventoryItem,
     updateInventoryItem,
     getReport,
@@ -306,5 +298,9 @@ export default {
     deleteEmployee,
     getIngredients,
     checkStock,
-    getStock
+    getStock,
+    updateEmployeeEmail,
+    updateEmployeeName,
+    updateEmployeePhoneNum,
+    updateEmployeeType
 };
