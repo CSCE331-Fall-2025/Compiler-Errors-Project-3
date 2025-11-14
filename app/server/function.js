@@ -1,31 +1,6 @@
 import React from 'react';
 import dbConn from './db.js';
 
-async function addEmployee(name, employeetype, email, phonenum)
-{
-    dbConn.addEmployee(name,employeetype,email,phonenum);
-}
-
-async function updateEmployee(targetName, name, employeetype, email, phonenum)
-{
-    dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
-}
-
-async function deleteEmployee(name) 
-{
-    dbConn.deleteEmployee(name);
-}
-
-async function deleteMenuItem(name)
-{
-    dbConn.deleteMenuItem(name);
-}
-
-async function addInventoryItem(name, qty, unit_price)
-{
-    dbConn.addInventoryItem(name, qty, unit_price);
-}
-
 async function createMenuItemArray()
 {
     //res.rows[i]."type" gets the value of that field
@@ -100,17 +75,7 @@ async function getIngredientList(name)
     return res.rows[0].split(", ");
 }
 
-//Need addInventoryItem function
-
 export default {
     createMenuItemArray,
-    addEmployee,
-    updateEmployee,
-    addMenuItem,
-    updateMenuItem,
-    updateInventoryItem,
-    deleteEmployee,
-    deleteMenuItem,
-    addInventoryItem,
     getIngredientList
 }
