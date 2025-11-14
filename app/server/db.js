@@ -244,7 +244,6 @@ function filterOrderHistory(startDate, endDate)
     }
 }
 
-
 export default {
     query: (text, params) => pool.query(text, params), // generic helper
     connectDB,
