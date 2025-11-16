@@ -8,7 +8,7 @@ function OrderMenuitem({ img, alt, title, cal, price }) {
     const { cart, addToCart, clearCart } = useContext(CartContext);
 
     async function add() {
-        addToCart(title);
+        addToCart(title, price);
     }
 
     return (

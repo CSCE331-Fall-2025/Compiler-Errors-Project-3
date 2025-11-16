@@ -14,7 +14,7 @@ export function CartProvider({ children }) {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (name) => {
+  const addToCart = (name, price) => {
     for(let i = 0; i < cart.length; i++) {
             if(cart[i].name === name) {
                 const newCart = [...cart];
@@ -26,6 +26,7 @@ export function CartProvider({ children }) {
 
     let order = {
             name: name,
+            price: price,
             quantity: 1,
             add: [],
             sub: []
