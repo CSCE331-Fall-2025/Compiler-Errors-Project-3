@@ -47,30 +47,30 @@ function StaticMenuPage() {
                     <h2 class="statich2">Sides</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Fried Rice"/>
+                        <img src="/images/Fried Rice.png" alt="Fried Rice"/>
                         <h3>Fried Rice</h3>
                         <p>Classic fried rice with eggs, peas, and carrots.</p>
                         <span className={styles["staticprice"]}>$3.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Chow Mein"/>
+                        <img src="/images/Chow Mein.png" alt="Chow Mein"/>
                         <h3>Chow Mein</h3>
                         <p>Soft noodles stir-fried with onions, celery, and cabbage.</p>
                         <span className={styles["staticprice"]}>$3.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Steamed Rice"/>
+                        <img src="/images/Steamed White Rice.png" alt="Steamed Rice"/>
                         <h3>Steamed White Rice</h3>
                         <p>Fluffy white rice, perfect with any entrée.</p>
                         <span className={styles["staticprice"]}>$2.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Brown Rice"/>
-                        <h3>Brown Steamed Rice</h3>
-                        <p>Healthy and hearty steamed brown rice.</p>
+                        <img src="/images/Super Greens.png" alt="Super Greens"/>
+                        <h3>Super Greens</h3>
+                        <p>Healthy and hearty steamed vegetables.</p>
                         <span className={styles["staticprice"]}>$2.99</span>
                     </div>
                     </div>
@@ -80,28 +80,28 @@ function StaticMenuPage() {
                     <h2 class="statich2">Appetizers & Drinks</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Veggie Spring Rolls"/>
+                        <img src="/images/Veggie Spring Roll.avif" alt="Veggie Spring Rolls"/>
                         <h3>Veggie Spring Rolls (2)</h3>
                         <p>Crispy rolls filled with seasoned vegetables.</p>
                         <span className={styles["staticprice"]}>$4.25</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Cream Cheese Rangoon"/>
+                        <img src="/images/Cream Cheese Ragoon.avif" alt="Cream Cheese Rangoon"/>
                         <h3>Cream Cheese Rangoon</h3>
                         <p>Fried wontons stuffed with cream cheese filling.</p>
                         <span className={styles["staticprice"]}>$4.49</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Fountain Drink"/>
+                        <img src="/images/Soda.avif" alt="Fountain Drink"/>
                         <h3>Fountain Drink</h3>
                         <p>Choose from Coke, Diet Coke, Sprite, and more.</p>
                         <span className={styles["staticprice"]}>$2.25</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Bottled Water"/>
+                        <img src="/images/Water.avif" alt="Bottled Water"/>
                         <h3>Bottled Water</h3>
                         <p>Refreshing purified bottled water.</p>
                         <span className={styles["staticprice"]}>$1.99</span>
