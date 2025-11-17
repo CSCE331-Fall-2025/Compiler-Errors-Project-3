@@ -19,56 +19,6 @@ async function createMenuItemArray()
     return menuItemArray;
 }
 
-async function addMenuItem(name, price, ingredients)
-{
-    dbConn.addMenuItem(name,price,ingredients);
-}
-
-async function updateMenuItem(name, newName, price, ingredients)
-{
-    dbConn.updateMenuItem(name, newName, price,ingredients);
-}
-
-async function updateInventoryItem(name, newName, qty, uprice)
-{
-    dbConn.updateInventoryItem(name, newName, qty, uprice);
-}
-
-
-function getReportBtn()
-{
-    //Get query type
-    var type;
-    
-    //Exact same queries and checking logic from P2
-    const res = dbConn.getReport(type);
-
-    //Insert formatting here?
-}
-
-function filteredOrderHistoryBtn()
-{
-    //Get start/end dates
-    var startDate;
-    var endDate;
-
-    if(endDate < startDate)
-    {
-        //Insert error here?
-    }
-
-    const res = dbConn.filterOrderHistory(startDate,endDate);
-}
-
-function deleteMenuItemBtn()
-{
-    //Get name
-    var targetName;
-
-    //The "true" is supposed to be an authentication value to prevent unauthorized deletion. Currently disabled and bypassed
-    dbConn.deleteMenuItem(true, targetName);
-}
-
 async function getIngredientList(name)
 {
     const res = await dbConn.getIngredients();
