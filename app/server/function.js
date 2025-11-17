@@ -43,8 +43,8 @@ async function createMenuItemArray()
     return restrictedMenu;
 }
 
-async function getIngredientList(name){
-    const res = await dbConn.getIngredients();
+async function getIngredientList(name){ 
+    const res = await dbConn.getIngredients(name);
     return res.rows[0].split(", ");
 }
 
