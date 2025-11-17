@@ -8,6 +8,7 @@ import CheckoutPage from "./components/CheckoutPage";
 import LocationsPage from "./components/LocationsPage";
 import LoginPage from "./components/LoginPage";
 import EmployeeLoginPage from "./components/EmployeeLoginPage";
+import CashierPage from "./components/CashierPage";
 import "./css/style.css";
 
 
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/locations" element={<LocationsPage/>}></Route>
                 <Route path="/login" element={<LoginPage/>}></Route>
                 <Route path="/employee/login" element={<EmployeeLoginPage/>}></Route>
+                <Route path="/employee/cashier" element={<CashierPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );

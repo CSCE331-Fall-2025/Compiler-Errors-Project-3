@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from "./NavBar";
-import "../css/checkout.css";
+import "../css/cashier.css";
 
 function CheckoutSummary(){
     return(

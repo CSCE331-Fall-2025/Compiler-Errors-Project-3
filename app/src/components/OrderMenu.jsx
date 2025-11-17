@@ -12,6 +12,7 @@ function Menu() {
         async function getMenu() {
             const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
             const data = await response.json();
+            console.log
             setData(data);
             // const data = [
             //     {
