@@ -217,40 +217,53 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         //Get the orders
         const { orders } = req.body; 
         
-        //Check if all orders are valid
-        flag = true;
+        //Get ingredients used
         orders.forEach((order) => {
             const quantity = order.quantity;
-            //If no item ordered is invalid, check
-            if(flag){
             //Gets ingredients for order
-                var ingrList = getIngredientsList(order.name);
-                //For each ingredient
-                for(let i = 0; i < ingrList.length; i++){
-                    //If ingredient hasn't been used, initialize
-                    if(usedIngrMap.get(ingrList[i]) === undefined){
-                        usedIngrMap.set(ingrList[i], 0);
-                    }
-
-                    //If it uses too much ingredients, skip ordering entirely
-                    if(order.quantity > inventoryMap.get(order.name)){
-                        flag = false;
-                        break;
-                    }
-                    //Else add ingredients to the used list
-                    else{
-                        usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
-                    }
+            var ingrList = getIngredientsList(order.name);
+            
+            //For each ingredient
+            for(let i = 0; i < ingrList.length; i++){
+                //If ingredient hasn't been used, initialize
+                if(usedIngrMap.get(ingrList[i]) === undefined){
+                    usedIngrMap.set(ingrList[i], 0);
                 }
+                //Else add ingredients to the used list
+                else{
+                    usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+                }
+            }
+
+            //Add quantity amount of each additional ingredient
+            const addArr = order.add.split(",");
+            for(let i = 0; i < addArr.length; i++){
+                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
+            }
+
+            //Remove quantity amount of some ingredient
+            const subArr = order.sub.split(",");
+            for(let i = 0; i < addArr.length; i++){
+                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
             }
         });
 
+        var flag = true;
+        //Check if exceeds stock
+        usedIngrMap.forEach((value, key) => {
+            if(value > inventoryMap.get(key)){
+                flag = false;
+            }
+        });
+
+        //If exceeds, error. Else, add to inventory
         if(!flag){
             throw new TypeError('Quantity Exceeds Inventory Stock');
         }
         else{
             dbConn.addOrders(orders);
-            dbConn.updateInventory(usedIngrMap,inventoryMap);
+            await dbConn.updateInventory(usedIngrMap,inventoryMap);
+            
         }
 
     } catch (err) {

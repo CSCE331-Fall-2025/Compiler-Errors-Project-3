@@ -228,6 +228,14 @@ function updateMenuItem(name, newName, price, ingredients)
     }
 }
 
+//Used in updating orders
+async function updateInventory(usedIngrMap, inventoryMap){
+    usedIngrMap.forEach((value, key) => {
+        pool.query('UPDATE menuce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
+    });
+}
+
+//Used in manager side
 function updateInventoryItem(name, newName, qty, uprice)
 {
     if(newName.localeCompare('') != 0)
@@ -340,5 +348,6 @@ export default {
     updateEmployeeEmail,
     updateEmployeeName,
     updateEmployeePhoneNum,
-    updateEmployeeType
+    updateEmployeeType,
+    updateInventory
 };
