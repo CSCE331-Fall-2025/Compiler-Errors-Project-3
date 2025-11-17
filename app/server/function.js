@@ -1,31 +1,6 @@
 import React from 'react';
 import dbConn from './db.js';
 
-async function addEmployee(name, employeetype, email, phonenum)
-{
-    dbConn.addEmployee(name,employeetype,email,phonenum);
-}
-
-async function updateEmployee(targetName, name, employeetype, email, phonenum)
-{
-    dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
-}
-
-async function deleteEmployee(name) 
-{
-    dbConn.deleteEmployee(name);
-}
-
-async function deleteMenuItem(name)
-{
-    dbConn.deleteMenuItem(name);
-}
-
-async function addInventoryItem(name, qty, unit_price)
-{
-    dbConn.addInventoryItem(name, qty, unit_price);
-}
-
 async function createMenuItemArray()
 {
     //res.rows[i]."type" gets the value of that field
@@ -44,66 +19,13 @@ async function createMenuItemArray()
     return menuItemArray;
 }
 
-async function addMenuItem(name, price, ingredients)
+async function getIngredientList(name)
 {
-    dbConn.addMenuItem(name,price,ingredients);
+    const res = await dbConn.getIngredients();
+    return res.rows[0].split(", ");
 }
-
-async function updateMenuItem(name, newName, price, ingredients)
-{
-    dbConn.updateMenuItem(name, newName, price,ingredients);
-}
-
-async function updateInventoryItem(name, newName, qty, uprice)
-{
-    dbConn.updateInventoryItem(name, newName, qty, uprice);
-}
-
-
-function getReportBtn()
-{
-    //Get query type
-    var type;
-    
-    //Exact same queries and checking logic from P2
-    const res = dbConn.getReport(type);
-
-    //Insert formatting here?
-}
-
-function filteredOrderHistoryBtn()
-{
-    //Get start/end dates
-    var startDate;
-    var endDate;
-
-    if(endDate < startDate)
-    {
-        //Insert error here?
-    }
-
-    const res = dbConn.filterOrderHistory(startDate,endDate);
-}
-
-function deleteMenuItemBtn()
-{
-    //Get name
-    var targetName;
-
-    //The "true" is supposed to be an authentication value to prevent unauthorized deletion. Currently disabled and bypassed
-    dbConn.deleteMenuItem(true, targetName);
-}
-
-//Need addInventoryItem function
 
 export default {
     createMenuItemArray,
-    addEmployee,
-    updateEmployee,
-    addMenuItem,
-    updateMenuItem,
-    updateInventoryItem,
-    deleteEmployee,
-    deleteMenuItem,
-    addInventoryItem
+    getIngredientList
 }

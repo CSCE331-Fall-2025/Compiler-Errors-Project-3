@@ -6,9 +6,9 @@ import dbConn  from './db.js';
 import functionTest from './function.js';
 //dbConn.connectDB();
 //dbConn.addInventoryItem('toast', 3, 2.04);
-//dbConn.testQuery();
+dbConn.testQuery();
 //console.log(dbConn.query('SELECT * FROM inventoryce WHERE name = "toast"'));
 
-functionTest.createMenuItemArray();
+//functionTest.createMenuItemArray();
 
 //console.log("completion:");
