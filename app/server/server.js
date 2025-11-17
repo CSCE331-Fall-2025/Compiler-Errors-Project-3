@@ -221,7 +221,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         orders.forEach((order) => {
             const quantity = order.quantity;
             //Gets ingredients for order
-            var ingrList = getIngredientsList(order.name);
+            var ingrList = getIngredientList(order.name);
             
             //For each ingredient
             for(let i = 0; i < ingrList.length; i++){
