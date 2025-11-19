@@ -1,13 +1,17 @@
-import React from 'react';
-import NavBar from './NavBar';
+import React, { useContext } from "react";
+import { CartContext } from "./CartContext";
+import CheckoutOrderItem from "./CheckoutOrderItem"
 
 function OrderPanel(){
+    const { cart } = useContext(CartContext);
+
     return(
         <section class = "order-panel">
             <h1>Your order</h1>
             <div id = "orderItems" class = "orderItems">
-                {/* items will be added here or served by server side */}
-                <div class = "empty">Your cart is empty</div>
+                {cart.map((item, idx) => (
+                    <CheckoutOrderItem key={item.name+idx} order={item} title={item.name} price={item.price} hasSide={true}/>
+                ))}
             </div>
         </section>
     );

@@ -38,7 +38,8 @@ async function createMenuItemArray()
         alt: row.name,
         title: row.name,
         cal: row.calories + " cal",
-        price: `$${row.price.toFixed(2)}`
+        price: `$${row.price.toFixed(2)}`,
+        type: row.itemtype
     }));
 
     return menuItemArray;
