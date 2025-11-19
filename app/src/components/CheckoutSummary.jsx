@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from "./CartContext";
 import "../css/checkout.css";
+import { submitOrders } from '../js/utils';
 
 function CheckoutSummary(){
     const { cart, clearCart } = useContext(CartContext);
@@ -17,12 +18,41 @@ function CheckoutSummary(){
 
     async function placeOrder() {
         
-        // const newCart = [];
-        // for(let i = 0; i < cart.length; i++) {
-        //     const order = {
+        const newCart = [];
+        const names = [];
+        for(let i = 0; i < cart.length; i++) {
+            if(!names.includes(cart[i].name)) {
+                names.push(cart[i].name);
+            }
+        }
 
-        //     }
-        // }
+        for(let i = 0; i < names.length; i++) {
+            const add = [];
+            const qty = 0;
+
+            for(let j = 0; j < cart.length; j++) {
+                if(cart[j].name === names[i]) {
+                    qty += 1;
+                    if(cart[j].side != null) {
+                        add.push(cart[j].side);
+                    }
+                }
+            }
+
+            const order = {
+                name: names[i],
+                quantity: qty,
+                add: add,
+                sub: []
+            }
+
+            newCart.push(order);
+
+
+        }
+
+        const response = await fetch('http://localhost:3000/api/', submitOrders(newCart));
+        const data = await response.json();
 
         // fetch (endpoint)
         // if success:
