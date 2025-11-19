@@ -229,16 +229,20 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
                 if(usedIngrMap.get(ingrList[i]) === undefined){
                     usedIngrMap.set(ingrList[i], 0);
                 }
-                //Else add ingredients to the used list
-                else{
-                    usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
-                }
+                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
             }
 
-            //Add quantity amount of each additional ingredient
+            //Add is sides
             const addArr = order.add;
             for(let i = 0; i < addArr.length; i++){
-                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
+                ingrList = getIngredientList(addArr[i]);
+                for(let j = 0; i < ingrList.length; i++)
+                {
+                    if(usedIngrMap.get(ingrList[j]) === undefined){
+                        usedIngrMap.set(ingrList[j], 0);
+                    }
+                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
+                }
             }
 
             //Remove quantity amount of some ingredient
@@ -263,7 +267,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         else{
             dbConn.addOrders(orders);
             await dbConn.updateInventory(usedIngrMap,inventoryMap);
-            
+            res.status(200).json({ message: "Orders uploaded!" });
         }
 
     } catch (err) {
