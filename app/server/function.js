@@ -1,30 +1,7 @@
 import React from 'react';
 import dbConn from './db.js';
 
-async function addEmployee(name, employeetype, email, phonenum)
-{
-    dbConn.addEmployee(name,employeetype,email,phonenum);
-}
-
-async function updateEmployee(targetName, name, employeetype, email, phonenum)
-{
-    dbConn.updateEmployee(targetName,name,employeetype,email,phonenum);
-}
-
-async function deleteEmployee(name) 
-{
-    dbConn.deleteEmployee(name);
-}
-
-async function deleteMenuItem(name)
-{
-    dbConn.deleteMenuItem(name);
-}
-
-async function addInventoryItem(name, qty, unit_price)
-{
-    dbConn.addInventoryItem(name, qty, unit_price);
-}
+//Required APIs, Google Translate, Auth (google or otherwise), Place, Weather
 
 async function createMenuItemArray()
 {
@@ -33,7 +10,7 @@ async function createMenuItemArray()
     const res = await dbConn.getMenuItems();
 
     //For each row
-    let menuItemArray = res.rows.map(row => ({
+    let menuItemArray = res.rows.map((row) => ({
         img: 'images/Orange Chicken.png',
         alt: row.name,
         title: row.name,
@@ -42,69 +19,37 @@ async function createMenuItemArray()
         type: row.itemtype
     }));
 
-    return menuItemArray;
+    //Prepare restrictions
+    let restrictedMenu = new Array();
+    const temp = await dbConn.getStock();
+    const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
+    const stockLevel = new Map(res.rows.map(row => [row.name,row.minimum]));
+
+    //For each menu item, if their ingredients are not below minimum required stock, then display.
+    menuItemArray.forEach(obj => {
+        const ingrList = getIngredientList(obj.alt);
+        var flag = true;
+        
+        ingrList.forEach(name => {
+            if(inventoryMap.get(name) < stockLevel.get(minimum)){
+                flag = false;
+            }
+        });
+
+        if(flag){
+            restrictedMenu.push(obj);
+        }
+    });
+
+    return restrictedMenu;
 }
 
-async function addMenuItem(name, price, ingredients)
-{
-    dbConn.addMenuItem(name,price,ingredients);
+async function getIngredientList(name){ 
+    const res = await dbConn.getIngredients(name);
+    return res.rows[0].split(", ");
 }
-
-async function updateMenuItem(name, newName, price, ingredients)
-{
-    dbConn.updateMenuItem(name, newName, price,ingredients);
-}
-
-async function updateInventoryItem(name, newName, qty, uprice)
-{
-    dbConn.updateInventoryItem(name, newName, qty, uprice);
-}
-
-
-function getReportBtn()
-{
-    //Get query type
-    var type;
-    
-    //Exact same queries and checking logic from P2
-    const res = dbConn.getReport(type);
-
-    //Insert formatting here?
-}
-
-function filteredOrderHistoryBtn()
-{
-    //Get start/end dates
-    var startDate;
-    var endDate;
-
-    if(endDate < startDate)
-    {
-        //Insert error here?
-    }
-
-    const res = dbConn.filterOrderHistory(startDate,endDate);
-}
-
-function deleteMenuItemBtn()
-{
-    //Get name
-    var targetName;
-
-    //The "true" is supposed to be an authentication value to prevent unauthorized deletion. Currently disabled and bypassed
-    dbConn.deleteMenuItem(true, targetName);
-}
-
-//Need addInventoryItem function
 
 export default {
     createMenuItemArray,
-    addEmployee,
-    updateEmployee,
-    addMenuItem,
-    updateMenuItem,
-    updateInventoryItem,
-    deleteEmployee,
-    deleteMenuItem,
-    addInventoryItem
+    getIngredientList
 }
