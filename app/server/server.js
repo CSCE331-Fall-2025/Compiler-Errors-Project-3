@@ -236,15 +236,15 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
             }
 
             //Add quantity amount of each additional ingredient
-            const addArr = order.add.split(",");
+            const addArr = order.add;
             for(let i = 0; i < addArr.length; i++){
                 usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
             }
 
             //Remove quantity amount of some ingredient
-            const subArr = order.sub.split(",");
-            for(let i = 0; i < addArr.length; i++){
-                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
+            const subArr = order.sub;
+            for(let i = 0; i < subArr.length; i++){
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
             }
         });
 
