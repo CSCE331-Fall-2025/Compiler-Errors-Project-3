@@ -221,7 +221,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         orders.forEach((order) => {
             const quantity = order.quantity;
             //Gets ingredients for order
-            var ingrList = getIngredientsList(order.name);
+            var ingrList = getIngredientList(order.name);
             
             //For each ingredient
             for(let i = 0; i < ingrList.length; i++){
@@ -229,22 +229,26 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
                 if(usedIngrMap.get(ingrList[i]) === undefined){
                     usedIngrMap.set(ingrList[i], 0);
                 }
-                //Else add ingredients to the used list
-                else{
-                    usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+            }
+
+            //Add is sides
+            const addArr = order.add;
+            for(let i = 0; i < addArr.length; i++){
+                ingrList = getIngredientList(addArr[i]);
+                for(let j = 0; i < ingrList.length; i++)
+                {
+                    if(usedIngrMap.get(ingrList[j]) === undefined){
+                        usedIngrMap.set(ingrList[j], 0);
+                    }
+                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
                 }
             }
 
-            //Add quantity amount of each additional ingredient
-            const addArr = order.add.split(",");
-            for(let i = 0; i < addArr.length; i++){
-                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
-            }
-
             //Remove quantity amount of some ingredient
-            const subArr = order.sub.split(",");
-            for(let i = 0; i < addArr.length; i++){
-                usedIngrMap.set(addArr[i], usedIngrMap.get(addArr[i]) + quantity);
+            const subArr = order.sub;
+            for(let i = 0; i < subArr.length; i++){
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
             }
         });
 
@@ -263,7 +267,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         else{
             dbConn.addOrders(orders);
             await dbConn.updateInventory(usedIngrMap,inventoryMap);
-            
+            res.status(200).json({ message: "Orders uploaded!" });
         }
 
     } catch (err) {
