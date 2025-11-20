@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { deleteMenuItem } from "../js/utils";
+import { deleteMenuItem } from "../../js/utils";
 
 function MenuDeleteForm() {
     const [name, setName] = useState("");

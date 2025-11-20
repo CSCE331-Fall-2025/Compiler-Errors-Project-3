@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { updateInventoryItem } from "../js/utils.js";
+import { updateInventoryItem } from "../../js/utils.js";
 
 
 function InventoryUpdateForm() {

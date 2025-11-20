@@ -55,10 +55,15 @@ body{
   top:24px;
 }
 .summary-card h3{margin-top:0;color:var(--accent)}
-.summary-row{display:flex;justify-content:space-between;padding:8px 0}
+.summary-row{display:flex; flex-direction: column; justify-content:space-between;padding:8px 0}
+.checkout-summary-items{display:flex; flex-direction: row; justify-content: space-between;}
+.checkout-summary-prices{text-align: right;}
+.checkout-summary-descriptor{text-align: left;}
+.checkout-summary-item-price{text-align: right;}
 .summary-total{display:flex;justify-content:space-between;padding-top:6px;font-size:18px}
 .btn{display:inline-block;padding:10px 18px;border-radius:8px;border:0;cursor:pointer}
 .checkout-btn{background:var(--accent);color:#fff;font-weight:700;width:100%;margin-top:12px}
+.checkout-summary-text-fitter{display: flex; flex-direction: row; justify-content: space-between;}
 
 /* Recommendation bar */
 .recommend-bar{background:#fff;padding:18px 28px;border-top:6px solid var(--accent)}

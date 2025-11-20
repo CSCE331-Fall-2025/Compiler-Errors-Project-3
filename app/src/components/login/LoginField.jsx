@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from './NavBar'
-import "../css/checkout.css"
+import NavBar from '../NavBar'
+import "../../css/checkout.css"
 
 function LoginField(){
     return(

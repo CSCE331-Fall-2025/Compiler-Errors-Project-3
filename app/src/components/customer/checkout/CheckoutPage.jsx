@@ -1,7 +1,6 @@
 import React from 'react';
-import NavBar from "./NavBar"
-import Hero from "./Hero"
-import "../css/checkout.css"
+import NavBar from "../../NavBar"
+import "../../../css/checkout.css"
 import CheckoutSummary from './CheckoutSummary';
 import OrderPanel from "./CheckoutOrderPanel";
 

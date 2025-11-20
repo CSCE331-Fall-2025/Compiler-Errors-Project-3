@@ -1,7 +1,7 @@
 import React from "react";
-import NavBar from "./NavBar"
-import Hero from "./Hero"
-import "../css/style.css"
+import NavBar from "../NavBar"
+import Hero from "../Hero"
+import "../../css/style.css"
 
 function HomePage() {
     return (

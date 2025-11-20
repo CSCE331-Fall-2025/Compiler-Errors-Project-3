@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { deleteEmployee } from "../js/utils";
+import { deleteEmployee } from "../../js/utils";
 
 function EmployeeDeleteForm() {
     const [name, setName] = useState("");

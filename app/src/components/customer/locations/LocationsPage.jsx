@@ -1,6 +1,6 @@
 import React from "react";
-import "../css/locations.css";
-import NavBar from "./NavBar";
+import "../../../css/locations.css";
+import NavBar from "../../NavBar";
 import Map from "./LocationMap";
 import Hours from "./LocationHours";
 import LocationInfo from "./LocationInfo";

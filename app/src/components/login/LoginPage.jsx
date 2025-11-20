@@ -1,8 +1,7 @@
 import React from 'react'
-import NavBar from "./NavBar"
-import Hero from "./Hero"
+import NavBar from "../NavBar"
 import { Link } from "react-router-dom";
-import "../css/checkout.css"
+import "../../css/checkout.css"
 import LoginField from "./LoginField";
 
 function LoginPage(){

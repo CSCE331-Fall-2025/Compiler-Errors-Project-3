@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { addMenuItem } from "../js/utils";
+import { addMenuItem } from "../../js/utils";
 
 function MenuAddForm() {
     const [name, setName] = useState("");
