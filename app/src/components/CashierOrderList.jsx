@@ -1,4 +1,6 @@
 import React from 'react';
+import CashierOrderListItems from './CashierOrderListItems';
+import "../css/cashier.css";
 
 function CashierOrderList(){
     return(
@@ -8,9 +10,9 @@ function CashierOrderList(){
                 {/* items will be added here or served by server side */}
                 <div class = "summary-row">
                     <span>Items</span>
-                    <span id = "summary-count">0</span>
+                    <CashierOrderListItems></CashierOrderListItems>
                 </div>
-                <button id = "submitOrders" class = "cashier-btn">Submit Order</button>
+                <button onClick={checkout} class="checkout-button">Submit order</button>
             </div>
         </aside>
     );
