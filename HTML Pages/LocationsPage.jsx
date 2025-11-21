@@ -1,5 +1,7 @@
 import React from "react";
+import NavBar from "./NavBar";
 import "../css/locations.css";
+
 
 function LocationsPage() {
   return (

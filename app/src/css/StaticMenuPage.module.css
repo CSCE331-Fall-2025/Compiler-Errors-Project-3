@@ -76,13 +76,6 @@ a {
     object-fit: cover;
 }
 
-/* .staticindex_Background {
-    background-image: url("HTML\ Pages/Images\ for\ HTML/ .staticindex_Background.staticpng");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-} */
-
 /* Menu grid */
 body {
   font-family: Arial, sans-serif;
@@ -92,16 +85,39 @@ body {
 }
 
 .statich1 {
+  color: #b00000;
   text-align: center;
   margin: 30px 0 10px;
 }
 
 .statich2 {
-  color: #b00000;
+  color: #fa5e5e;
   margin: 40px 0 10px;
-  border-bottom: 2px solid #b00000;
-  display: inline-block;
-  padding-bottom: 4px;
+  font-size: 2.5em;
+
+  text-align: center;
+  text-shadow: 0px 3px 0px #fdfdfd;
+  
+}
+
+.statich3 {
+  color: #fa5e5e;
+  margin: 40px 0 10px;
+  font-size: 2.5em;
+
+  text-align: center;
+  text-shadow: 0px 3px 0px #fdfdfd;
+  
+}
+
+.statich4 {
+  color: #fa5e5e;
+  margin: 40px 0 10px;
+  font-size: 2.5em;
+
+  text-align: center;
+  text-shadow: 0px 3px 0px #fdfdfd;
+  
 }
 
 .staticmenu-section {
@@ -118,10 +134,12 @@ body {
 }
 
 .staticmenu-item {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 20px;
+  color: rgb(232, 232, 232);
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.static1);
   transition: transform 0.static2s ease, box-shadow 0.static2s ease;
@@ -145,13 +163,28 @@ body {
 }
 
 .staticmenu-item p {
-  color: #555;
-  font-size: 0.static9em;
+  color: #f5f5f5;
+  text-shadow: 0 2px 4px #00000040 ;
+  font-size: 1.08rem;
+  line-height: 1.55;
+  border-left: 3px solid #ffffff;
+  padding-left: 14px;
+  border-right: 3px solid #ffffff;
+  padding-right: 14px;
+  margin-top: 12px;
 }
 
 .staticmenu-item span.staticprice {
   display: block;
   margin-top: 8px;
   font-weight: bold;
-  color: #e67e22;
+  color: #fff;
+}
+
+.static-menu-page{
+    background-image: url("/images/static-menu-bg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
 }

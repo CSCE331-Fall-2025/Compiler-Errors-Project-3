@@ -7,7 +7,7 @@ function StaticMenuPage() {
         <>
             <NavBar></NavBar>
         
-            <div class="static-menu-page">
+            <div className={styles["static-menu-page"]}>
                 <h1 className={styles["statich1"]}>Menu</h1>
 
                 <div className={styles["staticmenu-section"]}>
@@ -44,7 +44,7 @@ function StaticMenuPage() {
                 </div>
 
                 <div className={styles["staticmenu-section"]}>
-                    <h2 class="statich2">Sides</h2>
+                    <h2 className={styles["statich3"]}>Sides</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
                         <img src="https://via.placeholder.com/250x150" alt="Fried Rice"/>
@@ -77,11 +77,11 @@ function StaticMenuPage() {
                 </div>
 
                 <div className={styles["staticmenu-section"]}>
-                    <h2 class="statich2">Appetizers & Drinks</h2>
+                    <h2 className={styles["statich4"]}>Appetizers & Drinks</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
                         <img src="https://via.placeholder.com/250x150" alt="Veggie Spring Rolls"/>
-                        <h3>Veggie Spring Rolls (2)</h3>
+                        <h3>Veggie Spring Rolls</h3>
                         <p>Crispy rolls filled with seasoned vegetables.</p>
                         <span className={styles["staticprice"]}>$4.25</span>
                     </div>

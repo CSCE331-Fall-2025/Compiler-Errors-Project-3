@@ -15,7 +15,7 @@ function LocationsPage() {
         <div className="cards">
           <section className="card info-card">
             <h3>INformation</h3>
-            <p className="status open">Open • Closes 10PM</p>
+            <p className="status open">Open  Closes 10PM</p>
             <address className="address">6027 Stewart Rd<br/>Galveston, TX 77551</address>
             <p className="phone">(346) 291-2298</p>
             <p className="services">Catering | Delivery | Takeout</p>
