@@ -208,7 +208,7 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 });
 
 //addOrders
-app.post("/api/Cashier/addOrders", async (req, res) => {
+app.post("/api/Cashier/addOrders", async (req, response) => {
     //Gets inventory
     const res = await dbConn.getStock();
     const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
@@ -218,11 +218,10 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         const { orders } = req.body; 
         
         //Get ingredients used
-        orders.forEach((order) => {
+        orders.forEach(async (order) => {
             const quantity = order.quantity;
             //Gets ingredients for order
-            var ingrList = getIngredientList(order.name);
-            
+            var ingrList = await getIngredientList(order.name);
             //For each ingredient
             for(let i = 0; i < ingrList.length; i++){
                 //If ingredient hasn't been used, initialize
@@ -235,7 +234,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
             //Add is sides
             const addArr = order.add;
             for(let i = 0; i < addArr.length; i++){
-                ingrList = getIngredientList(addArr[i]);
+                ingrList = await getIngredientList(addArr[i]);
                 for(let j = 0; i < ingrList.length; i++)
                 {
                     if(usedIngrMap.get(ingrList[j]) === undefined){
@@ -267,12 +266,12 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
         else{
             dbConn.addOrders(orders);
             await dbConn.updateInventory(usedIngrMap,inventoryMap);
-            res.status(200).json({ message: "Orders uploaded!" });
+            response.status(200).json({ message: "Orders uploaded!" });
         }
 
     } catch (err) {
         console.log(err.message);
-        res.status(500).json({error: err.message});
+        response.status(500).json({error: err.message});
     }
 })
 
