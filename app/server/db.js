@@ -113,18 +113,22 @@ function addInventoryItem(name, qty, unit_price)
     pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2, $3)', [name, qty, unit_price]);
 }
 
-async function updateInventory(usedIngrMap,inventoryMap){
-    usedIngrMap.forEach((key, value, map) => {
-        pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
-    });
-}
+// async function updateInventory(usedIngrMap,inventoryMap){
+// //     usedIngrMap.forEach((key, value, map) => {
+// //         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
+// //     });
+// // }
 
 //Used in updating orders
 async function updateInventory(usedIngrMap, inventoryMap){
-    usedIngrMap.forEach((value, key) => {
-        pool.query('UPDATE menuce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
+    usedIngrMap.forEach((key, value, map) => {
+        pool.query(
+            'UPDATE inventoryce SET quantity = $1 WHERE name = $2',
+            [inventoryMap.get(key) - value, key]
+        );
     });
 }
+
 
 //Used in manager side
 function updateInventoryItem(name, newName, qty, uprice){

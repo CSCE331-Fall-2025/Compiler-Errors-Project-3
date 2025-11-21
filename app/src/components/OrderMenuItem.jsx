@@ -3,7 +3,7 @@ import "../css/style.css";
 import { Link } from "react-router-dom";
 
 function OrderMenuitem({ img, alt, title, cal, price }) {
-    return (
+    return (        
         <div class="menu-item">
             <div class="menu-item-img-container">
                 <img src={img} alt={alt} class="menu-item-img"></img>

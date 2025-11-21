@@ -209,11 +209,11 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 
 //addOrders
 app.post("/api/Cashier/addOrders", async (req, res) => {
-    //Gets inventory
-    const res = await dbConn.getStock();
-    const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
+   try { //Gets inventory
+    const stockRes = await dbConn.getStock();
+    const inventoryMap = new Map(stockRes.rows.map(row => [row.name,row.quantity]));
     const usedIngrMap = new Map();
-    try {
+    
         //Get the orders
         const { orders } = req.body; 
         
@@ -248,7 +248,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
             }
         });
 
-        var flag = true;
+        let flag = true;
         //Check if exceeds stock
         usedIngrMap.forEach((value, key) => {
             if(value > inventoryMap.get(key)){
@@ -265,6 +265,7 @@ app.post("/api/Cashier/addOrders", async (req, res) => {
             await dbConn.updateInventory(usedIngrMap,inventoryMap);
             
         }
+        
 
     } catch (err) {
         console.log(err.message);
