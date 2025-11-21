@@ -215,7 +215,7 @@ async function checkStock(name){
 
 async function getStock(){
     try{
-        return pool.query('SELECT name, quantity FROM inventoryce');
+        return pool.query('SELECT name, quantity, minimum FROM inventoryce');
     } catch(err) {
         console.log(err);
     }

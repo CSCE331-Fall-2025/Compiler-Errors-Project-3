@@ -19,32 +19,33 @@ async function createMenuItemArray()
     }));
 
     //Prepare restrictions
-    let restrictedMenu = new Array();
+    const restrictedMenu = new Array();
     const temp = await dbConn.getStock();
-    const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
-    const stockLevel = new Map(res.rows.map(row => [row.name,row.minimum]));
+    const inventoryMap = new Map(temp.rows.map(row => [row.name,row.quantity]));
+    const stockLevel = new Map(temp.rows.map(row => [row.name,row.minimum]));
 
     //For each menu item, if their ingredients are not below minimum required stock, then display.
-    menuItemArray.forEach(obj => {
-        const ingrList = getIngredientList(obj.alt);
-        var flag = true;
-        
-        ingrList.forEach(name => {
-            if(inventoryMap.get(name) < stockLevel.get(minimum)){
-                flag = false;
-            }
-        });
+    for (const obj of menuItemArray) {
+        const ingrList = await getIngredientList(obj.alt);
+        let flag = true;
 
-        if(flag){
+        for (const name of ingrList) {
+            if (inventoryMap.get(name) < stockLevel.get(name)) {
+                flag = false;
+                break;
+            }
+        }
+
+        if (flag) {
             restrictedMenu.push(obj);
         }
-    });
-
+    }
+    
     return restrictedMenu;
 }
 
 async function getIngredientList(name){ 
-    const res = await getIngredients(name);
+    const res = await dbConn.getIngredients(name);
     var temp = res.rows[0].ingredients;
     var temp2 = temp.split(', ');
     return temp2;
