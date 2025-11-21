@@ -178,13 +178,15 @@ body {
   display: block;
   margin-top: 8px;
   font-weight: bold;
-  color: #fff;
-}
-
+  color: #fff;}
+  
+/* background image is not pixelated fix needed */
 .static-menu-page{
     background-image: url("/images/static-menu-bg.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+
+
 }
