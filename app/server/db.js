@@ -270,5 +270,5 @@ export default {
     updateEmployeeName,
     updateEmployeePhoneNum,
     updateEmployeeType,
-    updateInventory
+   // updateInventory
 };
