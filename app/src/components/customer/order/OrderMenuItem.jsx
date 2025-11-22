@@ -1,9 +1,17 @@
-import React from "react";
-import "../css/style.css";
+import React, { useContext } from "react";
+import { CartContext } from "../../contexts/CartContext";
+import "../../../css/style.css";
 import { Link } from "react-router-dom";
 
 function OrderMenuitem({ img, alt, title, cal, price }) {
-    return (        
+
+    const { cart, addToCart, clearCart } = useContext(CartContext);
+
+    async function add() {
+        addToCart(title, price);
+    }
+
+    return (
         <div class="menu-item">
             <div class="menu-item-img-container">
                 <img src={img} alt={alt} class="menu-item-img"></img>
@@ -18,7 +26,7 @@ function OrderMenuitem({ img, alt, title, cal, price }) {
             </div>
             
             <div class="menu-item-button-container">
-                <Link to="/checkout">Add to cart</Link>
+                <button type="button" onClick={add} class="menu-item-button">Add to cart</button>
             </div>
         </div>
     );

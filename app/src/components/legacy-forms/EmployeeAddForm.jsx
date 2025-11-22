@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { addEmployee } from "../js/utils";
+import { addEmployee } from "../../js/utils";
 
 function EmployeeAddForm() {
     const [name, setName] = useState("");

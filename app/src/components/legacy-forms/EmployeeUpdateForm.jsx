@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { updateEmployee } from "../js/utils";
+import { updateEmployee } from "../../js/utils";
 
 function EmployeeUpdateForm() {
     const [name, setName] = useState("");

@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "./NavBar"
-import styles from "../css/StaticMenuPage.module.css"
+import NavBar from "../NavBar"
+import styles from "../../css/StaticMenuPage.module.css"
 
 function StaticMenuPage() {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { addInventoryItem } from "../js/utils";
+import { addInventoryItem } from "../../js/utils";
 
 function InventoryAddForm() {
     const [name, setName] = useState("");

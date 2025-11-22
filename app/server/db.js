@@ -6,7 +6,7 @@ dotenv.config({ path: findConfig('.env') });
 var pool = new Pool({
     user: process.env.DBUSER,
     host: process.env.DBHOST,
-    database: process.env.DBNAME,
+    database: process.env.DBNAME, 
     password: process.env.DBPASSWORD,
     port: process.env.DBPORT,
     ssl: false,
@@ -118,17 +118,6 @@ function addInventoryItem(name, qty, unit_price)
 // //         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
 // //     });
 // // }
-
-//Used in updating orders
-async function updateInventory(usedIngrMap, inventoryMap){
-    usedIngrMap.forEach((key, value, map) => {
-        pool.query(
-            'UPDATE inventoryce SET quantity = $1 WHERE name = $2',
-            [inventoryMap.get(key) - value, key]
-        );
-    });
-}
-
 
 //Used in manager side
 function updateInventoryItem(name, newName, qty, uprice){

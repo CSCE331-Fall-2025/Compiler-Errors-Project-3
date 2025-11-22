@@ -114,3 +114,12 @@ export function addInventoryItem(name, qty, unit_price){
     }
     return json;
 }
+
+export function submitOrders(orders) {
+     const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(orders)
+    }
+    return json;
+}
