@@ -47,28 +47,28 @@ function StaticMenuPage() {
                     <h2 className={styles["statich3"]}>Sides</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Fried Rice"/>
+                        <img src="/images/Fried Rice.png" alt="Fried Rice"/>
                         <h3>Fried Rice</h3>
                         <p>Classic fried rice with eggs, peas, and carrots.</p>
                         <span className={styles["staticprice"]}>$3.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Chow Mein"/>
+                        <img src="/images/Chow Mein.png" alt="Chow Mein"/>
                         <h3>Chow Mein</h3>
                         <p>Soft noodles stir-fried with onions, celery, and cabbage.</p>
                         <span className={styles["staticprice"]}>$3.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Steamed Rice"/>
+                        <img src="/images/Steamed White Rice.png" alt="Steamed White Rice"/>
                         <h3>Steamed White Rice</h3>
                         <p>Fluffy white rice, perfect with any entrée.</p>
                         <span className={styles["staticprice"]}>$2.99</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Brown Rice"/>
+                        <img src="/images/Brown Steamed Rice.png" alt="Brown Steamed Rice"/>
                         <h3>Brown Steamed Rice</h3>
                         <p>Healthy and hearty steamed brown rice.</p>
                         <span className={styles["staticprice"]}>$2.99</span>
@@ -80,28 +80,28 @@ function StaticMenuPage() {
                     <h2 className={styles["statich4"]}>Appetizers & Drinks</h2>
                     <div className={styles["staticmenu-grid"]}>
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Veggie Spring Rolls"/>
+                        <img src="/images/Veggie Spring Rolls.png" alt="Veggie Spring Rolls"/>
                         <h3>Veggie Spring Rolls</h3>
                         <p>Crispy rolls filled with seasoned vegetables.</p>
                         <span className={styles["staticprice"]}>$4.25</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Cream Cheese Rangoon"/>
+                        <img src="/images/Cream Cheese Rangoon.png" alt="Cream Cheese Rangoon"/>
                         <h3>Cream Cheese Rangoon</h3>
                         <p>Fried wontons stuffed with cream cheese filling.</p>
                         <span className={styles["staticprice"]}>$4.49</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Fountain Drink"/>
+                        <img src="/images/Fountain Drink.png" alt="Fountain Drink"/>
                         <h3>Fountain Drink</h3>
                         <p>Choose from Coke, Diet Coke, Sprite, and more.</p>
                         <span className={styles["staticprice"]}>$2.25</span>
                     </div>
 
                     <div className={styles["staticmenu-item"]}>
-                        <img src="https://via.placeholder.com/250x150" alt="Bottled Water"/>
+                        <img src="/images/Bottled Water.png" alt="Bottled Water"/>
                         <h3>Bottled Water</h3>
                         <p>Refreshing purified bottled water.</p>
                         <span className={styles["staticprice"]}>$1.99</span>
