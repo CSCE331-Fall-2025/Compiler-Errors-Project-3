@@ -6,7 +6,7 @@ function OrderPreview() {
     return (
         <div class="order-preview-details">
             <div class="order-preview-title">
-             <h1>Your Order</h1>
+             <h1> YOUR ORDER </h1>
             </div>
             <OrderPreviewItems></OrderPreviewItems>
         </div>
