@@ -186,7 +186,7 @@ body {
     display: flex;
     flex-direction: column;
     margin: 20px 20px;
-    overflow-y: auto; 
+    overflow-y: auto;  
     
 
 }
@@ -197,6 +197,10 @@ body {
     padding: 10px;
     padding-bottom: 20px;
     justify-items: center;
+}
+
+.order-preview-items {
+    overflow-y: auto;
 }
 
 /* checkout order button and item */
@@ -211,6 +215,7 @@ body {
     background-color: #d51818;
 }
 
+/* ya order page ka hai */
 .checkout-order-item {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
