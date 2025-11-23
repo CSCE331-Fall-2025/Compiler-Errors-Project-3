@@ -389,21 +389,300 @@ a {
     flex-direction: column;
 }
 
-.manager-staff-page {
+.manager-inventory-card {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: black;
+}
+
+.manager-inventory-name {
+    font-size: 28px;
+    margin-top: 70px;
+    padding: 4px;
+    font-weight: lighter;
+    text-align: center;
+}
+
+.edit-inventory-name {
+    font-size: 28px;
+    margin-top: 70px;
+    margin-bottom: 70px;
+    padding: 4px;
+    font-weight: lighter;
+    text-align: center;
+}
+
+.inventory-edit-info {
+    padding: 10px;
+}
+
+.inventory-edit-info-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.inventory-edit-info-row p {
+    font-weight: 500;
+}
+
+.manager-inventory-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px;
+}
+
+.manager-info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+.staff-edit-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid black;
+    object-fit: cover;
+    margin-bottom: 25px;
+}
+
+.edit-employee-name {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.edit-employee-role {
+    font-size: 20px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.staff-edit-contact {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.edit-employee-email,
+.edit-employee-phone {
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.edit-card-template {
+    padding-top: 80px;
+}
+
+.edit-card-template span {
+    cursor: pointer;
+}
+
+.edit-card-template input {
+    width: 40%;
+    padding: 4px 6px;
+    font-size: inherit;
+}
+
+.label {
+    font-weight: 600;
+}
+
+.value {
+    font-weight: 400;
+}
+
+.manager-menu-card {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.manager-menu-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+.manager-menu-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.manager-menu-name {
+  font-size: 16px;
+  margin: 0;
+}
+
+
+.manager-menu-cal,
+.manager-menu-type,
+.manager-menu-seasonal {
+  font-size: 14px;
+  margin: 0;
+}
+
+.manager-menu-price {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+
+.manager-template-page {
     width: 100%;
     height: 667px;
     margin-top: 75px;
-    border: 3px solid green;
 }
 
-.manager-staff-list {
+.manager-template-list {
+    padding-left: 40px;
     margin-top: 20px;
-    border: 3px solid blue;
     width: 100%;
     height: 645px;
     display: grid;
+    grid-template-columns: repeat(5, 1fr);
 }
 
+.manager-template-card {
+  width: 240px;
+  height: 310px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  border: 1px solid black;
+  text-decoration: none;
+  font-size: 22px;
+  background-color: white;
+  color: inherit;
+  text-decoration: none;
+}
+
+.manager-template-card a,
+.manager-template-card a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+.manager-employee-card {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.manager-employee-card img {
+    width: 120px;
+    height: 120px;
+    border: 1px solid black;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+.employee-main {
+    text-align: center;
+}
+
+.employee-name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.employee-role {
+    margin: 5px 0 0 0;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.employee-contact {
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.edit-page {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    border: 3px solid red;
+    width: 100%;
+    height: 667px;
+    margin-top: 75px;
+}
+
+.edit-card-template {
+    width: 390px;
+    height: 620px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    border: 1px solid black;
+    text-decoration: none;
+    font-size: 22px;
+    background-color: white;
+    color: inherit;
+    text-decoration: none;
+}
+
+.edit-menu-item-info {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.edit-menu-info-row {
+    display: flex;
+    gap: 12px;
+    flex-direction: row;
+    width: 100%;
+    font-weight: lighter;
+}
+
+.edit-menu-item-title {
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}
+
+.edit-menu-img-container {
+    height: 150px;
+}
+
+.edit-menu-img {
+  width: 170px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto;
+}
 
 @media (max-width: 768px){
     .nav ul { gap: 30px; }

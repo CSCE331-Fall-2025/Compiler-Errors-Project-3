@@ -12,6 +12,8 @@ const {
     updateInventoryItem,
     deleteMenuItem,
     deleteEmployee,
+    getEmployees,
+    getInventory
     } = functions;
 
 //Inside App, npm run dev
@@ -32,6 +34,25 @@ app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.get("/api/Manager/fetchEmployees", async (req, res) => {
+    try {
+        const employees = await getEmployees();
+        res.json(employees);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/api/Manager/fetchInventory", async (req, res) => {
+    try {
+        const employees = await getInventory();
+        res.json(employees);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 //addEmployee
 app.post("/api/Manager/addEmployee", async (req, res) => {
     try {
@@ -53,10 +74,10 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
 //updateEmployee
 app.post("/api/Manager/updateEmployee", async (req, res) => {
     try{
-        const {targetName, name, role, email, phone} = req.body;
+        const {name, newName, role, email, phone} = req.body;
         console.log("attempting");
         try{
-            await updateEmployee(targetName, name, role, email, phone);
+            await updateEmployee(name, newName, role, email, phone);
         }
         catch(err){
             console.error("add error: ", err);
@@ -171,11 +192,10 @@ app.post("/api/Manager/addMenuItem", async (req, res) => {
 
 app.post("/api/Manager/updateMenuItem", async (req, res) => {
     try {
-        const { name, newName, price, ingredients } = req.body;
+        const { name, newName, price, type, seasonal, cal } = req.body;
         
         try {
-            console.log("Testing");
-            await updateMenuItem(name, newName, price, ingredients);
+            await updateMenuItem(name, newName, price, type, seasonal, cal);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -190,11 +210,11 @@ app.post("/api/Manager/updateMenuItem", async (req, res) => {
 
 app.post("/api/Manager/updateInventoryItem", async (req, res) => {
     try {
-        const { name, newName, qty, uprice } = req.body;
+        const { name, newName, qty, uprice, minimum } = req.body;
         
         try {
-            console.log("Testing");
-            await updateInventoryItem(name, newName, qty, uprice);
+            console.log("Testing: ", name, newName, qty, uprice, minimum);
+            await updateInventoryItem(name, newName, parseInt(qty), parseFloat(uprice), parseInt(minimum));
         } catch (err) {
             console.error("add error: ", err);
             throw err;

@@ -9,6 +9,11 @@ import LocationsPage from "./components/customer/locations/LocationsPage";
 import LoginPage from "./components/login/LoginPage";
 import EmployeeLoginPage from "./components/login/EmployeeLoginPage";
 import ManagerStaffPage from "./components/employee/manager/ManagerStaffPage";
+import ManagerInventoryPage from "./components/employee/manager/ManagerInventoryPage";
+import ManagerMenuPage from "./components/employee/manager/ManagerMenuPage";
+import ManagerStaffEditPage from "./components/employee/manager/ManagerStaffEditPage";
+import ManagerInventoryEditPage from "./components/employee/manager/ManagerInventoryEditPage";
+import ManagerMenuEditPage from "./components/employee/manager/ManagerMenuEditPage";
 import "./css/style.css";
 
 
@@ -25,6 +30,11 @@ function App() {
                 <Route path="/login" element={<LoginPage/>}></Route>
                 <Route path="/employee/login" element={<EmployeeLoginPage/>}></Route>
                 <Route path="/employee/manager/staff" element={<ManagerStaffPage/>}></Route>
+                <Route path="/employee/manager/menu" element={<ManagerMenuPage/>}></Route>
+                <Route path="/employee/manager/inventory" element={<ManagerInventoryPage/>}></Route>
+                <Route path="/employee/manager/staff/:id" element={<ManagerStaffEditPage/>}></Route>
+                <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage/>}></Route>
+                <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );

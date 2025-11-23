@@ -6,12 +6,12 @@ function ManagerNavBar() {
   return (
     <nav>
       <ul>
-        <li class="nav-home"><Link to="/">HOME</Link></li>
-        <li><Link to="/menu">DATA</Link></li>
-        <li><Link to="/locations">EMPLOYEES</Link></li>
-        <li><Link to="/weather">MENU</Link></li>
-        <li><Link to="/login">INVENTORY</Link></li>
-        <li><Link to="/login">STATS</Link></li>
+        <li class="nav-home"><Link to="/employee/manager">HOME</Link></li>
+        <li><Link to="/employee/manager/data">DATA</Link></li>
+        <li><Link to="/employee/manager/staff">EMPLOYEES</Link></li>
+        <li><Link to="/employee/manager/menu">MENU</Link></li>
+        <li><Link to="/employee/manager/inventory">INVENTORY</Link></li>
+        <li><Link to="/employee/manager/stats">STATS</Link></li>
       </ul>
     </nav>
   );
