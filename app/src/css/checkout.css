@@ -48,7 +48,15 @@ body {
   grid-template-columns: 1fr 360px;
   gap: 24px;
   padding: 28px;
+  margin-top: 12px;
   align-items: start;
+  
+  background: url('/images/static-menu-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+
 }
 
 
@@ -57,8 +65,23 @@ body {
   background: #fff;
   padding: 18px;
   border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);  
+  max-height: 1000px;
+} 
+
+.orderItems {
+  
+
+  margin-top: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
 }
+
+.vspacer {
+  padding-top: 65px;
+} 
 
 .order-panel h2 {
   margin-top: 0;
@@ -91,6 +114,12 @@ body {
 
 
 /*Summary Card*/
+
+.back-btn {
+  color:#fff;
+  border-radius: 8px; ;
+
+}
 .summary-card {
   background: var(--dark);
   color: #fff;
@@ -98,6 +127,7 @@ body {
   border-radius: 8px;
   position: sticky;
   top: 24px;
+
 }
 
 .summary-card h3 {
@@ -110,6 +140,12 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 8px 0;
+  overflow-y: auto;
+  max-height: 300px;
+  scroll-margin-right: 800px;
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+
 }
 
 .checkout-summary-items {
