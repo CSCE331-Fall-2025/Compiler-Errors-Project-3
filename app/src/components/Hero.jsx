@@ -20,7 +20,7 @@ function Hero() {
                         <p className="popular-description">
                             Crispy chicken tossed in sweet and tangy orange sauce.
                         </p>
-                        <p className="popular-review">Customer Review : </p>      
+                        <p className="popular-review-label">Customer Review : </p>      
                         <p className="popular-review">I don't understand the bad reviews, place is great, workers were very kind, good ambiance, and the best food out of every Parody Express I've been to.</p>
                     </div>
                     <div className="popular-right">
