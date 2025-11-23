@@ -166,7 +166,7 @@ body {
 /* side bar of order page */
 .order-preview-pane { 
     height: 550px;
-    width: auto;
+    width: 300px;
     margin-right: 30px;
     position: fixed;
     background-color: var(--white);
