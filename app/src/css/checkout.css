@@ -117,16 +117,17 @@ body {
 
 .back-btn {
   color:#fff;
-  border-radius: 8px; ;
-
+  border-radius: 8px; 
 }
 .summary-card {
-  background: var(--dark);
-  color: #fff;
-  padding: 18px;
-  border-radius: 8px;
-  position: sticky;
-  top: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 20px;
+  color: rgb(255, 255, 255);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.static1);
+  transition: transform 0.static2s ease, box-shadow 0.static2s ease;
 
 }
 

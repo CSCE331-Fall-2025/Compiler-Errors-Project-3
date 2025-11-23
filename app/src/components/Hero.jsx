@@ -26,7 +26,7 @@ function Hero() {
                     <div className="popular-right">
                         <div className="popular-image-container">
                             <img
-                                src="/images/Orange Chicken.png"
+                                src="/images/Orange Chicken gif.gif"
                                 className="popular-food-image"
                             />
                         </div>
