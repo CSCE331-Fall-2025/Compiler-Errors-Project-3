@@ -14,6 +14,7 @@ import ManagerMenuPage from "./components/employee/manager/ManagerMenuPage";
 import ManagerStaffEditPage from "./components/employee/manager/ManagerStaffEditPage";
 import ManagerInventoryEditPage from "./components/employee/manager/ManagerInventoryEditPage";
 import ManagerMenuEditPage from "./components/employee/manager/ManagerMenuEditPage";
+import CashierPage from "./components/CashierPage";
 import "./css/style.css";
 import ManagerInventoryAddPage from "./components/employee/manager/ManagerInventoryAddPage";
 import ManagerStaffAddPage from "./components/employee/manager/ManagerStaffAddPage";
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/employee/manager/staff/:id" element={<ManagerStaffEditPage/>}></Route>
                 <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage/>}></Route>
                 <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
+                <Route path="/employee/cashier" element={<CashierPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );
