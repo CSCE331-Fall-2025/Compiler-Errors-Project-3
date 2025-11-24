@@ -147,11 +147,13 @@ async function addUser(username, password, usertype, email){
 }
 
 //Employee Management
-async function addEmployee(name = '', employeetype = '', email = '', phonenum = '')
+async function addEmployee(name = '', employeetype = '', email = '', phonenum = '', img)
 {
+
+    // TO BE IMPLEMENTED: Add img column to database, add img to INSERT. 
     try
     {
-        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1, $2, $3, $4)', [name, employeetype, email, phonenum]);
+        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum, img) VALUES ($1, $2, $3, $4, $5)', [name, employeetype, email, phonenum, img]);
     }
     catch(err)
     {
@@ -175,33 +177,40 @@ async function updateEmployeePhoneNum(targetName, phonenum){
     pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
 }
 
+async function updateEmployeePfp(targetName, img){
+    pool.query('UPDATE employeesce SET img = $1 WHERE name = $2', [img, targetName]);
+}
+
 function deleteEmployee(name){
     pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
 //Managing Inventory
-function addInventoryItem(name, qty, unit_price)
+function addInventoryItem(name, qty, unit_price, minimum)
 {
-    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2, $3)', [name, qty, unit_price]);
+    pool.query('INSERT INTO inventoryce (name, quantity, unit_price, minimum) VALUES ($1, $2, $3, $4)', [name, qty, unit_price, minimum]);
 }
 
 //Used in updating orders
 function updateInventory(usedIngrMap, inventoryMap){
     for(const [key,value] of usedIngrMap){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
-    }
+    });
 }
 
 //Used in manager side
-function updateInventoryItem(name, newName, qty, uprice){
-    if(newName.localeCompare('') != 0){
-        pool.query('UPDATE inventoryce SET name = $1 WHERE name = $2', [newName, name]);
-    }
+function updateInventoryItem(name, newName, qty, uprice, minimum){
     if(typeof qty !== 'string'){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [qty, name]);
     }
     if(typeof uprice !== 'string'){
         pool.query('UPDATE inventoryce SET unit_price = $1 WHERE name = $2', [uprice, name]);
+    }
+    if(typeof minimum !== 'string'){
+        pool.query('UPDATE inventoryce SET minimum = $1 WHERE name = $2', [minimum, name]);
+    }
+    if(newName.localeCompare('') != 0){
+        pool.query('UPDATE inventoryce SET name = $1 WHERE name = $2', [newName, name]);
     }
 }
 
@@ -230,6 +239,22 @@ async function getMenuItems(){
     }
 }
 
+async function getEmployees(){
+    try{
+        return await pool.query('SELECT * FROM employeesce');
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+async function getInventory(){
+    try{
+        return await pool.query('SELECT * FROM inventoryce');
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 async function getIngredients(name){
     try{
         return await pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
@@ -238,19 +263,34 @@ async function getIngredients(name){
     }
 }
 
-function addMenuItem(name, price, ingredients){
-    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2, $3)', [name, price, ingredients]);
+function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
+    pool.query('INSERT INTO menuce (name, price, ingredients, itemtype, isseasonal, calories, img) VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+        [name, price, ingredients, type, seasonal, calories, img]);
 }
 
-function updateMenuItem(name, newName, price, ingredients){
-    if(newName.localeCompare('') != 0){
-        pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
+function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
+    console.log("Testing: ", name, newName, price, type, seasonal, calories, ingredients);
+
+    if(type.localeCompare('') != 0){
+        pool.query('UPDATE menuce SET itemtype = $1 WHERE name = $2', [type, name]);
+    }
+    if(typeof seasonal !== 'string') {
+        pool.query('UPDATE menuce SET isseasonal = $1 WHERE name = $2', [seasonal, name]);
     }
     if(typeof price !== 'string'){
         pool.query('UPDATE menuce SET price = $1 WHERE name = $2', [price, name]);
     }
+    if(typeof calories !== 'string'){
+        pool.query('UPDATE menuce SET calories = $1 WHERE name = $2', [calories, name]);
+    }
     if(ingredients.localeCompare('') != 0){
         pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [ingredients, name]);
+    }
+    if(img != null) {
+        pool.query('UPDATE menuce SET img = $1 WHERE name = $2', [img, name]);
+    }
+    if(newName.localeCompare('') != 0){
+        pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
     }
 }
 
@@ -345,5 +385,8 @@ export default {
     updateEmployeeName,
     updateEmployeePhoneNum,
     updateEmployeeType,
-    updateInventory
+    updateEmployeePfp,
+    updateInventory,
+    getEmployees,
+    getInventory
 };

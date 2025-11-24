@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import functions from './function.js';
 import dbConn from './db.js';
+import multer from "multer";
 const { 
     createMenuItemArray, 
     addEmployee, 
@@ -12,6 +13,8 @@ const {
     updateInventoryItem,
     deleteMenuItem,
     deleteEmployee,
+    getEmployees,
+    getInventory
     } = functions;
 
 //Inside App, npm run dev
@@ -20,6 +23,7 @@ const {
 console.log("Server.js starting");
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors());
 app.use(express.json());
@@ -32,14 +36,34 @@ app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.get("/api/Manager/fetchEmployees", async (req, res) => {
+    try {
+        const employees = await getEmployees();
+        res.json(employees);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/api/Manager/fetchInventory", async (req, res) => {
+    try {
+        const employees = await getInventory();
+        res.json(employees);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 //addEmployee
-app.post("/api/Manager/addEmployee", async (req, res) => {
+app.post("/api/Manager/addEmployee", upload.single("img"), async (req, res) => {
     try {
         const { name, role, email, phone } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         console.log("Attempting");
 
         try {
-            await addEmployee(name, role, email, phone);
+            await addEmployee(name, role, email, phone, imgbuf);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -51,12 +75,13 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
     }
 });
 //updateEmployee
-app.post("/api/Manager/updateEmployee", async (req, res) => {
+app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) => {
     try{
-        const {targetName, name, role, email, phone} = req.body;
+        const {name, newName, role, email, phone} = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         console.log("attempting");
         try{
-            await updateEmployee(targetName, name, role, email, phone);
+            await updateEmployee(name, newName, role, email, phone, imgbuf);
         }
         catch(err){
             console.error("add error: ", err);
@@ -115,10 +140,10 @@ app.post("/api/Manager/deleteMenuItem", async (req, res) => {
 //addInventoryItem
 app.post("/api/Manager/addInventoryItem", async (req, res) => {
     try{
-        const {name, qty, unit_price} = req.body;
+        const {name, qty, unit_price, minimum} = req.body;
         console.log("attempting");
         try{
-            await addInventoryItem(name, qty, unit_price);
+            await addInventoryItem(name, qty, unit_price, minimum);
         }
         catch(err){
             console.error("add error: ", err);
@@ -152,12 +177,13 @@ app.post("/api/Manager/updateEmployee", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/addMenuItem", async (req, res) => {
+app.post("/api/Manager/addMenuItem", upload.single("img"), async (req, res) => {
     try {
-        const { name, price, ingredients } = req.body;
+        const { name, calories, type, price, seasonal, ingredients } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         
         try {
-            await addMenuItem(name, price, ingredients);
+            await addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf);
         } catch {
             console.error("add error: ", err);
             throw err;
@@ -169,13 +195,14 @@ app.post("/api/Manager/addMenuItem", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/updateMenuItem", async (req, res) => {
+app.post("/api/Manager/updateMenuItem", upload.single("img"), async (req, res) => {
     try {
-        const { name, newName, price, ingredients } = req.body;
+        console.log(req.body);
+        const { name, newName, price, type, seasonal, cal } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         
         try {
-            console.log("Testing");
-            await updateMenuItem(name, newName, price, ingredients);
+            await updateMenuItem(name, newName, price, type, seasonal, cal, imgbuf);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -190,11 +217,11 @@ app.post("/api/Manager/updateMenuItem", async (req, res) => {
 
 app.post("/api/Manager/updateInventoryItem", async (req, res) => {
     try {
-        const { name, newName, qty, uprice } = req.body;
+        const { name, newName, qty, uprice, minimum } = req.body;
         
         try {
-            console.log("Testing");
-            await updateInventoryItem(name, newName, qty, uprice);
+            console.log("Testing: ", name, newName, qty, uprice, minimum);
+            await updateInventoryItem(name, newName, parseInt(qty), parseFloat(uprice), parseInt(minimum));
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -209,6 +236,7 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 
 //addOrders
 app.post("/api/Cashier/addOrders", async (req, response) => {
+app.post("/api/Cashier/addOrders", async (req, response) => {
     //Gets inventory
     const res = await dbConn.getStock();
     const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
@@ -216,6 +244,7 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
     try {
         //Get the orders
         const { orders } = req.body; 
+        console.log(orders);
         
         //Get ingredients used
         orders.forEach(async (order) => {
@@ -266,11 +295,12 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
         else{
             dbConn.addOrders(orders);
             await dbConn.updateInventory(usedIngrMap,inventoryMap);
-            response.status(200).json({ message: "Orders uploaded!" });
+            response.status(200).json({ message: "Orders uploaded!", status: true });
         }
 
     } catch (err) {
         console.log(err.message);
+        response.status(500).json({error: err.message});
         response.status(500).json({error: err.message});
     }
 })
