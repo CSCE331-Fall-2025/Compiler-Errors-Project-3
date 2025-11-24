@@ -214,12 +214,14 @@ body {
 
 /* ya place order page ka hai */
 .checkout-order-item {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(125, 9, 9, 0.1);
     margin-top: 10px;
-    height: 120px;
+    height: auto;
     display: flex;
     flex-direction: row;
     border: #000000 1px solid;
+    justify-content: space-between;
+    align-items: center;
 }
 
 
@@ -238,6 +240,7 @@ body {
     margin-top: 25px;
     margin-bottom: 25px;
     line-height: 1.4;
+    font-weight: bold;
 }
 
 .checkout-order-price {
@@ -260,6 +263,7 @@ body {
     height: 40px;
     border-radius: 8px;
     background-color: red;
+    margin: 10px;
     
 }
 
@@ -275,11 +279,15 @@ body {
     display: flex;
     flex-direction: row;
     border: #000000 1px solid;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .checkout-order-side {
-    width: 100px;
+    width: auto;
     margin-left: 25px;
+    
 
 }
 
