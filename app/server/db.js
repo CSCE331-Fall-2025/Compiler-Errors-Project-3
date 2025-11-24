@@ -195,7 +195,7 @@ function addInventoryItem(name, qty, unit_price, minimum)
 function updateInventory(usedIngrMap, inventoryMap){
     for(const [key,value] of usedIngrMap){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
-    });
+    };
 }
 
 //Used in manager side
