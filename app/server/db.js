@@ -98,16 +98,14 @@ async function testQuery()
 async function validateEmployee(username, password){
     const res = await pool.query('SELECT * FROM usersce');
 
-    flag = false;
     var userType = 'FAIL';
-    res.rows.forEach(row => {
-        if(!flag){
-            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
-                userType = row.usertype;
-                flag = true;
-            }
+    for(let i = 0; i < res.rows.length; i++) {
+        const row = res.rows[i];
+        if((row.username === username || row.email === username) && (row.password === password)) {
+            userType = row.usertype;
+            break;
         }
-    });
+    }
 
     return userType;
 }
@@ -388,5 +386,5 @@ export default {
     updateEmployeePfp,
     updateInventory,
     getEmployees,
-    getInventory,
+    getInventory
 };

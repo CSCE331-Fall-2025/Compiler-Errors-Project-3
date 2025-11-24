@@ -18,6 +18,7 @@ import "./css/style.css";
 import ManagerInventoryAddPage from "./components/employee/manager/ManagerInventoryAddPage";
 import ManagerStaffAddPage from "./components/employee/manager/ManagerStaffAddPage";
 import ManagerMenuAddPage from "./components/employee/manager/ManagerMenuAddPage";
+import CashierPage from "./components/employee/cashier/CashierPage";
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/employee/manager/staff/:id" element={<ManagerStaffEditPage/>}></Route>
                 <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage/>}></Route>
                 <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
+                <Route path="/employee/cashier" element={<CashierPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );

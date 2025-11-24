@@ -2,18 +2,32 @@ import React from 'react'
 import NavBar from '../NavBar'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateCustomer } from "../../js/utils";
+import { validateEmployee } from "../../js/utils";
 import "../../css/checkout.css"
 
-function LoginField(){
+function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const nav = useNavigate();
 
     async function submitForm(e) {
         e.preventDefault(); 
         
-        const res = await fetch("http://localhost:3000/api/Manager/validateCustomer", validateCustomer(username, password));
-        console.log(res.body);
+        var result = "FAIL";
+
+        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password))
+        .then(res => res.json())
+        .then(data => {
+            result = data.result;
+        });
+
+        if(result.toUpperCase() === "MANAGER") {
+            nav("/Employee/Manager");
+        } else if(result.toUpperCase() === "CASHIER") {
+            nav("/Employee/Cashier");
+        }
+
     }
 
     return (
@@ -69,4 +83,4 @@ function LoginField(){
     );
 }
 
-export default LoginField;
+export default EmployeeLoginField;

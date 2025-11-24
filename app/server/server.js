@@ -28,6 +28,42 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(cors());
 app.use(express.json());
 
+app.post("/api/login/validateEmployee", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateEmployee(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true, result: result });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false, result: result });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.post("/api/login/validateCustomer", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateCustomer(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true, result: result });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false, result: result });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
     try {
         const menu = await createMenuItemArray();
@@ -305,15 +341,3 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
 })
 
 app.listen(3000, () => console.log("Server running on port 3000"));
-
-/*
-Template post
-app.post("", async (req, res) => {
-    try {
-  
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json({error: err.message}); 
-    }
-})
-*/
