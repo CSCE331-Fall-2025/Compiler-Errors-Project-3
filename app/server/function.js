@@ -1,5 +1,8 @@
 import React from 'react';
 import dbConn from './db.js';
+import dotenv from 'dotenv';
+import findConfig from 'find-config';
+dotenv.config({ path: findConfig('.env') });
 
 //Required APIs, Google Translate, Auth (google or otherwise), Place, Weather
 
@@ -87,6 +90,42 @@ async function addMenuItem(name, calories, type, price, seasonal, ingredients, i
 
 async function addInventoryItem(name, qty, uprice, min) {
     await dbConn.addInventoryItem(name, qty, uprice, min);
+}
+
+//External API calls
+async function getWeatherAPI(){
+    const apiKey = process.env.WEATHERAPI_KEY;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${'Houston, Tx'}&appid=${apiKey}&units=imperial`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(`Weather in ${city}:`, data.weather[0].description);
+        console.log(`Temperature: ${data.main.temp}°F`);
+    } catch (error) {
+        console.error('Error fetching weather:', error);
+    }
+
+}
+
+async function getPlacesAPI(){
+    const apiKey = process.env.PLACEAPI_KEY;
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&radius=${50000}&key=${apiKey}`;
+
+    //Location Constraint url
+    //const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&location=${lat},${lng}&radius=${50000}&key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        data.results.forEach(place => {
+            console.log(`Name: ${place.name}`);
+            console.log(`Address: ${place.formatted_address}`);
+        });
+        console.log(data);
+    } catch (error) {
+        console.error('Error fetching places:', error);
+    }
 }
 
 

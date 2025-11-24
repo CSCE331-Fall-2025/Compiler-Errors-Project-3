@@ -20,10 +20,36 @@ async function getIngredientList(name){
     return temp2;
 }
 
+/*
+
+*/
+
+
 //Not to be actually used. Use this as a test site for all connections
-async function testQuery(username, password)
+async function testQuery()
 {
-    var res = await getStock();
+    const apiKey = process.env.WEATHERAPI_KEY;
+    //Houston Lat and Long: 29.7604, -95.3698
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${29.7604}&lon=${-95.3698}&appid=${apiKey}&exclude=${'minutely','hourly','alerts'}&units=imperial`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(JSON.stringify(data, null, 2));
+        
+        console.log(`Current weather: ${data.current.weather[0].description}`);
+        console.log(`Temperature: ${data.current.temp}°F`);
+        console.log(`Humidity: ${data.current.humidity}%`);
+
+        // Example: print tomorrow’s forecast
+        console.log(`Tomorrow: ${data.daily[1].weather[0].description}, High: ${data.daily[1].temp.max}°F`);
+    } catch (error) {
+        console.error('Error fetching weather:', error);
+    }
+}
+
+/*
+var res = await getStock();
     var inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
     var usedIngrMap = new Map();
     try {
@@ -99,10 +125,6 @@ async function testQuery(username, password)
     } catch (err) {
         console.log(err.message);
     }
-}
-
-/*
-
 
 */
 
