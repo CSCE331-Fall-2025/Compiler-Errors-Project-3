@@ -246,7 +246,8 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
         console.log(orders);
         
         //Get ingredients used
-        orders.forEach(async (order) => {
+        for(let k = 0; k < orders.length; k++) {
+            const order = orders[k];
             const quantity = order.quantity;
             //Gets ingredients for order
             var ingrList = await getIngredientList(order.name);
@@ -263,43 +264,32 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
             const addArr = order.add;
             for(let i = 0; i < addArr.length; i++){
                 ingrList = await getIngredientList(addArr[i]);
-                for(let j = 0; i < ingrList.length; i++)
+                for(let j = 0; j < ingrList.length; j++)
                 {
                     if(usedIngrMap.get(ingrList[j]) === undefined){
                         usedIngrMap.set(ingrList[j], 0);
                     }
-                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
+                    usedIngrMap.set(ingrList[j], usedIngrMap.get(ingrList[j]) + quantity);
                 }
             }
 
             //Remove quantity amount of some ingredient
             const subArr = order.sub;
             for(let i = 0; i < subArr.length; i++){
-                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) - quantity);
             }
-        });
+        };
 
         var flag = true;
         //Check if exceeds stock
-        usedIngrMap.forEach((value, key) => {
+        for(const [key,value] of usedIngrMap){
             if(value > inventoryMap.get(key)){
                 flag = false;
             }
-        });
-
-        //If exceeds, error. Else, add to inventory
-        if(!flag){
-            throw new TypeError('Quantity Exceeds Inventory Stock');
-        }
-        else{
-            dbConn.addOrders(orders);
-            await dbConn.updateInventory(usedIngrMap,inventoryMap);
-            response.status(200).json({ message: "Orders uploaded!", status: true });
-        }
+        };
 
     } catch (err) {
         console.log(err.message);
-        response.status(500).json({error: err.message});
         response.status(500).json({error: err.message});
     }
 })

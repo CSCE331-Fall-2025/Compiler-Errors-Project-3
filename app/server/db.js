@@ -21,24 +21,30 @@ async function getIngredientList(name){
 }
 
 //Not to be actually used. Use this as a test site for all connections
-async function testQuery()
+async function testQuery(username, password)
 {
     var res = await getStock();
-    const inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
-    const usedIngrMap = new Map();
+    var inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
+    var usedIngrMap = new Map();
     try {
         //Get the orders
         const orders = new Array();
         orders.push({
             name: 'Orange Chicken',
-            quantity: 4,
+            quantity: 1,
+            add: new Array(),
+            sub: new Array()
+        });
+        orders.push({
+            name: 'Fried Rice',
+            quantity: 1000,
             add: new Array(),
             sub: new Array()
         });
         
-        
         //Get ingredients used
-        orders.forEach(async (order) => {
+        for(let k = 0; k < orders.length; k++) {
+            const order = orders[k];
             const quantity = order.quantity;
             //Gets ingredients for order
             var ingrList = await getIngredientList(order.name);
@@ -53,31 +59,33 @@ async function testQuery()
 
             //Add is sides
             const addArr = order.add;
+            addArr.push('Orange Chicken');
             for(let i = 0; i < addArr.length; i++){
                 ingrList = await getIngredientList(addArr[i]);
-                for(let j = 0; i < ingrList.length; i++)
+                for(let j = 0; j < ingrList.length; j++)
                 {
                     if(usedIngrMap.get(ingrList[j]) === undefined){
                         usedIngrMap.set(ingrList[j], 0);
                     }
-                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
+                    usedIngrMap.set(ingrList[j], usedIngrMap.get(ingrList[j]) + quantity);
                 }
             }
 
             //Remove quantity amount of some ingredient
             const subArr = order.sub;
+            subArr.push('Garlic');
             for(let i = 0; i < subArr.length; i++){
-                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) - quantity);
             }
-        });
+        };
 
         var flag = true;
         //Check if exceeds stock
-        usedIngrMap.forEach((value, key) => {
+        for(const [key,value] of usedIngrMap){
             if(value > inventoryMap.get(key)){
                 flag = false;
             }
-        });
+        };
 
         //If exceeds, error. Else, add to inventory
         if(!flag){
@@ -91,23 +99,28 @@ async function testQuery()
     } catch (err) {
         console.log(err.message);
     }
-
 }
+
+/*
+
+
+*/
+
 
 //Account Management
 async function validateEmployee(username, password){
-    const res = await pool.query('SELECT * FROM usersce');
+    const res = await pool.query('SELECT name, employeetype, email, phonenum FROM usersce');
 
-    const flag = false;
+    var flag = false;
     var userType = 'FAIL';
-    res.rows.forEach(row => {
+    for(const row of res.rows){
         if(!flag){
-            if((row.name === username  || row.email === username) && row.password === password){
+            if((row.username === username  || row.email === username) && row.password === password){
                 userType = row.usertype;
                 flag = true;
             }
         }
-    });
+    }
 
     return userType;
 }
@@ -115,14 +128,14 @@ async function validateEmployee(username, password){
 async function validateCustomer(username, password){
     const res = await pool.query('SELECT * FROM customersce');
 
-    const flag = false;
-    res.rows.forEach(row => {
+    var flag = false;
+    for(const row of res.rows){
         if(!flag){
-            if((row.name === username  || row.email === username) && row.password === password){
+            if((row.username === username || row.email === username) && row.password === password){
                 flag = true;
             }
         }
-    });
+    }
 
     return flag;
 }
@@ -347,18 +360,19 @@ async function addOrders(orderArray){
     var res = await pool.query('SELECT MAX(id) FROM orderhistoryce');
     const id = res.rows[0].max;
     const now = new Date();
+    const corrMonth = parseInt(now.getMonth())+1;
 
-    var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
+    var date = now.getFullYear() + '-' + corrMonth.toString() + '-' + now.getDate();
     var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
     var i = 1;
-    orderArray.forEach(async (order) => {
+    for(const order of orderArray) {
         res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
         var price = res.rows[0].price;
         pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
             [id+i, date, time, order.name, order.quantity, price]
         );
         i += 1;
-    });
+    };
 }
 
 export default {
