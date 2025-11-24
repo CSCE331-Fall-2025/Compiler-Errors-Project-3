@@ -236,6 +236,7 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 
 //addOrders
 app.post("/api/Cashier/addOrders", async (req, response) => {
+app.post("/api/Cashier/addOrders", async (req, response) => {
     //Gets inventory
     const res = await dbConn.getStock();
     const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
@@ -246,11 +247,10 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
         console.log(orders);
         
         //Get ingredients used
-        orders.forEach((order) => {
+        orders.forEach(async (order) => {
             const quantity = order.quantity;
             //Gets ingredients for order
-            var ingrList = getIngredientList(order.name);
-            
+            var ingrList = await getIngredientList(order.name);
             //For each ingredient
             for(let i = 0; i < ingrList.length; i++){
                 //If ingredient hasn't been used, initialize
@@ -263,7 +263,7 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
             //Add is sides
             const addArr = order.add;
             for(let i = 0; i < addArr.length; i++){
-                ingrList = getIngredientList(addArr[i]);
+                ingrList = await getIngredientList(addArr[i]);
                 for(let j = 0; i < ingrList.length; i++)
                 {
                     if(usedIngrMap.get(ingrList[j]) === undefined){
@@ -300,6 +300,7 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
 
     } catch (err) {
         console.log(err.message);
+        response.status(500).json({error: err.message});
         response.status(500).json({error: err.message});
     }
 })

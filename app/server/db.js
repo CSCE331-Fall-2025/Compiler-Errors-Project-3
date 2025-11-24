@@ -12,13 +12,85 @@ var pool = new Pool({
     ssl: false,
 });
 
+//Used for testing addOrders in testQuery
+async function getIngredientList(name){ 
+    const res = await getIngredients(name);
+    var temp = res.rows[0].ingredients;
+    var temp2 = temp.split(', ');
+    return temp2;
+}
+
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
-    id = id.rows[0].max;
-    const res = await pool.query('SELECT name, ingredients FROM menuce');
-    console.log('Row 0:', id);
+    var res = await getStock();
+    const inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
+    const usedIngrMap = new Map();
+    try {
+        //Get the orders
+        const orders = new Array();
+        orders.push({
+            name: 'Orange Chicken',
+            quantity: 4,
+            add: new Array(),
+            sub: new Array()
+        });
+        
+        
+        //Get ingredients used
+        orders.forEach(async (order) => {
+            const quantity = order.quantity;
+            //Gets ingredients for order
+            var ingrList = await getIngredientList(order.name);
+            //For each ingredient
+            for(let i = 0; i < ingrList.length; i++){
+                //If ingredient hasn't been used, initialize
+                if(usedIngrMap.get(ingrList[i]) === undefined){
+                    usedIngrMap.set(ingrList[i], 0);
+                }
+                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+            }
+
+            //Add is sides
+            const addArr = order.add;
+            for(let i = 0; i < addArr.length; i++){
+                ingrList = await getIngredientList(addArr[i]);
+                for(let j = 0; i < ingrList.length; i++)
+                {
+                    if(usedIngrMap.get(ingrList[j]) === undefined){
+                        usedIngrMap.set(ingrList[j], 0);
+                    }
+                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
+                }
+            }
+
+            //Remove quantity amount of some ingredient
+            const subArr = order.sub;
+            for(let i = 0; i < subArr.length; i++){
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
+            }
+        });
+
+        var flag = true;
+        //Check if exceeds stock
+        usedIngrMap.forEach((value, key) => {
+            if(value > inventoryMap.get(key)){
+                flag = false;
+            }
+        });
+
+        //If exceeds, error. Else, add to inventory
+        if(!flag){
+            throw new TypeError('Quantity Exceeds Inventory Stock');
+        }
+        else{
+            await addOrders(orders);
+            updateInventory(usedIngrMap,inventoryMap);
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
 
 }
 
@@ -119,8 +191,9 @@ function addInventoryItem(name, qty, unit_price, minimum)
     pool.query('INSERT INTO inventoryce (name, quantity, unit_price, minimum) VALUES ($1, $2, $3, $4)', [name, qty, unit_price, minimum]);
 }
 
-async function updateInventory(usedIngrMap,inventoryMap){
-    usedIngrMap.forEach((key, value, map) => {
+//Used in updating orders
+function updateInventory(usedIngrMap, inventoryMap){
+    for(const [key,value] of usedIngrMap){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
     });
 }
@@ -143,7 +216,7 @@ function updateInventoryItem(name, newName, qty, uprice, minimum){
 
 async function checkStock(name){
     try{
-        return pool.query('SELECT qty FROM inventoryce WHERE name = $1', [name]);
+        return pool.query('SELECT quantity FROM inventoryce WHERE name = $1', [name]);
     } catch(err) {
         console.log(err);
     }
@@ -151,7 +224,7 @@ async function checkStock(name){
 
 async function getStock(){
     try{
-        return pool.query('SELECT name, qty FROM inventoryce');
+        return pool.query('SELECT name, quantity, minimum FROM inventoryce');
     } catch(err) {
         console.log(err);
     }
@@ -184,7 +257,7 @@ async function getInventory(){
 
 async function getIngredients(name){
     try{
-        return pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
+        return await pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
     } catch(err) {
         console.log(err);
     }
@@ -271,18 +344,20 @@ function filterOrderHistory(startDate, endDate)
  * @param {*} orderArray Array of orders
  */
 async function addOrders(orderArray){
-    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
-    id = id.rows[0].max;
+    var res = await pool.query('SELECT MAX(id) FROM orderhistoryce');
+    const id = res.rows[0].max;
     const now = new Date();
-    
+
     var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
     var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-
+    var i = 1;
     orderArray.forEach(async (order) => {
-        var price = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
+        res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
+        var price = res.rows[0].price;
         pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
             [id+i, date, time, order.name, order.quantity, price]
         );
+        i += 1;
     });
 }
 
