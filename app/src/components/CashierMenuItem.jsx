@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
+import { CartContext } from "../components/contexts/CartContext";
 import "../css/cashier.css";
 import { Link } from "react-router-dom";
 
 function CashierMenuItem({ img, alt, title, cal, price }) {
+    const { cart, addToCart, clearCart } = useContext(CartContext);
+    
+    async function add() {
+        addToCart(title, price);
+    }
+
     return (
         <div class="cashier-menu-item">
             <div class="cashier-menu-item-img-container">
@@ -16,8 +23,8 @@ function CashierMenuItem({ img, alt, title, cal, price }) {
                 </div>
             </div>
             
-            <div class="cashier-menu-item-button-container">
-                <Link to="/checkout">Add to cart</Link>
+            <div class="menu-item-button-container">
+                <button type="button" onClick={add} class="menu-item-button">Add to cart</button>
             </div>
         </div>
     );

@@ -26,11 +26,11 @@ async function testQuery()
 async function validateEmployee(username, password){
     const res = await pool.query('SELECT * FROM usersce');
 
-    flag = false;
+    const flag = false; //Wasnt reading properly initially
     var userType = 'FAIL';
     res.rows.forEach(row => {
         if(!flag){
-            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
+            if((row.name.localeCompare(username) === 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
                 userType = row.usertype;
                 flag = true;
             }

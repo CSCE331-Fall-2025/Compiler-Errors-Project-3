@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
-import { CartContext } from "./contexts/CartContext";
+import React, { useContext, useEffect, useState } from 'react';
+import { CartContext } from "../components/contexts/CartContext";
+import { useNavigate } from 'react-router-dom';
 import "../css/cashier.css";
+import { submitOrders } from '../js/utils';
 
 function CashierOrderListItems() {
-    let { cart } = useContext(CartContext);
+    const { cart, addToCart, clearCart } = useContext(CartContext);
     console.log(cart);
 
     const tempCart = [...cart];
@@ -15,6 +17,10 @@ function CashierOrderListItems() {
             copy.quantity = 1;
             outputCart.push(tempCart[i]);
         }
+    }
+    
+    async function add() {
+        addToCart(title, price);
     }
 
     return (

@@ -296,6 +296,25 @@ app.post("/api/login/validateEmployee", async (req, res) => {
     }
 });
 
+//Customer login validation
+app.post("/api/login/validateCustomer", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateCustomer(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
 app.listen(3000, () => console.log("Server running on port 3000"));
 
 /*
