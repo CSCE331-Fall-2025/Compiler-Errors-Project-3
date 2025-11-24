@@ -48,7 +48,7 @@ export function addMenuItem(name, price, ingredients) {
     return json;
 }
 
-export function updateMenuItem(name, newName, price, ingredients) {
+export function updateMenuItem(name, newName, price, type, seasonal, cal) {
 
     const json = {
         method: "POST",
@@ -57,14 +57,16 @@ export function updateMenuItem(name, newName, price, ingredients) {
             name,
             newName,
             price,
-            ingredients
+            type,
+            seasonal,
+            cal
         }),
     };
 
     return json;
 }
 
-export function updateInventoryItem(name, newName, qty, uprice) {
+export function updateInventoryItem(name, newName, qty, uprice, minimum) {
 
     const json = {
         method: "POST",
@@ -73,7 +75,8 @@ export function updateInventoryItem(name, newName, qty, uprice) {
             name,
             newName,
             qty,
-            uprice
+            uprice,
+            minimum
         }),
     };
 
@@ -102,14 +105,15 @@ export function deleteMenuItem(name){
     return json;
 }
 
-export function addInventoryItem(name, qty, unit_price){
+export function addInventoryItem(name, qty, unit_price, minimum){
     const json = {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
             name,
             qty,
-            unit_price
+            unit_price,
+            minimum
         }),
     }
     return json;

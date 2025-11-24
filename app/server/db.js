@@ -6,19 +6,91 @@ dotenv.config({ path: findConfig('.env') });
 var pool = new Pool({
     user: process.env.DBUSER,
     host: process.env.DBHOST,
-    database: process.env.DBNAME, 
+    database: process.env.DBNAME,
     password: process.env.DBPASSWORD,
     port: process.env.DBPORT,
     ssl: false,
 });
 
+//Used for testing addOrders in testQuery
+async function getIngredientList(name){ 
+    const res = await getIngredients(name);
+    var temp = res.rows[0].ingredients;
+    var temp2 = temp.split(', ');
+    return temp2;
+}
+
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
-    id = id.rows[0].max;
-    const res = await pool.query('SELECT name, ingredients FROM menuce');
-    console.log('Row 0:', id);
+    var res = await getStock();
+    const inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
+    const usedIngrMap = new Map();
+    try {
+        //Get the orders
+        const orders = new Array();
+        orders.push({
+            name: 'Orange Chicken',
+            quantity: 4,
+            add: new Array(),
+            sub: new Array()
+        });
+        
+        
+        //Get ingredients used
+        orders.forEach(async (order) => {
+            const quantity = order.quantity;
+            //Gets ingredients for order
+            var ingrList = await getIngredientList(order.name);
+            //For each ingredient
+            for(let i = 0; i < ingrList.length; i++){
+                //If ingredient hasn't been used, initialize
+                if(usedIngrMap.get(ingrList[i]) === undefined){
+                    usedIngrMap.set(ingrList[i], 0);
+                }
+                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
+            }
+
+            //Add is sides
+            const addArr = order.add;
+            for(let i = 0; i < addArr.length; i++){
+                ingrList = await getIngredientList(addArr[i]);
+                for(let j = 0; i < ingrList.length; i++)
+                {
+                    if(usedIngrMap.get(ingrList[j]) === undefined){
+                        usedIngrMap.set(ingrList[j], 0);
+                    }
+                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
+                }
+            }
+
+            //Remove quantity amount of some ingredient
+            const subArr = order.sub;
+            for(let i = 0; i < subArr.length; i++){
+                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
+            }
+        });
+
+        var flag = true;
+        //Check if exceeds stock
+        usedIngrMap.forEach((value, key) => {
+            if(value > inventoryMap.get(key)){
+                flag = false;
+            }
+        });
+
+        //If exceeds, error. Else, add to inventory
+        if(!flag){
+            throw new TypeError('Quantity Exceeds Inventory Stock');
+        }
+        else{
+            await addOrders(orders);
+            updateInventory(usedIngrMap,inventoryMap);
+        }
+
+    } catch (err) {
+        console.log(err.message);
+    }
 
 }
 
@@ -75,11 +147,13 @@ async function addUser(username, password, usertype, email){
 }
 
 //Employee Management
-async function addEmployee(name = '', employeetype = '', email = '', phonenum = '')
+async function addEmployee(name = '', employeetype = '', email = '', phonenum = '', img)
 {
+
+    // TO BE IMPLEMENTED: Add img column to database, add img to INSERT. 
     try
     {
-        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1, $2, $3, $4)', [name, employeetype, email, phonenum]);
+        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum, img) VALUES ($1, $2, $3, $4, $5)', [name, employeetype, email, phonenum, img]);
     }
     catch(err)
     {
@@ -103,38 +177,46 @@ async function updateEmployeePhoneNum(targetName, phonenum){
     pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
 }
 
+async function updateEmployeePfp(targetName, img){
+    pool.query('UPDATE employeesce SET img = $1 WHERE name = $2', [img, targetName]);
+}
+
 function deleteEmployee(name){
     pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
 //Managing Inventory
-function addInventoryItem(name, qty, unit_price)
+function addInventoryItem(name, qty, unit_price, minimum)
 {
-    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2, $3)', [name, qty, unit_price]);
+    pool.query('INSERT INTO inventoryce (name, quantity, unit_price, minimum) VALUES ($1, $2, $3, $4)', [name, qty, unit_price, minimum]);
 }
 
-async function updateInventory(usedIngrMap,inventoryMap){
-    usedIngrMap.forEach((key, value, map) => {
+//Used in updating orders
+function updateInventory(usedIngrMap, inventoryMap){
+    for(const [key,value] of usedIngrMap){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
     });
 }
 
 //Used in manager side
-function updateInventoryItem(name, newName, qty, uprice){
-    if(newName.localeCompare('') != 0){
-        pool.query('UPDATE inventoryce SET name = $1 WHERE name = $2', [newName, name]);
-    }
+function updateInventoryItem(name, newName, qty, uprice, minimum){
     if(typeof qty !== 'string'){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [qty, name]);
     }
     if(typeof uprice !== 'string'){
         pool.query('UPDATE inventoryce SET unit_price = $1 WHERE name = $2', [uprice, name]);
     }
+    if(typeof minimum !== 'string'){
+        pool.query('UPDATE inventoryce SET minimum = $1 WHERE name = $2', [minimum, name]);
+    }
+    if(newName.localeCompare('') != 0){
+        pool.query('UPDATE inventoryce SET name = $1 WHERE name = $2', [newName, name]);
+    }
 }
 
 async function checkStock(name){
     try{
-        return pool.query('SELECT qty FROM inventoryce WHERE name = $1', [name]);
+        return pool.query('SELECT quantity FROM inventoryce WHERE name = $1', [name]);
     } catch(err) {
         console.log(err);
     }
@@ -142,7 +224,7 @@ async function checkStock(name){
 
 async function getStock(){
     try{
-        return pool.query('SELECT name, qty FROM inventoryce');
+        return pool.query('SELECT name, quantity, minimum FROM inventoryce');
     } catch(err) {
         console.log(err);
     }
@@ -157,27 +239,58 @@ async function getMenuItems(){
     }
 }
 
-async function getIngredients(name){
+async function getEmployees(){
     try{
-        return pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
+        return await pool.query('SELECT * FROM employeesce');
     } catch(err) {
         console.log(err);
     }
 }
 
-function addMenuItem(name, price, ingredients){
-    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2, $3)', [name, price, ingredients]);
+async function getInventory(){
+    try{
+        return await pool.query('SELECT * FROM inventoryce');
+    } catch(err) {
+        console.log(err);
+    }
 }
 
-function updateMenuItem(name, newName, price, ingredients){
-    if(newName.localeCompare('') != 0){
-        pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
+async function getIngredients(name){
+    try{
+        return await pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
+    pool.query('INSERT INTO menuce (name, price, ingredients, itemtype, isseasonal, calories, img) VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+        [name, price, ingredients, type, seasonal, calories, img]);
+}
+
+function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
+    console.log("Testing: ", name, newName, price, type, seasonal, calories, ingredients);
+
+    if(type.localeCompare('') != 0){
+        pool.query('UPDATE menuce SET itemtype = $1 WHERE name = $2', [type, name]);
+    }
+    if(typeof seasonal !== 'string') {
+        pool.query('UPDATE menuce SET isseasonal = $1 WHERE name = $2', [seasonal, name]);
     }
     if(typeof price !== 'string'){
         pool.query('UPDATE menuce SET price = $1 WHERE name = $2', [price, name]);
     }
+    if(typeof calories !== 'string'){
+        pool.query('UPDATE menuce SET calories = $1 WHERE name = $2', [calories, name]);
+    }
     if(ingredients.localeCompare('') != 0){
         pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [ingredients, name]);
+    }
+    if(img != null) {
+        pool.query('UPDATE menuce SET img = $1 WHERE name = $2', [img, name]);
+    }
+    if(newName.localeCompare('') != 0){
+        pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
     }
 }
 
@@ -231,18 +344,20 @@ function filterOrderHistory(startDate, endDate)
  * @param {*} orderArray Array of orders
  */
 async function addOrders(orderArray){
-    var id = await pool.query('SELECT MAX(id) FROM orderhistoryce');
-    id = id.rows[0].max;
+    var res = await pool.query('SELECT MAX(id) FROM orderhistoryce');
+    const id = res.rows[0].max;
     const now = new Date();
-    
+
     var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
     var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-
+    var i = 1;
     orderArray.forEach(async (order) => {
-        var price = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
+        res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
+        var price = res.rows[0].price;
         pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
             [id+i, date, time, order.name, order.quantity, price]
         );
+        i += 1;
     });
 }
 
@@ -270,5 +385,8 @@ export default {
     updateEmployeeName,
     updateEmployeePhoneNum,
     updateEmployeeType,
+    updateEmployeePfp,
     updateInventory,
+    getEmployees,
+    getInventory
 };
