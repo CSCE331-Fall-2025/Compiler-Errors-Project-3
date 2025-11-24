@@ -98,11 +98,11 @@ async function testQuery()
 async function validateEmployee(username, password){
     const res = await pool.query('SELECT * FROM usersce');
 
-    flag = false;
+    const flag = false;
     var userType = 'FAIL';
     res.rows.forEach(row => {
         if(!flag){
-            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
+            if((row.name === username  || row.email === username) && row.password === password){
                 userType = row.usertype;
                 flag = true;
             }
@@ -115,10 +115,10 @@ async function validateEmployee(username, password){
 async function validateCustomer(username, password){
     const res = await pool.query('SELECT * FROM customersce');
 
-    flag = false;
+    const flag = false;
     res.rows.forEach(row => {
         if(!flag){
-            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
+            if((row.name === username  || row.email === username) && row.password === password){
                 flag = true;
             }
         }
