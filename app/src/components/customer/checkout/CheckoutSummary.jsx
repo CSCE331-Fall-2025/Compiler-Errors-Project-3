@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from "../../contexts/CartContext";
 import "../../../css/checkout.css";
 import { submitOrders } from '../../../js/utils';
+import { useNavigate } from 'react-router-dom';
 
 function CheckoutSummary(){
     const { cart, clearCart } = useContext(CartContext);
     const [subtotal, setSubtotal] = useState(0.0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(cart.length > 0){
@@ -61,10 +63,15 @@ function CheckoutSummary(){
     }
 
     return(
+        
         <aside class = "summary-card">
+            <button class="back-btn"onClick={() => navigate(-1)}
+                > Back
+            </button>
             <h2>Order Summary</h2>
+                            <p>Items</p>
+
             <div class = "summary-row">
-                <p>Items</p>
                 {cart.map((item) => (
                     <div class="checkout-summary-items">
                         <span class="checkout-summary-item-name">{item.name}</span>

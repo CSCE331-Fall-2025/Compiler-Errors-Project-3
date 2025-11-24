@@ -48,7 +48,7 @@ export function addMenuItem(name, price, ingredients) {
     return json;
 }
 
-export function updateMenuItem(name, newName, price, type, seasonal, cal) {
+export function updateMenuItem(name, newName, price, ingredients) {
 
     const json = {
         method: "POST",
@@ -57,16 +57,14 @@ export function updateMenuItem(name, newName, price, type, seasonal, cal) {
             name,
             newName,
             price,
-            type,
-            seasonal,
-            cal
+            ingredients
         }),
     };
 
     return json;
 }
 
-export function updateInventoryItem(name, newName, qty, uprice, minimum) {
+export function updateInventoryItem(name, newName, qty, uprice) {
 
     const json = {
         method: "POST",
@@ -75,8 +73,7 @@ export function updateInventoryItem(name, newName, qty, uprice, minimum) {
             name,
             newName,
             qty,
-            uprice,
-            minimum
+            uprice
         }),
     };
 
@@ -105,15 +102,14 @@ export function deleteMenuItem(name){
     return json;
 }
 
-export function addInventoryItem(name, qty, unit_price, minimum){
+export function addInventoryItem(name, qty, unit_price){
     const json = {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
             name,
             qty,
-            unit_price,
-            minimum
+            unit_price
         }),
     }
     return json;
@@ -124,6 +120,30 @@ export function submitOrders(orders) {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify(orders)
+    }
+    return json;
+}
+
+export function validateEmployee(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
+    }
+    return json;
+}
+
+export function validateCustomer(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
     }
     return json;
 }

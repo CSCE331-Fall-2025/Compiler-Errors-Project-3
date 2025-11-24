@@ -1,13 +1,13 @@
 import React from 'react';
 import NavBar from "../NavBar";
 import "../../css/checkout.css";
-import LoginField from "./LoginField";
+import EmployeeLoginField from "./EmployeeLoginField";
 
 function EmployeeLoginPage(){
     return(
         <>
             <NavBar></NavBar> 
-            <LoginField></LoginField>
+            <EmployeeLoginField></EmployeeLoginField>
         </>
     );
 }

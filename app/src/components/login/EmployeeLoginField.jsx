@@ -2,17 +2,17 @@ import React from 'react'
 import NavBar from '../NavBar'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateCustomer } from "../../js/utils";
+import { validateEmployee } from "../../js/utils";
 import "../../css/checkout.css"
 
-function LoginField(){
+function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/Manager/validateCustomer", validateCustomer(username, password));
+        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password));
     }
 
     return (
@@ -68,4 +68,4 @@ function LoginField(){
     );
 }
 
-export default LoginField;
+export default EmployeeLoginField;

@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import functions from './function.js';
 import dbConn from './db.js';
-import multer from "multer";
 const { 
     createMenuItemArray, 
     addEmployee, 
@@ -13,8 +12,6 @@ const {
     updateInventoryItem,
     deleteMenuItem,
     deleteEmployee,
-    getEmployees,
-    getInventory
     } = functions;
 
 //Inside App, npm run dev
@@ -23,7 +20,6 @@ const {
 console.log("Server.js starting");
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors());
 app.use(express.json());
@@ -36,34 +32,14 @@ app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-app.get("/api/Manager/fetchEmployees", async (req, res) => {
-    try {
-        const employees = await getEmployees();
-        res.json(employees);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-app.get("/api/Manager/fetchInventory", async (req, res) => {
-    try {
-        const employees = await getInventory();
-        res.json(employees);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
 //addEmployee
-app.post("/api/Manager/addEmployee", upload.single("img"), async (req, res) => {
+app.post("/api/Manager/addEmployee", async (req, res) => {
     try {
         const { name, role, email, phone } = req.body;
-        const imgbuf = req.file ? req.file.buffer : null;
         console.log("Attempting");
 
         try {
-            await addEmployee(name, role, email, phone, imgbuf);
+            await addEmployee(name, role, email, phone);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -75,13 +51,12 @@ app.post("/api/Manager/addEmployee", upload.single("img"), async (req, res) => {
     }
 });
 //updateEmployee
-app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) => {
+app.post("/api/Manager/updateEmployee", async (req, res) => {
     try{
-        const {name, newName, role, email, phone} = req.body;
-        const imgbuf = req.file ? req.file.buffer : null;
+        const {targetName, name, role, email, phone} = req.body;
         console.log("attempting");
         try{
-            await updateEmployee(name, newName, role, email, phone, imgbuf);
+            await updateEmployee(targetName, name, role, email, phone);
         }
         catch(err){
             console.error("add error: ", err);
@@ -140,10 +115,10 @@ app.post("/api/Manager/deleteMenuItem", async (req, res) => {
 //addInventoryItem
 app.post("/api/Manager/addInventoryItem", async (req, res) => {
     try{
-        const {name, qty, unit_price, minimum} = req.body;
+        const {name, qty, unit_price} = req.body;
         console.log("attempting");
         try{
-            await addInventoryItem(name, qty, unit_price, minimum);
+            await addInventoryItem(name, qty, unit_price);
         }
         catch(err){
             console.error("add error: ", err);
@@ -177,13 +152,12 @@ app.post("/api/Manager/updateEmployee", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/addMenuItem", upload.single("img"), async (req, res) => {
+app.post("/api/Manager/addMenuItem", async (req, res) => {
     try {
-        const { name, calories, type, price, seasonal, ingredients } = req.body;
-        const imgbuf = req.file ? req.file.buffer : null;
+        const { name, price, ingredients } = req.body;
         
         try {
-            await addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf);
+            await addMenuItem(name, price, ingredients);
         } catch {
             console.error("add error: ", err);
             throw err;
@@ -195,14 +169,13 @@ app.post("/api/Manager/addMenuItem", upload.single("img"), async (req, res) => {
     }
 });
 
-app.post("/api/Manager/updateMenuItem", upload.single("img"), async (req, res) => {
+app.post("/api/Manager/updateMenuItem", async (req, res) => {
     try {
-        console.log(req.body);
-        const { name, newName, price, type, seasonal, cal } = req.body;
-        const imgbuf = req.file ? req.file.buffer : null;
+        const { name, newName, price, ingredients } = req.body;
         
         try {
-            await updateMenuItem(name, newName, price, type, seasonal, cal, imgbuf);
+            console.log("Testing");
+            await updateMenuItem(name, newName, price, ingredients);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -217,11 +190,11 @@ app.post("/api/Manager/updateMenuItem", upload.single("img"), async (req, res) =
 
 app.post("/api/Manager/updateInventoryItem", async (req, res) => {
     try {
-        const { name, newName, qty, uprice, minimum } = req.body;
+        const { name, newName, qty, uprice } = req.body;
         
         try {
-            console.log("Testing: ", name, newName, qty, uprice, minimum);
-            await updateInventoryItem(name, newName, parseInt(qty), parseFloat(uprice), parseInt(minimum));
+            console.log("Testing");
+            await updateInventoryItem(name, newName, qty, uprice);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -303,6 +276,44 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
         response.status(500).json({error: err.message});
     }
 })
+
+//Employee login validation
+app.post("/api/login/validateEmployee", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateEmployee(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+//Customer login validation
+app.post("/api/login/validateCustomer", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateCustomer(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
 
 app.listen(3000, () => console.log("Server running on port 3000"));
 
