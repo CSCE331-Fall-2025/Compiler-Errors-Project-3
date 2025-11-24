@@ -197,7 +197,8 @@ body {
 }
 
 .order-preview-items {
-    overflow-y: auto;    
+    overflow-y: auto;
+    margin-left: 10px;
 }
 
 /* checkout order button and item */
@@ -240,7 +241,7 @@ body {
     margin-top: 25px;
     margin-bottom: 25px;
     line-height: 1.4;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .checkout-order-price {
@@ -252,7 +253,7 @@ body {
     margin-top: 25px;
     margin-bottom: 25px;
     margin-right: 10px;
-    font-weight: light;
+    font-weight: bold;
 }
 
 .checkout-order-remove-button {
