@@ -17,6 +17,18 @@ function ManagerInventoryPage() {
       getInventory();
   }, []);
 
+  const handleDelete = async (name) => {
+      const res = await fetch(`http://localhost:3000/api/Manager/deleteInventoryItem`, {
+          method: "DELETE",
+      });
+
+      if (res.ok) {
+          setData(prev => prev.filter(item => item.name !== name));
+      } else {
+          alert("Failed to delete item");
+      }
+  };
+
   return (
       <>
           <div class="manager-page-root">
@@ -28,6 +40,9 @@ function ManagerInventoryPage() {
                                   <ManagerInventoryCard key={item.name} {...item} />
                               </div>
                           ))}
+                          <div class="manager-template-card">
+                            <Link to="/employee/manager/inventory/add"><div class="manager-add-card">+</div></Link>
+                          </div>
                   </div>
               </div>
           </div>

@@ -6,9 +6,9 @@ import "../css/style.css"
 function Hero() {
     return (
         <section class="hero">
-            <div class="order-button">
-                <Link to="/order">Order Now</Link>
-            </div>
+            <Link to="/order"><div class="order-button">
+                Order Now
+            </div></Link>
         </section>
     );
 }

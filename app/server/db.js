@@ -75,11 +75,13 @@ async function addUser(username, password, usertype, email){
 }
 
 //Employee Management
-async function addEmployee(name = '', employeetype = '', email = '', phonenum = '')
+async function addEmployee(name = '', employeetype = '', email = '', phonenum = '', img)
 {
+
+    // TO BE IMPLEMENTED: Add img column to database, add img to INSERT. 
     try
     {
-        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum) VALUES ($1, $2, $3, $4)', [name, employeetype, email, phonenum]);
+        return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum, img) VALUES ($1, $2, $3, $4, $5)', [name, employeetype, email, phonenum, img]);
     }
     catch(err)
     {
@@ -103,14 +105,18 @@ async function updateEmployeePhoneNum(targetName, phonenum){
     pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
 }
 
+async function updateEmployeePfp(targetName, img){
+    pool.query('UPDATE employeesce SET img = $1 WHERE name = $2', [img, targetName]);
+}
+
 function deleteEmployee(name){
     pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
 //Managing Inventory
-function addInventoryItem(name, qty, unit_price)
+function addInventoryItem(name, qty, unit_price, minimum)
 {
-    pool.query('INSERT INTO inventoryce (name, quantity, unit_price) VALUES ($1, $2, $3)', [name, qty, unit_price]);
+    pool.query('INSERT INTO inventoryce (name, quantity, unit_price, minimum) VALUES ($1, $2, $3, $4)', [name, qty, unit_price, minimum]);
 }
 
 async function updateInventory(usedIngrMap,inventoryMap){
@@ -184,11 +190,12 @@ async function getIngredients(name){
     }
 }
 
-function addMenuItem(name, price, ingredients){
-    pool.query('INSERT INTO menuce (name, price, ingredients) VALUES ($1, $2, $3)', [name, price, ingredients]);
+function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
+    pool.query('INSERT INTO menuce (name, price, ingredients, itemtype, isseasonal, calories, img) VALUES ($1, $2, $3, $4, $5, $6, $7)', 
+        [name, price, ingredients, type, seasonal, calories, img]);
 }
 
-function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients){
+function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
     console.log("Testing: ", name, newName, price, type, seasonal, calories, ingredients);
 
     if(type.localeCompare('') != 0){
@@ -205,6 +212,9 @@ function updateMenuItem(name, newName, price, type, seasonal, calories, ingredie
     }
     if(ingredients.localeCompare('') != 0){
         pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [ingredients, name]);
+    }
+    if(img != null) {
+        pool.query('UPDATE menuce SET img = $1 WHERE name = $2', [img, name]);
     }
     if(newName.localeCompare('') != 0){
         pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
@@ -300,6 +310,7 @@ export default {
     updateEmployeeName,
     updateEmployeePhoneNum,
     updateEmployeeType,
+    updateEmployeePfp,
     updateInventory,
     getEmployees,
     getInventory

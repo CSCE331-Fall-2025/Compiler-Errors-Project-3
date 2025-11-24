@@ -23,11 +23,14 @@ function ManagerMenuPage() {
               <ManagerNavBar/>
               <div class="manager-template-page">
                   <div class="manager-template-list">
-                          {data.map((item, idx) => (
-                              <div key={item.title+"-Manager-"+idx} class="manager-template-card">
-                                  <ManagerMenuCard {...item}/>
-                              </div>
-                          ))}
+                        {data.map((item, idx) => (
+                            <div key={item.title+"-Manager-"+idx} class="manager-template-card">
+                                <ManagerMenuCard {...item}/>
+                            </div>
+                        ))}
+                        <div class="manager-template-card">
+                            <Link to="/employee/manager/menu/add"><div class="manager-add-card">+</div></Link>
+                        </div>
                   </div>
               </div>
           </div>

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import functions from './function.js';
 import dbConn from './db.js';
+import multer from "multer";
 const { 
     createMenuItemArray, 
     addEmployee, 
@@ -22,6 +23,7 @@ const {
 console.log("Server.js starting");
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors());
 app.use(express.json());
@@ -54,13 +56,14 @@ app.get("/api/Manager/fetchInventory", async (req, res) => {
 });
 
 //addEmployee
-app.post("/api/Manager/addEmployee", async (req, res) => {
+app.post("/api/Manager/addEmployee", upload.single("img"), async (req, res) => {
     try {
         const { name, role, email, phone } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         console.log("Attempting");
 
         try {
-            await addEmployee(name, role, email, phone);
+            await addEmployee(name, role, email, phone, imgbuf);
         } catch (err) {
             console.error("add error: ", err);
             throw err;
@@ -72,12 +75,13 @@ app.post("/api/Manager/addEmployee", async (req, res) => {
     }
 });
 //updateEmployee
-app.post("/api/Manager/updateEmployee", async (req, res) => {
+app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) => {
     try{
         const {name, newName, role, email, phone} = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         console.log("attempting");
         try{
-            await updateEmployee(name, newName, role, email, phone);
+            await updateEmployee(name, newName, role, email, phone, imgbuf);
         }
         catch(err){
             console.error("add error: ", err);
@@ -136,10 +140,10 @@ app.post("/api/Manager/deleteMenuItem", async (req, res) => {
 //addInventoryItem
 app.post("/api/Manager/addInventoryItem", async (req, res) => {
     try{
-        const {name, qty, unit_price} = req.body;
+        const {name, qty, unit_price, minimum} = req.body;
         console.log("attempting");
         try{
-            await addInventoryItem(name, qty, unit_price);
+            await addInventoryItem(name, qty, unit_price, minimum);
         }
         catch(err){
             console.error("add error: ", err);
@@ -173,12 +177,13 @@ app.post("/api/Manager/updateEmployee", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/addMenuItem", async (req, res) => {
+app.post("/api/Manager/addMenuItem", upload.single("img"), async (req, res) => {
     try {
-        const { name, price, ingredients } = req.body;
+        const { name, calories, type, price, seasonal, ingredients } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         
         try {
-            await addMenuItem(name, price, ingredients);
+            await addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf);
         } catch {
             console.error("add error: ", err);
             throw err;
@@ -190,12 +195,14 @@ app.post("/api/Manager/addMenuItem", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/updateMenuItem", async (req, res) => {
+app.post("/api/Manager/updateMenuItem", upload.single("img"), async (req, res) => {
     try {
+        console.log(req.body);
         const { name, newName, price, type, seasonal, cal } = req.body;
+        const imgbuf = req.file ? req.file.buffer : null;
         
         try {
-            await updateMenuItem(name, newName, price, type, seasonal, cal);
+            await updateMenuItem(name, newName, price, type, seasonal, cal, imgbuf);
         } catch (err) {
             console.error("add error: ", err);
             throw err;

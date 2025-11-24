@@ -63,13 +63,45 @@ function ManagerStaffEditPage() {
         setEmployee(({...employee, phone: phone}));
     }
 
+    async function editImage(img) {
+        const formData = new FormData();
+
+        formData.append("img", img);
+        formData.append("name", employee.name);
+        formData.append("newName", employee.name);
+        formData.append("type", employee.type);
+        formData.append("email", employee.email);
+        formData.append("phone", employee.phone);
+
+        await fetch("http://localhost:3000/api/Manager/updateEmployee", {
+            method: "POST",
+            body: formData
+        });
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64 = reader.result.split(",")[1];
+            setEmployee({ ...employee, img: base64 });
+        };
+        reader.readAsDataURL(img);
+    }
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        editImage(file);
+    };
+
     return (
         <>
             <ManagerNavBar/>
             <div class="edit-page">
                 <div class="edit-card-template">
-                    {/* src={employee.img} TO BE IMPLEMENTED */}
-                    <img className="staff-edit-img" src="" alt=""/>
+                    <div className="staff-edit-img-wrapper" onClick={() => document.getElementById("staff-img-input").click()}>
+                        <img className="staff-edit-img" src={`data:image/png;base64,${employee.img}`} alt=""/>
+                    </div>
+                    <input id="staff-img-input" type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageUpload}/>
+                    
                     <EditableField value={employee.name} onSave={editName} className={"edit-employee-name"}/>
                     <EditableField value={employee.type} onSave={editType} className={"edit-employee-role"}/>
 

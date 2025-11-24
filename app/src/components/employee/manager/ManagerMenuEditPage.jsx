@@ -72,14 +72,46 @@ function ManagerMenuEditPage() {
         setItem(({...item, price: cost}));
     }
 
+    async function editImage(img) {
+        const formData = new FormData();
+
+        formData.append("img", img);
+        formData.append("name", item.title);
+        formData.append("newName", item.title);
+        formData.append("price", item.price);
+        formData.append("type", item.type);
+        formData.append("cal", item.cal);
+
+        await fetch("http://localhost:3000/api/Manager/updateMenuitem", {
+            method: "POST",
+            body: formData
+        });
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64 = reader.result.split(",")[1];
+            setItem({ ...item, img: base64 });
+        };
+        reader.readAsDataURL(img);
+    }
+
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        editImage(file);
+    };
+
     return (
         <>
             <ManagerNavBar/>
             <div class="edit-page">
                 <div class="edit-card-template">
-                    <div class="edit-menu-img-container">
-                        <img class="edit-menu-img" src={item.img} alt={item.alt}/>
+                    <div class="edit-menu-img-container" onClick={() => document.getElementById("staff-img-input").click()}>
+                        <img class="edit-menu-img" src={`data:image/png;base64,${item.img}`} alt={item.alt}/>
                     </div>
+
+                    <input id="staff-img-input" type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageUpload}/>
 
                     <div class="edit-menu-item-info">
                         <div class="edit-menu-info-row">

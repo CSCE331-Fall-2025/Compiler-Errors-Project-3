@@ -3,7 +3,7 @@ import "../../../css/style.css"
 import ManagerNavBar from "./ManagerNavBar";
 import ManagerEmployeeCard from "./ManagerEmployeeCard";
 import { useEffect, useState } from 'react';
-
+import { Link } from 'react-router-dom'
 
 function ManagerStaffPage() {
     const [data, setData] = useState([]);
@@ -28,6 +28,9 @@ function ManagerStaffPage() {
                                     <ManagerEmployeeCard key={item.name} {...item} />
                                 </div>
                             ))}
+                            <div class="manager-template-card">
+                                <Link to="/employee/manager/staff/add"><div class="manager-add-card">+</div></Link>
+                            </div>
                     </div>
                 </div>
             </div>

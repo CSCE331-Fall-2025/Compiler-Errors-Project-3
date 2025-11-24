@@ -105,14 +105,15 @@ export function deleteMenuItem(name){
     return json;
 }
 
-export function addInventoryItem(name, qty, unit_price){
+export function addInventoryItem(name, qty, unit_price, minimum){
     const json = {
         method: "POST",
         headers: { "Content-Type": "application/json"},
         body: JSON.stringify({
             name,
             qty,
-            unit_price
+            unit_price,
+            minimum
         }),
     }
     return json;

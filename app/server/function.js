@@ -11,7 +11,7 @@ async function createMenuItemArray()
 
     //For each row
     let menuItemArray = res.rows.map(row => ({
-        img: 'images/Orange Chicken.png',
+        img: row.img ? row.img.toString("base64") : null,
         alt: row.name,
         title: row.name,
         cal: row.calories + " cal",
@@ -36,7 +36,8 @@ async function getEmployees() {
         name: row.name,
         type: row.employeetype,
         email: row.email,
-        phone: row.phonenum
+        phone: row.phonenum,
+        img: row.img ? row.img.toString("base64") : null
     }));
 
     return employees;
@@ -56,19 +57,36 @@ async function getInventory() {
     return inventory;
 }
 
-async function updateEmployee(name, newName, role, email, phone) {
+async function addEmployee(name, role, email, phone, img) {
+    await dbConn.addEmployee(name, role, email, phone, img);
+}
+
+async function updateEmployee(name, newName, role, email, phone, img) {
     const res1 = await dbConn.updateEmployeeType(name, role);
     const res2 = await dbConn.updateEmployeeEmail(name, email);
     const res3 = await dbConn.updateEmployeePhoneNum(name, phone);
-    const res4 = await dbConn.updateEmployeeName(name, newName);
+
+    if(img != null) {
+        const res4 = await dbConn.updateEmployeePfp(name, img);
+    }
+
+    const res5 = await dbConn.updateEmployeeName(name, newName);
 }
 
 async function updateInventoryItem(name, newName, qty, uprice, minimum) {
     await dbConn.updateInventoryItem(name, newName, qty, uprice, minimum);
 }
 
-async function updateMenuItem(name, newName, price, type, seasonal, calories) {
-    await dbConn.updateMenuItem(name, newName, price, type, seasonal, calories, "");
+async function updateMenuItem(name, newName, price, type, seasonal, calories, img) {
+    await dbConn.updateMenuItem(name, newName, price, type, seasonal, calories, "", img);
+}
+
+async function addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf) {
+    await dbConn.addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf);
+}
+
+async function addInventoryItem(name, qty, uprice, min) {
+    await dbConn.addInventoryItem(name, qty, uprice, min);
 }
 
 
@@ -79,5 +97,8 @@ export default {
     getInventory,
     updateEmployee,
     updateInventoryItem,
-    updateMenuItem
+    updateMenuItem,
+    addEmployee,
+    addMenuItem,
+    addInventoryItem
 }
