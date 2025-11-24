@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/cashier.css";
+import "../../../css/cashier.css";
 import { Link } from "react-router-dom";
 
 function CashierMenuItem({ img, alt, title, cal, price }) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import CashierOrderListItems from './CashierOrderListItems';
-import "../css/cashier.css";
+import "../../../css/cashier.css";
 
 function CashierOrderList(){
     return(
@@ -12,7 +12,7 @@ function CashierOrderList(){
                     <span>Items</span>
                     <CashierOrderListItems></CashierOrderListItems>
                 </div>
-                <button onClick={checkout} class="checkout-button">Submit order</button>
+                <button class="checkout-button">Submit order</button>
             </div>
         </aside>
     );

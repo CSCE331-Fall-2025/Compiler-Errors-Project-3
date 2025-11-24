@@ -9,10 +9,25 @@ function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const nav = useNavigate();
+
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password));
+        var result = "FAIL";
+
+        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password))
+        .then(res => res.json())
+        .then(data => {
+            result = data.result;
+        });
+
+        if(result.toUpperCase() === "MANAGER") {
+            nav("/Employee/Manager");
+        } else if(result.toUpperCase() === "CASHIER") {
+            nav("/Employee/Cashier");
+        }
+
     }
 
     return (
