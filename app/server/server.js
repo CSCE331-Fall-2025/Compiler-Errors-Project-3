@@ -272,7 +272,6 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
 
 //addOrders
 app.post("/api/Cashier/addOrders", async (req, response) => {
-app.post("/api/Cashier/addOrders", async (req, response) => {
     //Gets inventory
     const res = await dbConn.getStock();
     const inventoryMap = new Map(res.rows.map(row => [row.name,row.quantity]));
