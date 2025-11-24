@@ -5,14 +5,14 @@ import { useState } from "react";
 import { validateEmployee } from "../../js/utils";
 import "../../css/checkout.css"
 
-function LoginField(){
+function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/Manager/validateEmployee", validateEmployee(username, password));
+        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password));
     }
 
     return (
@@ -68,4 +68,4 @@ function LoginField(){
     );
 }
 
-export default LoginField;
+export default EmployeeLoginField;
