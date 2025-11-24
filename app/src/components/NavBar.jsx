@@ -11,6 +11,7 @@ function NavBar() {
         <li><Link to="/menu">Menu</Link></li>
         <li><Link to="/locations">Locations</Link></li>
         <li><Link to="/weather">Weather</Link></li>
+        <li><Link to="/login">Login</Link></li>
       </ul>
     </nav>
   );
