@@ -12,7 +12,7 @@ function LoginField(){
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/Manager/validateCustomer", validateCustomer(username, password));
+        await fetch("http://localhost:3000/api/login/validateCustomer", validateCustomer(username, password));
     }
 
     return (
