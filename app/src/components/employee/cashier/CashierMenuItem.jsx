@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import { CartContext } from "../components/contexts/CartContext";
-import "../css/cashier.css";
+import React from "react";
+import "../../../css/cashier.css";
 import { Link } from "react-router-dom";
 
 function CashierMenuItem({ img, alt, title, cal, price }) {

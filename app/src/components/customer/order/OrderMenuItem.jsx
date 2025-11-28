@@ -14,7 +14,7 @@ function OrderMenuitem({ img, alt, title, cal, price }) {
     return (
         <div class="menu-item">
             <div class="menu-item-img-container">
-                <img src={img} alt={alt} class="menu-item-img"></img>
+                <img src={`data:image/png;base64,${img}`} alt={alt} class="menu-item-img"></img>
             </div>
 
             <div class="menu-text">

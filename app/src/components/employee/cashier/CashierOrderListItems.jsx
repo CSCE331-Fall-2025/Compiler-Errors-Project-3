@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from "../components/contexts/CartContext";
-import { useNavigate } from 'react-router-dom';
-import "../css/cashier.css";
-import { submitOrders } from '../js/utils';
+import React, { useContext } from "react";
+import { CartContext } from "../../contexts/CartContext"
+import "../../../css/cashier.css";
 
 function CashierOrderListItems() {
     const { cart, addToCart, clearCart } = useContext(CartContext);

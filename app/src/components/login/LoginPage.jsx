@@ -9,8 +9,8 @@ function LoginPage(){
         <>
             <NavBar></NavBar> 
             <LoginField></LoginField>
-            <div class="muted">Are you an employee?<a href = "#"> <Link to="/employee/login">Login</Link></a></div>
-            <div class="muted">Don't have an account? <a href="#"> Register</a></div>
+            <div class="muted">Are you an employee?<Link to="/employee/login"> Login</Link></div>
+            <div class="muted">Don't have an account? Register</div>
         </>
     );
 }

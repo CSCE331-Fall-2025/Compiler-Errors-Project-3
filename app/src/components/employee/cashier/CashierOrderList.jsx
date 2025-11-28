@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from "../components/contexts/CartContext";
 import CashierOrderListItems from './CashierOrderListItems';
-import { useNavigate } from 'react-router-dom';
-import "../css/cashier.css";
-import { submitOrders } from '../js/utils';
+import "../../../css/cashier.css";
 
 function CashierOrderList(){
     const { cart, clearCart } = useContext(CartContext);
@@ -70,6 +68,7 @@ function CashierOrderList(){
                     <span>Items</span>
                     <CashierOrderListItems/>
                 </div>
+                <button class="checkout-button">Submit order</button>
             </div>
             <button onClick={placeOrder} id="placeOrder" className="checkout-btn">
                 Place Order
