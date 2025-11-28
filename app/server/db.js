@@ -35,7 +35,6 @@ async function testQuery()
     try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(JSON.stringify(data, null, 2));
         
         console.log(`Current weather: ${data.current.weather[0].description}`);
         console.log(`Temperature: ${data.current.temp}°F`);
@@ -43,6 +42,7 @@ async function testQuery()
 
         // Example: print tomorrow’s forecast
         console.log(`Tomorrow: ${data.daily[1].weather[0].description}, High: ${data.daily[1].temp.max}°F`);
+        console.log(data.daily);
     } catch (error) {
         console.error('Error fetching weather:', error);
     }

@@ -288,6 +288,14 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
             }
         };
 
+        if(!flag){
+            throw new TypeError('Quantity Exceeds Inventory Stock');
+        }
+        else{
+            await dbConn.addOrders(orders);
+            dbConn.updateInventory(usedIngrMap,inventoryMap);
+        }
+
     } catch (err) {
         console.log(err.message);
         response.status(500).json({error: err.message});

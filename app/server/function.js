@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import findConfig from 'find-config';
 dotenv.config({ path: findConfig('.env') });
 
-//Required APIs, Google Translate, Auth (google or otherwise), Place, Weather
+//Required APIs, Google Translate, Auth (google or otherwise), Place (done), Weather (done)
 
 async function createMenuItemArray()
 {
