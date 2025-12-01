@@ -93,22 +93,47 @@ async function addInventoryItem(name, qty, uprice, min) {
 }
 
 //External API calls
-async function getWeatherAPI(){
+async function getWeatherAPI(lat = 29.7604, long = -95.3698){
     const apiKey = process.env.WEATHERAPI_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${'Houston, Tx'}&appid=${apiKey}&units=imperial`;
+    //Houston Lat and Long: 29.7604, -95.3698
+    //Defaults to Houston if no input
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&appid=${apiKey}&exclude=${'minutely','hourly','alerts'}&units=imperial`;
 
     try {
+        //Fetch query from API and send response to data
         const response = await fetch(url);
         const data = await response.json();
-        console.log(`Weather in ${city}:`, data.weather[0].description);
-        console.log(`Temperature: ${data.main.temp}°F`);
+        
+        /*
+        Current Fields: (data.current)
+            temp - Temperature (Configured for Imperial/Fahrenheit)
+            humidity - Humidity in %
+            weather - Array of objects
+                weather.main - Weather type
+                weather.description - Further details on weather type
+            feels_like - Feels Like X degrees (Configured for Imperial/Fahrenheit)
+        Daily Fields: (data.daily[X]; 0 is today)
+            temp - Now an array of fields
+                temp.morn - Morning time temp
+                temp.day - Temp during the day
+                temp.eve - Evening time temp
+                temp.night - Night time temp
+                temp.min - Low of X degrees
+                temp.max - High of X degrees
+            weather - Same as Current
+        Alerts Fields: (data.alert[X])
+            sender_name - who sent the alert
+            event - Name of the alert
+            description - Wall of text from the sender
+        */
+        return data;
     } catch (error) {
         console.error('Error fetching weather:', error);
     }
 
 }
 
-async function getPlacesAPI(){
+async function getPlacesAPI(lat, long){
     const apiKey = process.env.PLACEAPI_KEY;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&radius=${50000}&key=${apiKey}`;
 
@@ -118,11 +143,18 @@ async function getPlacesAPI(){
     try {
         const response = await fetch(url);
         const data = await response.json();
-        data.results.forEach(place => {
-            console.log(`Name: ${place.name}`);
-            console.log(`Address: ${place.formatted_address}`);
-        });
-        console.log(data);
+
+        const results = data.results;
+        /*
+        Fields:
+            name - Name of place. SHOULD always be 'Panda Express'
+            formatted_address - Address, with road, city, state + zip code, country
+            rating - rating according to google. 0.0 to 5.0 I presume (to reflect stars)
+            opening_hours - contains an object with a field that is called open_now. That's it?
+            photo_reference - Base 64 string I think
+            types - Array containing all tags of that location (meal_delivery, meal_takeaway, etc)
+         */
+        return results;
     } catch (error) {
         console.error('Error fetching places:', error);
     }
@@ -139,5 +171,7 @@ export default {
     updateMenuItem,
     addEmployee,
     addMenuItem,
-    addInventoryItem
+    addInventoryItem,
+    getWeatherAPI,
+    getPlacesAPI
 }

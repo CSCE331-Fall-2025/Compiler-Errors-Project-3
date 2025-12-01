@@ -302,6 +302,24 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
     }
 })
 
+app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
+    try {
+        const name = req.body.name;
+        //Find item. If it returns empty, then throw error
+
+        //Delete from table
+
+        //Get all menu items
+        //For each menu item, if list contains menu item, carefully delete the ingredient and reassemble the string
+        //Update menu item with new ingredient list
+
+        
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
 app.listen(3000, () => console.log("Server running on port 3000"));
 
 /*

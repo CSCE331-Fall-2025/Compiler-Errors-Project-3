@@ -28,24 +28,7 @@ async function getIngredientList(name){
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    const apiKey = process.env.WEATHERAPI_KEY;
-    //Houston Lat and Long: 29.7604, -95.3698
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${29.7604}&lon=${-95.3698}&appid=${apiKey}&exclude=${'minutely','hourly','alerts'}&units=imperial`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        console.log(`Current weather: ${data.current.weather[0].description}`);
-        console.log(`Temperature: ${data.current.temp}°F`);
-        console.log(`Humidity: ${data.current.humidity}%`);
-
-        // Example: print tomorrow’s forecast
-        console.log(`Tomorrow: ${data.daily[1].weather[0].description}, High: ${data.daily[1].temp.max}°F`);
-        console.log(data.daily);
-    } catch (error) {
-        console.error('Error fetching weather:', error);
-    }
+    
 }
 
 /*
@@ -334,7 +317,7 @@ function deleteMenuItem(itemName){
 }
 
 //Misc Functions
-function getReport(reportName)
+async function getReport(reportName)
 {
     var qry;
     if(reportName.localeCompare('Top 5 Menu items')) 
@@ -349,13 +332,34 @@ function getReport(reportName)
         qry = "SELECT SUM(price * qty) AS profit FROM orderhistoryce";
     }
     try{
-        return pool.query(qry);
+        return await pool.query(qry);
     }
     catch(err)
     {
         console.log(err);
     }
 }
+
+/**
+ * 
+ * @param {*} currentHour Integer (1 = 1AM, 24 = 12AM)
+ * @param {*} date String. Format is 'XXXX-XX-XX' (Year, month, day)
+ * @returns Array of order entries
+ */
+async function getXReport(currentHour, date) {
+    try {
+        const qry = `
+            SELECT EXTRACT(HOUR FROM time) AS hour, item, qty, price
+            FROM orderhistoryce
+            WHERE "date" = $1 AND EXTRACT(HOUR FROM time) < $2`;
+            
+        const res = await pool.query(qry, [date, currentHour]);
+        return res.rows;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 function filterOrderHistory(startDate, endDate)
 {
@@ -397,6 +401,8 @@ async function addOrders(orderArray){
     };
 }
 
+
+
 export default {
     addOrders,
     addUser,
@@ -424,5 +430,6 @@ export default {
     updateEmployeePfp,
     updateInventory,
     getEmployees,
-    getInventory
+    getInventory,
+    getXReport
 };
