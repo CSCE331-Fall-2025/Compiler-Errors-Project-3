@@ -102,6 +102,17 @@ export function deleteMenuItem(name){
     return json;
 }
 
+export function deleteInventoryItem(name){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
+}
+
 export function addInventoryItem(name, qty, unit_price, minimum){
     const json = {
         method: "POST",
@@ -147,4 +158,15 @@ export function validateCustomer(username, password){
         }),
     }
     return json;
+}
+
+export function fetchIngredients(name) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;   
 }

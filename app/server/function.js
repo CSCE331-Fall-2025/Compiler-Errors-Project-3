@@ -25,7 +25,7 @@ async function createMenuItemArray()
 
 async function getIngredientList(name){ 
     const res = await dbConn.getIngredients(name);
-    return res.rows[0].split(", ");
+    return res.rows[0].ingredients.split(", ");
 }
 
 async function getEmployees() {
@@ -89,6 +89,9 @@ async function addInventoryItem(name, qty, uprice, min) {
     await dbConn.addInventoryItem(name, qty, uprice, min);
 }
 
+async function addOrder(orders) {
+    await dbConn.addOrders(orders);
+}
 
 export default {
     createMenuItemArray,
@@ -100,5 +103,6 @@ export default {
     updateMenuItem,
     addEmployee,
     addMenuItem,
-    addInventoryItem
+    addInventoryItem,
+    addOrder
 }
