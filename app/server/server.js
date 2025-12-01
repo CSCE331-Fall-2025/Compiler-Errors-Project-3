@@ -306,13 +306,60 @@ app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
     try {
         const name = req.body.name;
         //Find item. If it returns empty, then throw error
-
+        const item = await pool.query('SELECT * FROM inventoryce WHERE name = $1', [name]);
+        if(item.rows.length === 0)
+        {
+            throw TypeError('Error, ingredient does not exist')
+        }
         //Delete from table
+        await dbConn.deleteInventoryItem();
 
         //Get all menu items
+        const res = await dbConn.getMenuItems();
+        //console.log(res.rows);
         //For each menu item, if list contains menu item, carefully delete the ingredient and reassemble the string
-        //Update menu item with new ingredient list
+        const names = [];
+        const ingrs = [];
+        for(const row of res.rows){
+            let list = await getIngredientList(row.name);
+            const updatedIngrs = [];
+            var flag = false;
+            for(const ingr of list){
+                //If ingredient to delete exists in the list, mark down name and flag it for updating 
+                if(ingr === 'Honey'){
+                    names.push(row.name);
+                    flag = true;
+                }
+                else{
+                    updatedIngrs.push(ingr);
+                }
+            }
+            if(flag){
+                ingrs.push(updatedIngrs);
+            }
+        }
 
+        //Update menu item with new ingredient list
+        const newList = [];
+        //For each array of ingredients
+        for(const ingrArr of ingrs){
+            let ingrStr = '';
+
+            //Concatenate with a ', ' between each ingredient
+            for(let i = 0; i < ingrArr.length; i++){
+                if(i+1 === ingrArr.length){
+                    ingrStr = ingrStr + ingrArr[i];
+                }
+                else{
+                    ingrStr = ingrStr + ingrArr[i] + ', ';
+                }
+            }
+            newList.push(ingrStr);
+        }
+
+        for(let i = 0; i < newList.length; i++){
+            dbConn.updateMenuIngr(names[i],newList[i]);
+        }
         
     } catch (err) {
         console.log(err.message);

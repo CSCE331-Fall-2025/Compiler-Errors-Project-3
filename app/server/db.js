@@ -20,97 +20,11 @@ async function getIngredientList(name){
     return temp2;
 }
 
-/*
-
-*/
-
-
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
     
 }
-
-/*
-var res = await getStock();
-    var inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
-    var usedIngrMap = new Map();
-    try {
-        //Get the orders
-        const orders = new Array();
-        orders.push({
-            name: 'Orange Chicken',
-            quantity: 1,
-            add: new Array(),
-            sub: new Array()
-        });
-        orders.push({
-            name: 'Fried Rice',
-            quantity: 1000,
-            add: new Array(),
-            sub: new Array()
-        });
-        
-        //Get ingredients used
-        for(let k = 0; k < orders.length; k++) {
-            const order = orders[k];
-            const quantity = order.quantity;
-            //Gets ingredients for order
-            var ingrList = await getIngredientList(order.name);
-            //For each ingredient
-            for(let i = 0; i < ingrList.length; i++){
-                //If ingredient hasn't been used, initialize
-                if(usedIngrMap.get(ingrList[i]) === undefined){
-                    usedIngrMap.set(ingrList[i], 0);
-                }
-                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
-            }
-
-            //Add is sides
-            const addArr = order.add;
-            addArr.push('Orange Chicken');
-            for(let i = 0; i < addArr.length; i++){
-                ingrList = await getIngredientList(addArr[i]);
-                for(let j = 0; j < ingrList.length; j++)
-                {
-                    if(usedIngrMap.get(ingrList[j]) === undefined){
-                        usedIngrMap.set(ingrList[j], 0);
-                    }
-                    usedIngrMap.set(ingrList[j], usedIngrMap.get(ingrList[j]) + quantity);
-                }
-            }
-
-            //Remove quantity amount of some ingredient
-            const subArr = order.sub;
-            subArr.push('Garlic');
-            for(let i = 0; i < subArr.length; i++){
-                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) - quantity);
-            }
-        };
-
-        var flag = true;
-        //Check if exceeds stock
-        for(const [key,value] of usedIngrMap){
-            if(value > inventoryMap.get(key)){
-                flag = false;
-            }
-        };
-
-        //If exceeds, error. Else, add to inventory
-        if(!flag){
-            throw new TypeError('Quantity Exceeds Inventory Stock');
-        }
-        else{
-            await addOrders(orders);
-            updateInventory(usedIngrMap,inventoryMap);
-        }
-
-    } catch (err) {
-        console.log(err.message);
-    }
-
-*/
-
 
 //Account Management
 async function validateEmployee(username, password){
@@ -232,6 +146,10 @@ function updateInventoryItem(name, newName, qty, uprice, minimum){
     }
 }
 
+async function deleteInventoryItem(name){
+    pool.query('DELETE FROM inventoryce WHERE name = $1', [name]);
+}
+
 async function checkStock(name){
     try{
         return pool.query('SELECT quantity FROM inventoryce WHERE name = $1', [name]);
@@ -310,6 +228,10 @@ function updateMenuItem(name, newName, price, type, seasonal, calories, ingredie
     if(newName.localeCompare('') != 0){
         pool.query('UPDATE menuce SET name = $1 WHERE name = $2', [newName, name]);
     }
+}
+
+async function updateMenuIngr(name, newList){
+    pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [newList,name]);
 }
 
 function deleteMenuItem(itemName){
@@ -413,9 +335,11 @@ export default {
     getMenuItems,
     addMenuItem,
     updateMenuItem,
+    updateMenuIngr,
     addEmployee,
     addInventoryItem,
     updateInventoryItem,
+    deleteInventoryItem,
     getReport,
     filterOrderHistory, 
     testQuery,
