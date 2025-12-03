@@ -12,6 +12,11 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
         addToCart(title, price);
     }
 
+    function addSide() {
+        console.log("side added");
+        addToCart(title, price);
+    }
+
     useEffect(() => {
         async function getMenu() {
             const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
@@ -42,6 +47,9 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
                 Sides
                 {newData.map((item, idx) => (
                     <CashierMenuSides key={item.title+idx} order={order} item={item.title}/>
+                    // <button type = "button" onClick={addSide} className ="checkout-order-side">
+                    //     {item.title}
+                    // </button>
                 ))}
             </section>}
 
