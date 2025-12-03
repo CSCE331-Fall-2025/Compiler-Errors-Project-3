@@ -3,7 +3,8 @@ import { CartContext } from "../../contexts/CartContext"
 import "../../../css/cashier.css";
 
 function CashierOrderListItems() {
-    let { cart } = useContext(CartContext);
+    const { cart, addToCart, clearCart } = useContext(CartContext);
+    const { removeFromCart } = useContext(CartContext);
     console.log(cart);
 
     const tempCart = [...cart];
@@ -17,6 +18,15 @@ function CashierOrderListItems() {
         }
     }
 
+    
+    async function add() {
+        addToCart(title, price);
+    }
+
+    async function remove(){
+        removeFromCart(order);
+    }
+
     return (
         <div class="order-preview-items">
             {cart.length === 0 ? (
@@ -25,9 +35,16 @@ function CashierOrderListItems() {
             outputCart.map((item, index) => (
             <div className="order-details-row" key={index}>
                 <span className="order-details-name">{item.name}</span>
-                <span className="order-details-qty"> {item.price}</span>
+                <span className="order-details-qty">{item.price}</span>
+
+                <button
+                    onClick={() => removeFromCart(item)}
+                    className="checkout-order-remove-button"
+                >
+                    X
+                </button>
             </div>
-            ))
+        ))
         )}
         </div>
     );
