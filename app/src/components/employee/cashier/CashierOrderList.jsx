@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from "../components/contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 import CashierOrderListItems from './CashierOrderListItems';
+import { useNavigate } from 'react-router-dom';
 import "../../../css/cashier.css";
+import { submitOrders } from "../../../js/utils";
 
 function CashierOrderList(){
-    const { cart, clearCart } = useContext(CartContext);
+    const { cart, clearCart } = useContext(CashierCartContext);
     const [subtotal, setSubtotal] = useState(0.0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(cart.length > 0){
@@ -27,13 +30,18 @@ function CashierOrderList(){
 
         for(let i = 0; i < names.length; i++) {
             const add = [];
-            const qty = 0;
+            const sub = [];
+            var qty = 0;
 
             for(let j = 0; j < cart.length; j++) {
                 if(cart[j].name === names[i]) {
                     qty += 1;
                     if(cart[j].side != null) {
                         add.push(cart[j].side);
+                    }
+
+                    for(let k = 0; k < cart[j].sub.length; k++) {
+                        sub.push(cart[j].sub[k]);
                     }
                 }
             }
@@ -42,21 +50,21 @@ function CashierOrderList(){
                 name: names[i],
                 quantity: qty,
                 add: add,
-                sub: []
+                sub: sub
             }
 
             newCart.push(order);
 
-
         }
-        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
-        const data = await response.json();
 
+        console.log(newCart);
+
+        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
+        
         if(response.status == 200) {
             clearCart();
-            // navigate away   
+            navigate("/");   
         }
-
     }
 
     return(
@@ -68,7 +76,6 @@ function CashierOrderList(){
                     <span>Items</span>
                     <CashierOrderListItems/>
                 </div>
-                <button class="checkout-button">Submit order</button>
             </div>
             <button onClick={placeOrder} id="placeOrder" className="checkout-btn">
                 Place Order
