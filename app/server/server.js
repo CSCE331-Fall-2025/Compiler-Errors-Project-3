@@ -3,6 +3,11 @@ import cors from "cors";
 import functions from './function.js';
 import dbConn from './db.js';
 import multer from "multer";
+import { OAuth2Client } from "google-auth-library";
+import dotenv from 'dotenv';
+import findConfig from 'find-config';
+dotenv.config({ path: findConfig('.env') });
+
 const { 
     createMenuItemArray, 
     addEmployee, 
@@ -24,6 +29,22 @@ console.log("Server.js starting");
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
+
+//# GOOGLE AUTH RELATED THINGS #//
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+//Switch redirect URI based on environment (If NODE_ENV is production (aka Render), then use that, else use localhost)
+//RENDER IS NOT CONFIGURED. DO NOT TEST THERE 
+const REDIRECT_URI =
+//OAuth is configured to use port 5713 which is the port that appears in npm run dev. Might break if not that port
+process.env.NODE_ENV === "production"
+    ? "https://your-app-name.onrender.com/oauth2callback"
+    : "http://localhost:5173/oauth2callback";
+
+//Create client
+const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+//# END #//
 
 app.use(cors());
 app.use(express.json());
@@ -366,6 +387,110 @@ app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
         res.status(500).json({error: err.message});
     }
 });
+
+//GOOGLE AUTH ENDPOINTS
+//Fair warning, this is AI generated, so this may be slightly harder to utilize
+//Step 1: Login route → redirect user to Google
+app.get("/auth/google", (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: ["profile", "email"],
+    });
+    res.redirect(url);
+});
+
+// Step 2: Callback route → exchange code for tokens
+app.get("/oauth2callback", async (req, res) => {
+    const { code, error } = req.query;
+
+    if (error) {
+        // User cancelled or login failed
+        console.error("OAuth error:", error);
+        return res.status(400).send(`Login failed: ${error}`);
+    }
+
+    try {
+        const { tokens } = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(tokens);
+
+        // For demo: show tokens (in production, store securely in DB/session)
+        //res.json(tokens); Commented out since apparently pasting tokens directly is a bad idea
+        /*
+        AI Generated Example of what Supposedly the above command returns:
+        {
+            "access_token": "ya29.a0AfH6SMCEXAMPLE...", //Used to call google APIs on behalf of user (idk if useful)
+            "refresh_token": "1//0gEXAMPLElongstring...", //Long term token to not require logins (idk if useful)
+            "scope": "profile email", //Scope of login?
+            "token_type": "Bearer", //Should default to Bearer, whatevert that is
+            "expiry_date": 1733200000000, //When token will expire (Milliseconds since Epoch )
+            "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ij..." //The useful thing
+        } 
+        */
+
+        const ticket = await oauth2Client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID, // must match your OAuth client ID
+        });
+
+        const payload = ticket.getPayload();
+        /*
+        Full payload data (JSON format):
+        {
+            "iss": "https://accounts.google.com",
+            "sub": "123456789012345678901",
+            "email": "user@example.com",
+            "email_verified": true,
+            "name": "Jane Doe",
+            "picture": "https://lh3.googleusercontent.com/a-/AOh14Gh...",
+            "given_name": "Jane",
+            "family_name": "Doe",
+            "aud": "your-client-id.apps.googleusercontent.com",
+            "exp": 1733200000,
+            "iat": 1733196400
+        }
+        I assume you access everything via the same way as below
+        */
+
+        //I guess you can augment this with whatever fields above
+        const userData = {
+            userId: payload['sub'],       // Google unique user ID
+            email: payload['email'],
+            name: payload['name'],
+            picture: payload['picture'],
+        }
+        res.json(userData);
+        
+        //Replace temp with value from actual client login type
+        const temp = 'EMPLOYEE';
+        var loginCheck;
+        //Special Pass is a random base 64 string I generated. Not important, just doing it like this for security
+        if(temp === 'EMPLOYEE'){
+            loginCheck = dbConn.validateEmployee(userData.email,process.env.OAUTH_SPECIALPASS);
+        }
+        else{
+            loginCheck = dbConn.validateCustomer(userData.email,process.env.OAUTH_SPECIALPASS);
+        }
+
+        //Redirects to correct login. I don't see an endpoint for this so not quite sure how that works
+        if(loginCheck === 'MANAGER'){
+            
+        }
+        else if(loginCheck === 'CASHIER'){
+            
+        }
+        else{ //If you end up being a customer or smth else idk
+
+        }
+        
+        
+    } catch (err) {
+        console.error("Error exchanging code:", err);
+        res.status(500).send("Authentication failed");
+    }
+});
+
+
+
 
 app.listen(3000, () => console.log("Server running on port 3000"));
 

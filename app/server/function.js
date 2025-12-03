@@ -161,6 +161,7 @@ async function getPlacesAPI(lat, long){
 }
 
 //PLEASE BE CAREFUL USING THIS, I DON'T THINK I HAVE TOO MANY CALLS BEFORE IT STARTS COSTING ME
+//Might not work lol
 async function translateText(text) {
     const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3.3b/translation", {
         method: "POST",

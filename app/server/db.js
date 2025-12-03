@@ -47,15 +47,26 @@ async function validateEmployee(username, password){
 
     var flag = false;
     var userType = 'FAIL';
-    for(const row of res.rows){
-        if(!flag){
-            if((row.username === username  || row.email === username) && row.password === password){
-                userType = row.usertype;
-                flag = true;
+    if(password === process.env.OAUTH_SPECIALPASS){
+        for(const row of res.rows){
+            if(!flag){
+                if(row.email === username){
+                    userType = row.usertype;
+                    flag = true;
+                }
             }
         }
     }
-
+    else{
+        for(const row of res.rows){
+            if(!flag){
+                if((row.username === username  || row.email === username) && row.password === password){
+                    userType = row.usertype;
+                    flag = true;
+                }
+            }
+        }
+    }
     return userType;
 }
 
@@ -63,14 +74,24 @@ async function validateCustomer(username, password){
     const res = await pool.query('SELECT * FROM customersce');
 
     var flag = false;
-    for(const row of res.rows){
-        if(!flag){
-            if((row.username === username || row.email === username) && row.password === password){
-                flag = true;
+    if(password === process.env.OAUTH_SPECIALPASS){
+        for(const row of res.rows){
+            if(!flag){
+                if(row.email === username){
+                    flag = true;
+                }
             }
         }
     }
-
+    else{
+        for(const row of res.rows){
+            if(!flag){
+                if((row.username === username || row.email === username) && row.password === password){
+                    flag = true;
+                }
+            }
+        }
+    }
     return flag;
 }
 
