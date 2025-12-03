@@ -160,6 +160,25 @@ async function getPlacesAPI(lat, long){
     }
 }
 
+//PLEASE BE CAREFUL USING THIS, I DON'T THINK I HAVE TOO MANY CALLS BEFORE IT STARTS COSTING ME
+async function translateText(text) {
+    const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3.3b/translation", {
+        method: "POST",
+        headers: {
+        "Authorization": `Token ${process.env.NLP_API_KEY}`,
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+        text: text,
+        source: "en",
+        target: "es"
+        })
+    });
+
+    const data = await response.json();
+    console.log("Translated:", data.translation_text);
+}
+
 
 export default {
     createMenuItemArray,

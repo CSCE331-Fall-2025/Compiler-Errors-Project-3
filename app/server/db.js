@@ -23,7 +23,22 @@ async function getIngredientList(name){
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    
+    const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3-3b/translation", {
+    method: "POST",
+    headers: {
+      "Authorization": `Token ${process.env.NLP_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      text: 'Bread',
+      source: "engl_Latn",
+      target: "spa_Latn"
+        })
+    });
+
+    console.log(response);
+    //const data = await response.json();
+    //console.log("Translated:", data.translation_text);
 }
 
 //Account Management
