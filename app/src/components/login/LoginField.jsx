@@ -46,22 +46,15 @@ function LoginField(){
                         />
                     </div>
 
-                    <div className="actions">
+                    
                         <div>
-                            <label style={{ fontWeight: 500 }}>
-                                <input type="checkbox" defaultChecked style={{ marginRight: 8 }} />
-                                Remember me
-                            </label>
-                        </div>
-                        <div>
-                            <a href="#" style={{ color: "#777", textDecoration: "underline" }}>
+                            <a className="forgot-password" href="#" >
                                 Forgot password?
                             </a>
                         </div>
-                    </div>
-
-                    <div style={{ marginTop: 18 }}>
-                        <button type="submit">Sign In</button>
+                        
+                <div className="actions">
+                    <button type="submit" class="btn-sign">Sign In</button>
                     </div>
                 </form>
             </section>

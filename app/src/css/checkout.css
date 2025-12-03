@@ -222,58 +222,85 @@ body {
 
 /* Login Form (Styled to Match Checkout) */
 .login-wrap {
+  margin-top: 50px;
   min-height: 70vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 28px;
 }
 
 .login-card {
-  width: 420px;
-  background: #fff;
+  width: 380px;
+  background: white;
   border-radius: 10px;
   padding: 28px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+  margin-top: 50px;
+  border: 2px solid black;
+  box-shadow: 0 4px 12px lightgrey;
 }
 
 .login-card h1 {
   margin: 0 0 18px;
   font-size: 28px;
+  font-weight: 800 ;
 }
 
-.form-row { margin-bottom: 14px; }
+.form-row {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
 
 label {
   display: block;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-weight: 600;
+  color: red;
+  margin-bottom: 6px;
+  padding: 0;
 }
+
 
 input[type="email"],
 input[type="password"] {
-  width: 100%;
+  width: auto;
+  height: 20px;
   padding: 12px 14px;
-  border: 1px solid #eee;
+  border: 1px solid #ccc;
   border-radius: 8px;
+  font-size: 15px;
+  background: white;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 8px;
+.forgot-password {
+  text-align: right;
+  margin-top: 10px;
+  font-size: 14px;
+  color: black;
 }
 
-.btn-sign {
-  background: var(--accent);
-  color: #fff;
+.btn-sign{
+  background:red;
+  color: white;
   border-radius: 10px;
   padding: 12px 18px;
   border: 0;
   width: 100%;
   font-weight: 700;
 }
+
+.btn-sign:hover {
+  background: lightcoral;
+  cursor: pointer;
+}
+
+.actions {
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  color: #333;
+}
+
 
 .muted {
   color: #666;
