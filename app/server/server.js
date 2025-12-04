@@ -473,13 +473,19 @@ app.get("/oauth2callback", async (req, res) => {
 
         //Redirects to correct login. I don't see an endpoint for this so not quite sure how that works
         if(loginCheck === 'MANAGER'){
-            
+            res.json({
+                type: 'MANAGER'
+            })
         }
         else if(loginCheck === 'CASHIER'){
-            
+            res.json({
+                type: 'CASHIER'
+            })
         }
         else{ //If you end up being a customer or smth else idk
-
+            res.json({
+                type: 'CUSTOMER'
+            })
         }
         
         
