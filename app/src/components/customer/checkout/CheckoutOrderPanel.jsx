@@ -5,12 +5,14 @@ import CheckoutOrderItem from "./CheckoutOrderItem"
 function OrderPanel(){
     const { cart } = useContext(CartContext);
 
+    console.log(cart);
+
     return(
         <section class = "order-panel">
             <h1>Your order</h1>
             <div id = "orderItems" class = "orderItems">
                 {cart.map((item, idx) => (
-                    <CheckoutOrderItem key={item.name+idx} order={item} title={item.name} price={item.price} hasSide={true}/>
+                    <CheckoutOrderItem key={item.name+idx} order={item} title={item.name} price={item.price} hasSide={item.type === "Entree"}/>
                 ))}
             </div>
         </section>

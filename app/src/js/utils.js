@@ -1,6 +1,3 @@
-// Functions for making frontend communication with backend easier
-// Constructing request JSONs mainly
-
 export function addEmployee(name, role, email, phone) {
     const json = {
         method: "POST",
@@ -105,6 +102,17 @@ export function deleteMenuItem(name){
     return json;
 }
 
+export function deleteInventoryItem(name){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
+}
+
 export function addInventoryItem(name, qty, unit_price, minimum){
     const json = {
         method: "POST",
@@ -126,4 +134,39 @@ export function submitOrders(orders) {
         body: JSON.stringify(orders)
     }
     return json;
+}
+
+export function validateEmployee(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
+    }
+    return json;
+}
+
+export function validateCustomer(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
+    }
+    return json;
+}
+
+export function fetchIngredients(name) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;   
 }

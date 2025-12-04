@@ -28,7 +28,7 @@ async function createMenuItemArray()
 
 async function getIngredientList(name){ 
     const res = await dbConn.getIngredients(name);
-    return res.rows[0].split(", ");
+    return res.rows[0].ingredients.split(", ");
 }
 
 async function getEmployees() {

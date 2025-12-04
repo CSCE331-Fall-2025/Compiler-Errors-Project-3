@@ -241,8 +241,6 @@ function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
 }
 
 function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
-    console.log("Testing: ", name, newName, price, type, seasonal, calories, ingredients);
-
     if(type.localeCompare('') != 0){
         pool.query('UPDATE menuce SET itemtype = $1 WHERE name = $2', [type, name]);
     }
@@ -352,16 +350,19 @@ async function addOrders(orderArray){
     for(const order of orderArray) {
         res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
         var price = res.rows[0].price;
-        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
-            [id+i, date, time, order.name, order.quantity, price]
+        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [id+i, date, time, order.name, order.quantity, price, "pending"]
         );
         i += 1;
     };
 }
 
-
+async function dataQuery(query, params) {
+    return await pool.query(query, params);
+}
 
 export default {
+    dataQuery,
     addOrders,
     addUser,
     addCustomer,

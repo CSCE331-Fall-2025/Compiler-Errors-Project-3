@@ -19,7 +19,9 @@ const {
     deleteMenuItem,
     deleteEmployee,
     getEmployees,
-    getInventory
+    getInventory,
+    addOrder,
+    getIngredientList
     } = functions;
 
 //Inside App, npm run dev
@@ -48,6 +50,163 @@ const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
 app.use(cors());
 app.use(express.json());
+
+app.post("/api/login/validateEmployee", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateEmployee(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true, result: result });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false, result: result });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.post("/api/login/validateCustomer", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        console.log("Attempting login for: ", username);
+        const result = await dbConn.validateCustomer(username, password);
+        if (result) {
+            console.log("Login successful for: ", username);
+            res.status(200).json({ message: "Login successful", status: true, result: result });
+        } else {
+            console.log("Login failed for: ", username);
+            res.status(401).json({ message: "Invalid credentials", status: false, result: result });
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.get("/api/Kitchen/getPending", async (req, res) => {
+    try {
+        const result = await dbConn.dataQuery("SELECT * FROM orderhistoryce WHERE status = 'pending'", [])
+        res.json(result.rows);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.get("/api/kitchen/completeOrder", async (req, res) => {
+    try {
+        const { id } = req.query;
+        await dbConn.dataQuery("UPDATE orderhistoryce SET status = 'completed' WHERE id = $1", [id]);
+        res.json({ status: true });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.get("/api/Manager/fetchStats", async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+
+        const query = `
+            SELECT *
+            FROM orderhistoryce
+            WHERE date BETWEEN $1 AND $2
+            ORDER BY date
+        `;
+
+        const result = await dbConn.dataQuery(query, [startDate, endDate]);
+        res.json(result.rows);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.get("/api/Manager/fetchData", async (req, res) => {
+    try {
+        const { sort, filterType, filterValue, limit, page} = req.query;
+
+        let whereClause = "";
+        let params = [];
+        let paramIndex = 1; 
+
+        if (filterType === "none") {
+            // we dont have a where clause
+        }
+        else if (filterType === "item") {
+            whereClause = `WHERE item ILIKE $${paramIndex}`;
+            params.push(`%${filterValue}%`);
+            paramIndex++;
+        }
+        else if (["year", "month", "day"].includes(filterType)) {
+            const part = filterType;
+            whereClause = `WHERE EXTRACT(${part.toUpperCase()} FROM date) = $${paramIndex}`;
+            params.push(Number(filterValue));
+            paramIndex++;
+        }
+        else if (["hour", "minute", "second"].includes(filterType)) {
+            const part = filterType;
+            whereClause = `WHERE EXTRACT(${part.toUpperCase()} FROM time) = $${paramIndex}`;
+            params.push(Number(filterValue));
+            paramIndex++;
+        }
+        else if (filterType === "price") {
+            whereClause = `WHERE price = $${paramIndex}`;
+            params.push(Number(filterValue));
+            paramIndex++;
+        }
+        else if (filterType === "qty") {
+            whereClause = `WHERE qty = $${paramIndex}`;
+            params.push(Number(filterValue));
+            paramIndex++;
+        }
+        else {
+            return res.status(400).json({ error: "Invalid filterType" });
+        }
+
+        const validSorts = ["date", "time", "item", "qty", "price"];
+        if (!validSorts.includes(sort)) {
+            return res.status(400).json({ error: "Invalid sort value" });
+        }
+
+        const limitNum = Number(limit) || 50;
+        const pageNum = Number(page) || 1;
+
+        params.push(limitNum);
+        params.push((pageNum - 1) * limitNum);
+
+        const query = `
+            SELECT *
+            FROM orderhistoryce
+            ${whereClause}
+            ORDER BY ${sort} DESC
+            LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+        `;
+
+        const result = await dbConn.dataQuery(query, params);
+        res.json(result.rows);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
+    try {
+        const name = req.body.name;
+        // TODO
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
 
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
     try {
@@ -218,7 +377,6 @@ app.post("/api/Manager/addMenuItem", upload.single("img"), async (req, res) => {
 
 app.post("/api/Manager/updateMenuItem", upload.single("img"), async (req, res) => {
     try {
-        console.log(req.body);
         const { name, newName, price, type, seasonal, cal } = req.body;
         const imgbuf = req.file ? req.file.buffer : null;
         
@@ -241,7 +399,6 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
         const { name, newName, qty, uprice, minimum } = req.body;
         
         try {
-            console.log("Testing: ", name, newName, qty, uprice, minimum);
             await updateInventoryItem(name, newName, parseInt(qty), parseFloat(uprice), parseInt(minimum));
         } catch (err) {
             console.error("add error: ", err);
@@ -249,6 +406,23 @@ app.post("/api/Manager/updateInventoryItem", async (req, res) => {
         }
 
         res.status(200).json({ message: "Inventory item updated successfully" });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message});
+    }
+});
+
+app.post("/api/OrderMenu/fetchIngredients", async (req, res) => {
+    try {
+        
+        const name = req.body.name;
+
+        try {
+            const ingredients = await getIngredientList(name);
+            res.status(200).json({ message: "Success", result: ingredients})
+        } catch (err) {
+            throw err;
+        }
     } catch (err) {
         console.log(err.message);
         res.status(500).json({error: err.message});
@@ -263,8 +437,7 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
     const usedIngrMap = new Map();
     try {
         //Get the orders
-        const { orders } = req.body; 
-        console.log(orders);
+        const orders = req.body; 
         
         //Get ingredients used
         for(let k = 0; k < orders.length; k++) {
