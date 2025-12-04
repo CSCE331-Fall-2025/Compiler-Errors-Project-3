@@ -3,12 +3,12 @@ import { CartContext } from "../../contexts/CartContext";
 import "../../../css/style.css";
 import { Link } from "react-router-dom";
 
-function OrderMenuitem({ img, alt, title, cal, price }) {
+function OrderMenuitem({ img, alt, title, cal, price, type }) {
 
     const { cart, addToCart, clearCart } = useContext(CartContext);
 
     async function add() {
-        addToCart(title, price);
+        addToCart(title, price, type);
     }
 
     return (

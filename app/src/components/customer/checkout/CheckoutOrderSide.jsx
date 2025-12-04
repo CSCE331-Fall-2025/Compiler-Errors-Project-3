@@ -1,12 +1,17 @@
 import React, {useContext} from "react";
 import { CartContext } from "../../contexts/CartContext";
 
-function CheckoutOrderSide({order, item}) {
+function CheckoutOrderSide({order, item, type="add"}) {
     
-    const { cart, clearCart, addSide } = useContext(CartContext);
+    const { cart, clearCart, addSide, addSub } = useContext(CartContext);
     async function chooseSide() {
-        addSide(order, item);
-        console.log(cart);
+
+        if(type === "add") {
+            addSide(order, item);
+        } else {
+            addSub(order, item.slice(3));
+        }
+
     }
 
     return (

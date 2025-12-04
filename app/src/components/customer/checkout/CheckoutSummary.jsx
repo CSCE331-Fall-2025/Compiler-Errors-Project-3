@@ -101,7 +101,7 @@ function CheckoutSummary(){
                 <span>Total</span>
                 <strong id = "summary-total">{"$" + (subtotal*1.0825).toFixed(2)}</strong>
             </div>
-            <button onClick={clearCart} id = "placeOrder" class = "checkout-btn">Place Order</button>
+            <button onClick={placeOrder} id = "placeOrder" class = "checkout-btn">Place Order</button>
         </aside>
     );
 }

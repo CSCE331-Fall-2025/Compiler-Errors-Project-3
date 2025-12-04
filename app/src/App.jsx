@@ -1,4 +1,5 @@
-import React, { use } from "react";
+import React from "react";
+import "./js/chartSetup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./components/customer/HomePage";
 import OrderPage from "./components/customer/order/OrderPage";
@@ -19,9 +20,11 @@ import ManagerInventoryAddPage from "./components/employee/manager/ManagerInvent
 import ManagerStaffAddPage from "./components/employee/manager/ManagerStaffAddPage";
 import ManagerMenuAddPage from "./components/employee/manager/ManagerMenuAddPage";
 import CashierPage from "./components/employee/cashier/CashierPage";
+import ManagerDataPage from "./components/employee/manager/ManagerDataPage";
+import ManagerStatsPage from "./components/employee/manager/ManagerStatsPage";
+import KitchenPage from "./components/employee/kitchen/KitchenPage";
 import { useEffect } from "react";
 import WeatherPage from "./components/customer/WeatherPage.jsx";
-
 
 
 function App() {
@@ -64,6 +67,9 @@ function App() {
                         <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage/>}></Route>
                         <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
                         <Route path="/employee/cashier" element={<CashierPage/>}></Route>
+                        <Route path="/employee/manager/data" element={<ManagerDataPage/>}></Route>
+                        <Route path="/employee/manager/stats" element={<ManagerStatsPage/>}></Route>
+                        <Route path="/employee/kitchen" element={<KitchenPage/>}></Route>
                     </Routes>
                 </BrowserRouter>
             </div>
