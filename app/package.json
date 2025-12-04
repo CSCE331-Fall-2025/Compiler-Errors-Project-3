@@ -4,7 +4,7 @@
     "cors": "^2.8.5",
     "db-migrate-pg": "^1.5.2",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "find-config": "^1.0.0",
     "google-auth-library": "^10.5.0",
     "multer": "^2.0.2",
