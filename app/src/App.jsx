@@ -20,6 +20,7 @@ import ManagerStaffAddPage from "./components/employee/manager/ManagerStaffAddPa
 import ManagerMenuAddPage from "./components/employee/manager/ManagerMenuAddPage";
 import CashierPage from "./components/employee/cashier/CashierPage";
 import { useEffect } from "react";
+import WeatherPage from "./components/customer/WeatherPage.jsx";
 
 
 
@@ -50,6 +51,7 @@ function App() {
                         <Route path="/employee/Manager" element={<ManagerPage/>}></Route>
                         <Route path="/checkout" element={<CheckoutPage/>}></Route>
                         <Route path="/locations" element={<LocationsPage/>}></Route>
+                        <Route path="/weather" element={<WeatherPage/>}></Route>
                         <Route path="/login" element={<LoginPage/>}></Route>
                         <Route path="/employee/login" element={<EmployeeLoginPage/>}></Route>
                         <Route path="/employee/manager/staff" element={<ManagerStaffPage/>}></Route>

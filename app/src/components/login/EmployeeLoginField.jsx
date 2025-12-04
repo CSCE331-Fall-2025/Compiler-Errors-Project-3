@@ -8,8 +8,6 @@ import "../../css/checkout.css"
 function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [totpCode, setTotpCode] = useState("");      
-    // const [is2FARequired, setIs2FARequired] = useState(false);
 
     const nav = useNavigate();
 
