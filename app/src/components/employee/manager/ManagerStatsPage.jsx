@@ -123,7 +123,6 @@ function ManagerStatsPage() {
 
         for(const key of Object.keys(items)) {
             items[key]["volumes"].push(items[key]["currentVolume"]);
-            items[key]["currentVolume"] = 0;
         }
 
         const datas = [];
