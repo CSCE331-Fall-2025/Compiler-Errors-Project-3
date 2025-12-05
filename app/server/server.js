@@ -21,7 +21,8 @@ const {
     getEmployees,
     getInventory,
     addOrder,
-    getIngredientList
+    getIngredientList,
+    getWeatherAPI
     } = functions;
 
 //Inside App, npm run dev
@@ -668,7 +669,19 @@ app.get("/oauth2callback", async (req, res) => {
     }
 });
 
+app.get("/api/weather", async (req, res) => {
+    try {
+        const lat = req.query.lat || 29.7604;
+        const long = req.query.long || -95.3698;
 
+        const weather = await getWeatherAPI(lat, long); 
+
+        res.json(weather);
+    } catch (err) {
+        console.error("Weather API error:", err);
+        res.status(500).json({ error: "Failed to fetch weather" });
+    }
+});
 
 
 app.listen(3000, () => console.log("Server running on port 3000"));

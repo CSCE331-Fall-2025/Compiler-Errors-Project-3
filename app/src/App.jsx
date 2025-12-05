@@ -24,7 +24,7 @@ import ManagerDataPage from "./components/employee/manager/ManagerDataPage";
 import ManagerStatsPage from "./components/employee/manager/ManagerStatsPage";
 import KitchenPage from "./components/employee/kitchen/KitchenPage";
 import { useEffect } from "react";
-import WeatherPage from "./components/customer/WeatherPage.jsx";
+import WeatherPage from "./components/customer/weather/WeatherPage";
 
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
             new google.translate.TranslateElement(
                 {
                     pageLanguage: 'en',
-                    includedLanguages: "en,es,fr,de,zh",
+                    includedLanguages: "en,es,fr,de,zh,sr",
                 },
                 "google_translate_element"
             );
