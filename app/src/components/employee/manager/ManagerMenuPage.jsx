@@ -17,6 +17,18 @@ function ManagerMenuPage() {
       getMenu();
   }, []);
 
+  async function onDelete(name) {
+    await fetch(`http://localhost:3000/api/Manager/deleteMenuItem?name=${name}`);
+    const newData = [...data];
+    for(let i = 0; i < newData.length; i++) {
+        if(newData[i].title === name) {
+            newData.splice(i, 1);
+            break;
+        }
+    }
+    setData(newData);
+  }
+
   return (
       <>
           <div class="manager-page-root">
@@ -25,7 +37,7 @@ function ManagerMenuPage() {
                   <div class="manager-template-list">
                         {data.map((item, idx) => (
                             <div key={item.title+"-Manager-"+idx} class="manager-template-card">
-                                <ManagerMenuCard {...item}/>
+                                <ManagerMenuCard {...item} onDelete={onDelete}/>
                             </div>
                         ))}
                         <div class="manager-template-card">

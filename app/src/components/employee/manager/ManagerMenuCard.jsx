@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../../../css/style.css"
 
 
-function ManagerMenuCard({ img, alt, title, cal, price, type, seasonal }) {
+function ManagerMenuCard({ img, alt, title, cal, price, type, seasonal, onDelete }) {
   return (
     <div class="card-wrapper">
       <Link to={"/employee/manager/menu/" + title.replace(" ", "_")}><div class="manager-menu-card">

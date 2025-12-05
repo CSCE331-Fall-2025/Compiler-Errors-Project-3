@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../../../css/style.css"
 
 
-function ManagerEmployeeCard({ name, type, email, phone, img}) {
+function ManagerEmployeeCard({ name, type, email, phone, img, onDelete}) {
   return (
     <div class="card-wrapper">
       <Link to={"/employee/manager/staff/" + name.replace(" ", "_").toLowerCase()}><div class="manager-employee-card">

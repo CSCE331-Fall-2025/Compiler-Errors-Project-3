@@ -43,7 +43,7 @@ async function testQuery()
 
 //Account Management
 async function validateEmployee(username, password){
-    const res = await pool.query('SELECT name, employeetype, email, phonenum FROM usersce');
+    const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
 
     var flag = false;
     var userType = 'FAIL';
@@ -57,12 +57,14 @@ async function validateEmployee(username, password){
             }
         }
     }
+
     else{
         for(const row of res.rows){
             if(!flag){
                 if((row.username === username  || row.email === username) && row.password === password){
                     userType = row.usertype;
                     flag = true;
+                    
                 }
             }
         }

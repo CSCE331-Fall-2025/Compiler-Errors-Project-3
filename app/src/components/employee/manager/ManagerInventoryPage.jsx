@@ -18,14 +18,17 @@ function ManagerInventoryPage() {
       getInventory();
   }, []);
 
-  const handleDelete = async (name) => {
-        const res = await fetch('http://localhost:3000/api/Manager/deleteInventoryItem', deleteInventoryItem(name));
-    //   if (res.ok) {
-    //       setData(prev => prev.filter(item => item.name !== name));
-    //   } else {
-    //       alert("Failed to delete item");
-    //   }
-  };
+  async function onDelete(name) {
+        await fetch(`http://localhost:3000/api/Manager/deleteInventoryItem?name=${name}`);
+        const newData = [...data];
+        for(let i = 0; i < newData.length; i++) {
+            if(newData[i].name === name) {
+                newData.splice(i, 1);
+                break;
+            }
+        }
+        setData(newData);
+  }
 
   return (
       <>
@@ -35,7 +38,7 @@ function ManagerInventoryPage() {
                   <div class="manager-template-list">
                           {data.map((item) => (
                               <div class="manager-template-card">
-                                  <ManagerInventoryCard key={item.name} {...item} onDelete={handleDelete}/>
+                                  <ManagerInventoryCard key={item.name} {...item} onDelete={onDelete}/>
                               </div>
                           ))}
                           <div class="manager-template-card">

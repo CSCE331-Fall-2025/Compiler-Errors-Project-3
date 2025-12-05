@@ -17,6 +17,18 @@ function ManagerStaffPage() {
         getEmployees();
     }, []);
 
+    async function onDelete(name) {
+        await fetch(`http://localhost:3000/api/Manager/deleteEmployee?name=${name}`);
+        const newData = [...data];
+        for(let i = 0; i < newData.length; i++) {
+            if(newData[i].name === name) {
+                newData.splice(i, 1);
+                break;
+            }
+        }
+        setData(newData);
+  }
+
     return (
         <>
             <div class="manager-page-root">
@@ -25,7 +37,7 @@ function ManagerStaffPage() {
                     <div class="manager-template-list">
                             {data.map((item) => (
                                 <div class="manager-template-card">
-                                    <ManagerEmployeeCard key={item.name} {...item} />
+                                    <ManagerEmployeeCard key={item.name} {...item} onDelete={onDelete}/>
                                 </div>
                             ))}
                             <div class="manager-template-card">

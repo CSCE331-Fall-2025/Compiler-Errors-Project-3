@@ -198,16 +198,6 @@ app.get("/api/Manager/fetchData", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
-    try {
-        const name = req.body.name;
-        // TODO
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json({error: err.message});
-    }
-});
-
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
     try {
         const menu = await createMenuItemArray();
@@ -276,12 +266,12 @@ app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) =
     }
 });
 //deleteEmployee
-app.post("/api/Manager/deleteEmployee", async (req, res) => {
+app.get("/api/Manager/deleteEmployee", async (req, res) => {
     try{
-        const {name} = req.body;
+        const {name} = req.query;
         console.log("attempting");
         try{
-            await deleteEmployee(name);
+            await dbConn.deleteEmployee(name);
         }
         catch(err){
             console.error("add error: ", err);
@@ -297,12 +287,13 @@ app.post("/api/Manager/deleteEmployee", async (req, res) => {
 });
 
 //deleteMenuItem
-app.post("/api/Manager/deleteMenuItem", async (req, res) => {
+app.get("/api/Manager/deleteMenuItem", async (req, res) => {
     try{
-        const {name} = req.body;
+        const {name} = req.query;
         console.log("Attempting: ", name);
         try{
-            await deleteMenuItem(name);
+            await dbConn.deleteMenuItem(name);
+            res.json({status: true});
         }
         catch(err){
             console.error("add error: ", err);
@@ -496,9 +487,9 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
     }
 })
 
-app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
+app.get("/api/Manager/deleteInventoryItem", async (req, res) => {
     try {
-        const name = req.body.name;
+        const { name } = req.query;
         //Find item. If it returns empty, then throw error
         const item = await pool.query('SELECT * FROM inventoryce WHERE name = $1', [name]);
         if(item.rows.length === 0)
