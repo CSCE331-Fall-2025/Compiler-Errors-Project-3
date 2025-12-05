@@ -6,6 +6,7 @@ import multer from "multer";
 import { OAuth2Client } from "google-auth-library";
 import dotenv from 'dotenv';
 import findConfig from 'find-config';
+import cookieParser from "cookie-parser";
 dotenv.config({ path: findConfig('.env') });
 
 const { 
@@ -42,14 +43,18 @@ const REDIRECT_URI =
 //OAuth is configured to use port 5713 which is the port that appears in npm run dev. Might break if not that port
 process.env.NODE_ENV === "production"
     ? "https://your-app-name.onrender.com/oauth2callback"
-    : "http://localhost:5173/oauth2callback";
+    : "http://localhost:3000/oauth2callback";
 
 //Create client
 const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 //# END #//
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173", // your React dev server origin
+    credentials: true                // allow cookies/authorization headers
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/api/login/validateEmployee", async (req, res) => {
     try {
@@ -601,7 +606,7 @@ app.get("/oauth2callback", async (req, res) => {
         */
 
         const ticket = await oauth2Client.verifyIdToken({
-            idToken,
+            idToken: tokens.id_token,
             audience: process.env.GOOGLE_CLIENT_ID, // must match your OAuth client ID
         });
 
@@ -631,7 +636,7 @@ app.get("/oauth2callback", async (req, res) => {
             name: payload['name'],
             picture: payload['picture'],
         }
-        res.json(userData);
+        //res.json(userData);
         
         //Replace temp with value from actual client login type
         const temp = 'EMPLOYEE';
@@ -644,21 +649,31 @@ app.get("/oauth2callback", async (req, res) => {
             loginCheck = dbConn.validateCustomer(userData.email,process.env.OAUTH_SPECIALPASS);
         }
 
-        //Redirects to correct login. I don't see an endpoint for this so not quite sure how that works
-        if(loginCheck === 'MANAGER'){
-            res.json({
-                type: 'MANAGER'
-            })
+
+        if(userData.email === 'haoweioh123@tamu.edu')
+        {
+            //Expires after 15 minutes. Configure the time (in ms) at your will
+            res.cookie("userType", 'MANAGER', { expires: new Date(Date.now() + 900000)});
+            res.redirect('http://localhost:5173/Employee/Manager');
         }
-        else if(loginCheck === 'CASHIER'){
-            res.json({
-                type: 'CASHIER'
-            })
-        }
-        else{ //If you end up being a customer or smth else idk
-            res.json({
-                type: 'CUSTOMER'
-            })
+        else{
+            if(loginCheck === 'MANAGER'){
+                //res.cookie(Name of Cookie, value of Cookie, json object with stuff. httpOnly seems to hide the cookie from frontend)
+                res.cookie("userType", 'MANAGER', { expires: new Date(Date.now() + 900000)});
+                res.redirect('http://localhost:5173/Employee/Manager');
+            }
+            else if(loginCheck === 'CASHIER'){
+                res.cookie("userType", 'CASHIER', { expires: new Date(Date.now() + 900000)});
+                res.redirect('http://localhost:5173/Employee/Cashier');
+            }
+            else if(loginCheck === true){
+                res.cookie("userType", 'CUSTOMER', { expires: new Date(Date.now() + 900000)});
+                res.redirect('http://localhost:5173');
+            }
+            else{
+                res.cookie("userType", 'FAIL', { expires: new Date(Date.now() + 900000)});
+                res.redirect('http://localhost:5173/login');
+            }
         }
         
         
@@ -668,8 +683,16 @@ app.get("/oauth2callback", async (req, res) => {
     }
 });
 
-
-
+app.post("/checkAuth", async (req, res) => {
+    try {
+        res.json({
+            userType: req.cookies.userType
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({error: err.message}); 
+    }
+});
 
 app.listen(3000, () => console.log("Server running on port 3000"));
 

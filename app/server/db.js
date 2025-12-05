@@ -43,7 +43,7 @@ async function testQuery()
 
 //Account Management
 async function validateEmployee(username, password){
-    const res = await pool.query('SELECT name, employeetype, email, phonenum FROM usersce');
+    const res = await pool.query('SELECT username, usertype, email FROM usersce');
 
     var flag = false;
     var userType = 'FAIL';

@@ -27,6 +27,41 @@ function ManagerPage() {
                         STATS AND REPORTS
                     </div></Link>
                 </div>
+                
+                <div style={{ marginTop: 12 }}>
+                    <button //You don't need to output it to console. Regardless, you will need to call the endpoint to get your cookie data.
+                        type="button"
+                        onClick={() => {
+                        fetch("http://localhost:3000/checkAuth", {
+                        method: "POST",
+                        credentials: "include"
+                        })
+                        .then(res => res.json()) // parses the JSON body
+                        .then(data => {
+                        console.log("Raw JSON:", JSON.stringify(data));          // full payload
+                        console.log("typeof data.userType:", typeof data.userType);
+                        console.log("userType value:", data.userType);
+                        if (typeof data.userType === "object" && data.userType) {
+                            console.log("userType keys:", Object.keys(data.userType));
+                        }
+                        })
+                        .catch(err => console.error("Fetch error:", err));
+
+
+                        }}
+                        
+
+                        style={{
+                        backgroundColor: "#4285F4",
+                        color: "white",
+                        padding: "8px 16px",
+                        border: "none",
+                        borderRadius: 4
+                        }}
+                    >
+                        Check Auth (Output in FrontEnd Console)
+                    </button>
+                    </div>
             </div>
         </>
     );

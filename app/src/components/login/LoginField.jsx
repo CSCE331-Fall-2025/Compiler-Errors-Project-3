@@ -63,6 +63,16 @@ function LoginField(){
                     <div style={{ marginTop: 18 }}>
                         <button type="submit">Sign In</button>
                     </div>
+
+                    <div style={{ marginTop: 12 }}>
+                        <button 
+                            type="button" 
+                            onClick={() => window.location.href="http://localhost:3000/auth/google"}
+                            style={{ backgroundColor: "#4285F4", color: "white", padding: "8px 16px", border: "none", borderRadius: 4 }}
+                        >
+                            Sign in with Google
+                        </button>
+                    </div>
                 </form>
             </section>
         </main>
