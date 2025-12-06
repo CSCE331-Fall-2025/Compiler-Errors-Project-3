@@ -8,6 +8,8 @@ import "../../css/checkout.css"
 function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    // const [totpCode, setTotpCode] = useState("");      
+    // const [is2FARequired, setIs2FARequired] = useState(false);
 
     const nav = useNavigate();
 
@@ -33,7 +35,7 @@ function EmployeeLoginField(){
     return (
         <main className="login-wrap">
             <section className="login-card" role="region" aria-label="Sign in">
-                <h1>Sign in to your account</h1>
+                <h1>Sign in to your employee account</h1>
 
                 <form onSubmit={submitForm}>
                     <div className="form-row">

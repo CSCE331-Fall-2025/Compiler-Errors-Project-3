@@ -265,6 +265,18 @@ app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) =
         res.status(500).json({error: "Failed to update employee"});
     }
 });
+
+app.get("/api/login/employeeLogin", async (req, res) => {
+    try {
+        const {user} = req.query;
+        const type = await dbConn.employeeAuth(user);
+        res.json(type);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({error: "Failed to fire employee"});
+    }
+});
+
 //deleteEmployee
 app.get("/api/Manager/deleteEmployee", async (req, res) => {
     try{
@@ -326,25 +338,6 @@ app.post("/api/Manager/addInventoryItem", async (req, res) => {
     catch(err){
       console.error(err);
       res.status(500).json({error: "Failed to add inventory item"});
-    }
-});
-
-app.post("/api/Manager/updateEmployee", async (req, res) => {
-    try {
-        const { name, newName, role, email, phone } = req.body;
-        console.log("Attempting: ", name, newName, role, email, phone);
-
-        try {
-            await updateEmployee(name, newName, role, email, phone);
-        } catch (err) {
-            console.error("update error: ", err);
-            throw err;
-        }
-
-        console.log("Succeeded");
-        res.status(200).json({ message: "Employee added successfully" });
-    } catch (err) {
-        res.status(500).json({error: err.message});
     }
 });
 
@@ -473,12 +466,10 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
             }
         };
 
-        if(!flag){
-            throw new TypeError('Quantity Exceeds Inventory Stock');
-        }
-        else{
-            await dbConn.addOrders(orders);
-            dbConn.updateInventory(usedIngrMap,inventoryMap);
+        if(flag) {
+            await addOrder(orders);
+            dbConn.updateInventory(usedIngrMap, inventoryMap);
+            response.status(200).json({message: "Order submitted successfully"});
         }
 
     } catch (err) {
