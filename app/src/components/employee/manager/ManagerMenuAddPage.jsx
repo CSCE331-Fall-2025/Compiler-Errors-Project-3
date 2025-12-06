@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from "react";
 import ManagerNavBar from "./ManagerNavBar";
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function ManagerMenuAddPage() {
     const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);

@@ -2,6 +2,9 @@ import React from "react";
 import { useEffect, useState } from 'react';
 import OrderCard from "./KitchenOrderCard";
 import "../../../css/style.css";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 function KitchenPage() {
     const [orders, setOrders] = useState([]);

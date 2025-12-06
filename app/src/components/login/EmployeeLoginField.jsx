@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import NavBar from '../NavBar'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateEmployee } from "../../js/utils";
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from "../contexts/AuthContext";
 import "../../css/checkout.css"
 
 function EmployeeLoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [totpCode, setTotpCode] = useState("");      
-    // const [is2FARequired, setIs2FARequired] = useState(false);
-
+    const { authCashier, authManager, authKitchen} = useContext(AuthContext);
     const nav = useNavigate();
 
     async function submitForm(e) {
@@ -25,12 +26,47 @@ function EmployeeLoginField(){
         });
 
         if(result.toUpperCase() === "MANAGER") {
+            authManager(true);
+            authCashier(true);
+            authKitchen(true);
+
             nav("/Employee/Manager");
         } else if(result.toUpperCase() === "CASHIER") {
+            authCashier(true);
+            authManager(false);
+            authKitchen(false);
+
             nav("/Employee/Cashier");
         }
 
     }
+
+    const onSuccess = async (credentialResponse) => {
+        const decoded = jwtDecode(credentialResponse.credential);
+
+        
+        const response = await fetch(`http://localhost:3000/api/login/employeeLogin?user=${decoded.email}`);
+        const type = await response.json();
+        if(type.toUpperCase() === "MANAGER") {
+            authManager(true);
+            authCashier(true);
+            authKitchen(true);
+
+            nav("/Employee/Manager");
+
+        } else if (type.toUpperCase() === "CASHIER") {
+            authCashier(true);
+            authManager(false);
+            authKitchen(false);
+
+            nav("/Employee/Cashier");
+        }
+    };
+
+    const onError = () => {
+        console.log('Login Failed');
+    };
+
 
     return (
         <main className="login-wrap">
@@ -61,6 +97,8 @@ function EmployeeLoginField(){
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
+
+                    <GoogleLogin class="google-login" onSuccess={onSuccess} onError={onError}/>
 
                     <div className="actions">
                         <div>

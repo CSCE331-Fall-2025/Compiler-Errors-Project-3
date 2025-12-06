@@ -3,10 +3,25 @@ import "../../../css/style.css"
 import ManagerNavBar from "./ManagerNavBar";
 import ManagerEmployeeCard from "./ManagerEmployeeCard";
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 function ManagerStaffPage() {
     const [data, setData] = useState([]);
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     useEffect(() => {
         async function getEmployees() {

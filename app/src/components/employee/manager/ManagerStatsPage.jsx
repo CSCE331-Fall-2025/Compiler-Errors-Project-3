@@ -2,7 +2,10 @@ import React from "react";
 import { useEffect, useState } from 'react';
 import ManagerNavBar from "./ManagerNavBar";
 import { Bar, Line } from "react-chartjs-2";
-import "../../../css/style.css"
+import "../../../css/style.css";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function ManagerStatsPage() {
 
@@ -10,6 +13,19 @@ function ManagerStatsPage() {
     const [startDate, setStartDate] = useState("2025-01-01");
     const [endDate, setEndDate] = useState("2025-12-31");
     const [graph, setGraph] = useState("profit");
+
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     useEffect(() => {
         async function getRows() {

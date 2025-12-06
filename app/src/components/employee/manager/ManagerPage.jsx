@@ -3,9 +3,29 @@ import styles from "../../../css/ManagerPage.module.css";
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import ManagerNavBar from "./ManagerNavBar";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 
 function ManagerPage() {
+    const { isManager, loaded } = useContext(AuthContext);
+    const nav = useNavigate();
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+    });
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+    }, [isManager]);
+
+    if(!isManager) { return; }
+
     return (
         <>
             <div class={styles["manager-portal-page"]}>
