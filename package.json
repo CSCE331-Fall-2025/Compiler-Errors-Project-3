@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "@react-google-maps/api": "^2.20.7",
-    "google-auth-library": "^10.5.0"
+    "google-auth-library": "^10.5.0",
+    "google-map-react": "^2.2.5"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10"
   }
 }

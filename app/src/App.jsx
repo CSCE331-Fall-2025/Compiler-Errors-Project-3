@@ -44,9 +44,9 @@ function App() {
         };
     }, []);
     return (
-        <>
-            <div id = "google_translate_element">
-                <BrowserRouter>
+        <div id="app-container">
+            <BrowserRouter>
+                <div id="main-content"> 
                     <Routes>
                         <Route path="/" element={<HomePage/>}></Route>
                         <Route path="/order" element={<OrderPage/>}></Route>
@@ -71,9 +71,11 @@ function App() {
                         <Route path="/employee/manager/stats" element={<ManagerStatsPage/>}></Route>
                         <Route path="/employee/kitchen" element={<KitchenPage/>}></Route>
                     </Routes>
-                </BrowserRouter>
-            </div>
-        </>
+                </div>
+                {/* Translate at bottom of each page */}
+                <div id="google_translate_element"></div> 
+            </BrowserRouter>
+        </div>
     );
 }
 

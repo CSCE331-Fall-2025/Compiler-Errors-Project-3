@@ -22,7 +22,8 @@ const {
     getInventory,
     addOrder,
     getIngredientList,
-    getWeatherAPI
+    getWeatherAPI,
+    getPlacesAPI
     } = functions;
 
 //Inside App, npm run dev
@@ -682,6 +683,29 @@ app.get("/api/weather", async (req, res) => {
         res.status(500).json({ error: "Failed to fetch weather" });
     }
 });
+
+async function getPlacesAPI(lat, long){
+    const apiKey = process.env.PLACEAPI_KEY;
+    
+    // Set defaults if no coordinates are provided
+    const defaultLat = 29.7604; 
+    const defaultLong = -95.3698; 
+    const searchLat = lat || defaultLat;
+    const searchLong = long || defaultLong;
+    
+    // Now using the location and radius parameters to search near the given coordinates
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&location=${searchLat},${searchLong}&radius=${50000}&key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const results = data.results;
+        return results;
+    } catch (error) {
+        console.error('Error fetching places:', error);
+    }
+}
 
 
 app.listen(3000, () => console.log("Server running on port 3000"));

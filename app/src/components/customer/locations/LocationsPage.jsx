@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../../css/locations.css";
 import NavBar from "../../NavBar";
-import Map from "./LocationMap";
+import Map from "./LocationMap"; 
 import Hours from "./LocationHours";
 import LocationInfo from "./LocationInfo";
 
 function LocationsPage() {
+
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadLocations() {
+      try {
+        const res = await fetch("http://localhost:3000/api/places");
+        const data = await res.json();
+        
+        if (!data || data.length === 0) {
+          setError("No restaurant locations found.");
+        }
+        setLocations(data);
+      } catch (err) {
+        console.error("Error loading places:", err);
+        setError("Failed to fetch restaurant locations.");
+      }
+      setLoading(false);
+    }
+    loadLocations();
+  }, []);
+
+  if (loading) return <p>Loading locations...</p>; 
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
   return (
     <>
       <NavBar></NavBar>
@@ -21,7 +48,7 @@ function LocationsPage() {
         <main className="locations-content">
           <div className="cards">
             <section className="card info-card">
-              <h3>INformation</h3>
+              <h3>Information</h3>
               <p className="status open">Open  Closes 10PM</p>
               <address className="address">6027 Stewart Rd<br/>Galveston, TX 77551</address>
               <p className="phone">(346) 291-2298</p>
@@ -43,15 +70,8 @@ function LocationsPage() {
             </section>
 
             <section className="card map-card">
-              <iframe
-                title="map"
-                src="https://maps.google.com/maps?q=6027%20Stewart%20Rd%20Galveston%20TX&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="300"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-              ></iframe>
+              {/* This is the new Google Map component, displaying all fetched locations */}
+              <Map locations={locations} /> 
             </section>
           </div>
         </main>
