@@ -1,51 +1,77 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-// Map container styles
 const containerStyle = {
   width: '100%',
-  height: '300px' 
+  height: '300px'
 };
 
-// Default Houston
-const defaultCenter = { lat: 29.7604, lng: -95.3698 }; 
+const initialDefaultCenter = { lat: 29.7604, lng: -95.3698 };
+const libraries = ["places"];
 
-const libraries = ["places"]; 
+function LocationMap({ locations, searchAddress, initialCenter = initialDefaultCenter, onAddressGeocoded }) {
 
-function LocationMap({ locations }) {
+  const [mapCenter, setMapCenter] = useState(initialCenter);
+  const geocoderRef = useRef(null);
+  const [apiReady, setApiReady] = useState(false);
 
-  const center = useMemo(() => {
-    if (locations && locations.length > 0) {
-      const firstLocation = locations[0].geometry.location;
-      return { lat: firstLocation.lat, lng: firstLocation.lng };
+  const onLoadMap = useCallback((map) => {
+    if (window.google?.maps) {
+      geocoderRef.current = new window.google.maps.Geocoder();
+      setApiReady(true);
     }
-    return defaultCenter;
-  }, [locations]);
-
-  const onLoad = useCallback(function callback(map) {
   }, []);
 
+  useEffect(() => {
+    if (!apiReady) return;
+    if (!searchAddress || searchAddress.trim() === "") {
+      setMapCenter(initialCenter);
+      return;
+    }
+
+    geocoderRef.current.geocode({ address: searchAddress }, (results, status) => {
+      if (status === "OK" && results.length > 0) {
+        const loc = results[0].geometry.location;
+        const newCenter = { lat: loc.lat(), lng: loc.lng() };
+
+        setMapCenter(newCenter);
+        onAddressGeocoded(newCenter);
+      } else {
+        console.error("Geocode failed:", status);
+        setMapCenter(initialCenter);
+        onAddressGeocoded(initialCenter);
+      }
+    });
+  }, [searchAddress, apiReady, initialCenter, onAddressGeocoded]);
+
   return (
-    <LoadScript 
-      googleMapsApiKey={'AIzaSyD9CQzryA0YqZ6m5Nqlsexm55_WPDt4Jps'} 
+    <LoadScript
+      googleMapsApiKey="AIzaSyD9CQzryA0YqZ6m5Nqlsexm55_WPDt4Jps"
       libraries={libraries}
     >
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10} // Adjust zoom level for better viewing of nearby locations
-        onLoad={onLoad}
+        center={mapCenter}
+        zoom={12}
+        onLoad={onLoadMap}
       >
-        {/* Map over the locations and place a Marker for each one */}
-        {locations.map((loc, index) => (
-          <Marker
-            key={index}
-            position={{
-              lat: loc.geometry.location.lat,
-              lng: loc.geometry.location.lng,
-            }}
-          />
-        ))}
+        {locations?.map((loc, i) => {
+          if (!loc?.geometry?.location) return null;
+
+          return (
+            <Marker
+              key={i}
+              position={{
+                lat: typeof loc.geometry.location.lat === "function"
+                  ? loc.geometry.location.lat()
+                  : loc.geometry.location.lat,
+                lng: typeof loc.geometry.location.lng === "function"
+                  ? loc.geometry.location.lng()
+                  : loc.geometry.location.lng,
+              }}
+            />
+          );
+        })}
       </GoogleMap>
     </LoadScript>
   );
