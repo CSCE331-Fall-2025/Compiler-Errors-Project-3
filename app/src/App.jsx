@@ -73,7 +73,8 @@ function App() {
                     </Routes>
                 </div>
                 {/* Translate at bottom of each page */}
-                <div id="google_translate_element"></div> 
+                <div id= "translate-wrapper">
+                <div id="google_translate_element"></div> </div>
             </BrowserRouter>
         </div>
     );
