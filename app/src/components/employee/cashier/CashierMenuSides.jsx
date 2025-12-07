@@ -10,7 +10,7 @@ function CashierMenuSides({order, item}) {
     }
 
     return (
-        <button onClick={chooseSide} class="checkout-order-side">
+        <button onClick={chooseSide} class="checkout-order-sides">
             {item}
         </button>
     );
