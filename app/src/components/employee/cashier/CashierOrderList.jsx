@@ -72,12 +72,12 @@ function CashierOrderList(){
             <h1>Order details</h1>
             <div id="cashierOrderItems" className="cashierOrderItems">
                 {/* items will be added here or served by server side */}
-                <div className="summary-row">
+                <div className="summary-roww">
                     <span>Items</span>
                     <CashierOrderListItems/>
                 </div>
             </div>
-            <button onClick={placeOrder} id="placeOrder" className="checkout-btn">
+            <button onClick={placeOrder} id="placeOrder" className="checkout-btnn">
                 Place Order
             </button>
         </aside>

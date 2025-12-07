@@ -28,7 +28,7 @@ function CashierOrderListItems() {
     }
 
     return (
-        <div class="order-preview-items">
+        <div class="order-preview-itemss">
             {cart.length === 0 ? (
             <div className="empty-cart">Your cart is empty.</div>
         ) : (
@@ -39,7 +39,7 @@ function CashierOrderListItems() {
 
                 <button
                     onClick={() => removeFromCart(item)}
-                    className="checkout-order-remove-button"
+                    className="checkout-order-remove-buttonn"
                 >
                     X
                 </button>

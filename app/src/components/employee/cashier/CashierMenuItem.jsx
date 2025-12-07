@@ -43,7 +43,7 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
                 </div>
             </div>
 
-            {hasSide && <section class="checkout-order-side-container">
+            {hasSide && <section className="checkout-order-side-containerr">
                 Sides
                 {newData.map((item, idx) => (
                     <CashierMenuSides key={item.title+idx} order={order} item={item.title}/>
@@ -53,8 +53,8 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
                 ))}
             </section>}
 
-            <div className="menu-item-button-container">
-                <button type="button" onClick={add} className="menu-item-button">
+            <div className="menu-item-button-containerr">
+                <button type="button" onClick={add} className="menu-item-buttonn">
                     Add to cart
                 </button>
             </div>
