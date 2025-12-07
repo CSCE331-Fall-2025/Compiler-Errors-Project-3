@@ -1,6 +1,8 @@
+import React, { useEffect } from "react";
 import "./js/chartSetup";
-import React, { use } from "react";
+import "./css/style.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import HomePage from "./components/customer/HomePage";
 import OrderPage from "./components/customer/order/OrderPage";
 import StaticMenuPage from "./components/customer/StaticMenuPage";
@@ -15,7 +17,6 @@ import ManagerMenuPage from "./components/employee/manager/ManagerMenuPage";
 import ManagerStaffEditPage from "./components/employee/manager/ManagerStaffEditPage";
 import ManagerInventoryEditPage from "./components/employee/manager/ManagerInventoryEditPage";
 import ManagerMenuEditPage from "./components/employee/manager/ManagerMenuEditPage";
-import "./css/style.css";
 import ManagerInventoryAddPage from "./components/employee/manager/ManagerInventoryAddPage";
 import ManagerStaffAddPage from "./components/employee/manager/ManagerStaffAddPage";
 import ManagerMenuAddPage from "./components/employee/manager/ManagerMenuAddPage";
@@ -23,61 +24,67 @@ import CashierPage from "./components/employee/cashier/CashierPage";
 import ManagerDataPage from "./components/employee/manager/ManagerDataPage";
 import ManagerStatsPage from "./components/employee/manager/ManagerStatsPage";
 import KitchenPage from "./components/employee/kitchen/KitchenPage";
-import { useEffect } from "react";
 import WeatherPage from "./components/customer/weather/WeatherPage";
 
-
-
 function App() {
+
     useEffect(() => {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
         document.body.appendChild(script);
 
         window.googleTranslateElementInit = () => {
             new google.translate.TranslateElement(
                 {
-                    pageLanguage: 'en',
-                    includedLanguages: "af,ar,az,be,bg,bn,bs,ca,cs,cy,da,de,el,en,es,et,fa,fi,fr,ga,gl,gu,ha,hi,hr,ht,hu,id,ig,is,it,iw,ja,ka,kk,km,kn,ko,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,ne,nl,no,ny,pa,pl,ps,pt,ro,ru,rw,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tk,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh,zu"
+                    pageLanguage: "en",
+                    includedLanguages:
+                        "af,ar,az,be,bg,bn,bs,ca,cs,cy,da,de,el,en,es,et,fa,fi,fr,ga,gl,gu,ha,hi,hr,ht,hu,id,ig,is,it,iw,ja,ka,kk,km,kn,ko,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,ne,nl,no,ny,pa,pl,ps,pt,ro,ru,rw,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tk,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh,zu"
                 },
                 "google_translate_element"
             );
         };
     }, []);
+
     return (
-        <>
-            <div id = "google_translate_element">
-                <BrowserRouter>
+        <div id="app-container">
+            <BrowserRouter>
+
+                {/* Main Content */}
+                <div id="main-content">
                     <Routes>
-                        <Route path="/" element={<HomePage/>}></Route>
-                        <Route path="/order" element={<OrderPage/>}></Route>
-                        <Route path="/menu" element={<StaticMenuPage/>}></Route>
-                        <Route path="/checkout" element={<CheckoutPage/>}></Route>
-                        <Route path="/locations" element={<LocationsPage/>}></Route>
-                        <Route path="/login" element={<LoginPage/>}></Route>
-                        <Route path="/employee/login" element={<EmployeeLoginPage/>}></Route>
-                        <Route path="/weather" element={<WeatherPage/>}></Route>
-                        <Route path="/employee/Manager" element={<ManagerPage/>}></Route>
-                        <Route path="/employee/manager/data" element={<ManagerDataPage/>}></Route>
-                        <Route path="/employee/manager/staff" element={<ManagerStaffPage/>}></Route>
-                        <Route path="/employee/manager/menu" element={<ManagerMenuPage/>}></Route>
-                        <Route path="/employee/manager/inventory" element={<ManagerInventoryPage/>}></Route>
-                        <Route path="/employee/manager/stats" element={<ManagerStatsPage/>}></Route>
-                        <Route path="/employee/kitchen" element={<KitchenPage/>}></Route>
-                        <Route path="/employee/manager/inventory/add" element={<ManagerInventoryAddPage/>}></Route>
-                        <Route path="/employee/manager/menu/add" element={<ManagerMenuAddPage/>}></Route>
-                        <Route path="/employee/manager/staff/add" element={<ManagerStaffAddPage/>}></Route>
-                        <Route path="/employee/manager/staff/:id" element={<ManagerStaffEditPage/>}></Route>
-                        <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage/>}></Route>
-                        <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
-                        <Route path="/employee/cashier" element={<CashierPage/>}></Route>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/order" element={<OrderPage />} />
+                        <Route path="/menu" element={<StaticMenuPage />} />
+                        <Route path="/employee/Manager" element={<ManagerPage />} />
+                        <Route path="/checkout" element={<CheckoutPage />} />
+                        <Route path="/locations" element={<LocationsPage />} />
+                        <Route path="/weather" element={<WeatherPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/employee/login" element={<EmployeeLoginPage />} />
+                        <Route path="/employee/manager/staff" element={<ManagerStaffPage />} />
+                        <Route path="/employee/manager/menu" element={<ManagerMenuPage />} />
+                        <Route path="/employee/manager/inventory" element={<ManagerInventoryPage />} />
+                        <Route path="/employee/manager/inventory/add" element={<ManagerInventoryAddPage />} />
+                        <Route path="/employee/manager/menu/add" element={<ManagerMenuAddPage />} />
+                        <Route path="/employee/manager/staff/add" element={<ManagerStaffAddPage />} />
+                        <Route path="/employee/manager/staff/:id" element={<ManagerStaffEditPage />} />
+                        <Route path="/employee/manager/inventory/:id" element={<ManagerInventoryEditPage />} />
+                        <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage />} />
+                        <Route path="/employee/cashier" element={<CashierPage />} />
+                        <Route path="/employee/manager/data" element={<ManagerDataPage />} />
+                        <Route path="/employee/manager/stats" element={<ManagerStatsPage />} />
+                        <Route path="/employee/kitchen" element={<KitchenPage />} />
                     </Routes>
-                <div id= "translate-wrapper">
-                <div id="google_translate_element"></div> 
                 </div>
-                </BrowserRouter>
-            </div>
-        </>
+
+                {/* Google Translate */}
+                <div id="translate-wrapper">
+                    <div id="google_translate_element"></div>
+                </div>
+
+            </BrowserRouter>
+        </div>
     );
 }
 
