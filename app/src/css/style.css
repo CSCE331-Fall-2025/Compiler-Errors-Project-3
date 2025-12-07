@@ -72,6 +72,26 @@ body {
   color: #CE3F3F;
 }
 
+.xz-report-row {
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+    width: 100%;
+    border: 1px solid black;
+    margin-bottom: 1px;
+    display: flex;
+    flex-direction: row;
+    padding: 2px;
+    font-size: 20px;
+    line-height: 2.6;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.xz-report-row-value {
+    margin-left: auto;
+}
+
 .login-button {
   color: #000000;
   padding: 10px 24px;
@@ -1293,6 +1313,8 @@ body {
     height: 80%;
     width: 100%;
     padding: 20px 20px;
+    overflow-y: auto;
+    width: 100%;
 }
 
 .manager-stats-x-report, 

@@ -21,7 +21,8 @@ const {
     getEmployees,
     getInventory,
     addOrder,
-    getIngredientList
+    getIngredientList,
+    getPlacesAPI
     } = functions;
 
 //Inside App, npm run dev
@@ -311,8 +312,6 @@ app.get("/api/Manager/deleteMenuItem", async (req, res) => {
             console.error("add error: ", err);
             throw err;
         }
-        console.log("Succeeded");
-      res.status(200).json({ message: "Menu item deleted" });
     }
     catch(err){
         console.error(err);
@@ -482,13 +481,8 @@ app.get("/api/Manager/deleteInventoryItem", async (req, res) => {
     try {
         const { name } = req.query;
         //Find item. If it returns empty, then throw error
-        const item = await pool.query('SELECT * FROM inventoryce WHERE name = $1', [name]);
-        if(item.rows.length === 0)
-        {
-            throw TypeError('Error, ingredient does not exist')
-        }
         //Delete from table
-        await dbConn.deleteInventoryItem();
+        await dbConn.deleteInventoryItem(name);
 
         //Get all menu items
         const res = await dbConn.getMenuItems();
@@ -502,7 +496,7 @@ app.get("/api/Manager/deleteInventoryItem", async (req, res) => {
             var flag = false;
             for(const ingr of list){
                 //If ingredient to delete exists in the list, mark down name and flag it for updating 
-                if(ingr === 'Honey'){
+                if(ingr === name){
                     names.push(row.name);
                     flag = true;
                 }
@@ -651,6 +645,28 @@ app.get("/oauth2callback", async (req, res) => {
 });
 
 
+app.get("/api/places", async (req, res) => {
+    const lat = req.query.lat || 29.7604; 
+    const lng = req.query.lng || -95.3698; 
+
+    try {
+        const places = await getPlacesAPI(lat, lng); 
+        
+        res.json(places);
+    } catch (err) {
+        console.error("Places API error:", err);
+        res.status(500).json({ error: "Failed to fetch restaurant locations" });
+    }
+});
+
+app.get("/api/Manager/getXReport", async (req, res) => {
+    try {
+        const result = await dbConn.getXReport();
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: err});
+    }
+});
 
 
 app.listen(3000, () => console.log("Server running on port 3000"));

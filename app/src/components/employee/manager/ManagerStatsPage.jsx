@@ -6,6 +6,7 @@ import "../../../css/style.css";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ReportRow from "./XZReportRow";
 
 function ManagerStatsPage() {
 
@@ -13,6 +14,7 @@ function ManagerStatsPage() {
     const [startDate, setStartDate] = useState("2025-01-01");
     const [endDate, setEndDate] = useState("2025-12-31");
     const [graph, setGraph] = useState("profit");
+    const [report, setReport] = useState([]);
 
     const nav = useNavigate();
 
@@ -26,6 +28,29 @@ function ManagerStatsPage() {
     });
 
     if(!isManager) { return; }
+
+    async function XReport() {
+        const response = await fetch("http://localhost:3000/api/Manager/getXReport");
+        const data = await response.json();
+        const report = {};
+
+        for(let i = 0; i < 24; i++) {
+            report[i] = 0;
+        }
+
+        for(let i = 0; i < data.length; i++) {
+            report[data[i].hour] += data[i].qty
+        }
+
+        setReport(report);
+    }
+
+    async function ZReport() {
+        const confirm = window.confirm("Create Z report?");
+        if(confirm) {
+            XReport();
+        }
+    }
 
     useEffect(() => {
         async function getRows() {
@@ -165,8 +190,6 @@ function ManagerStatsPage() {
     } else {
         var line = null;
     }
-    
-    console.log(line);
 
     if(!line) {
         return;
@@ -234,14 +257,16 @@ function ManagerStatsPage() {
                 <div class="manager-stats-reports-container">
                     
                     <div class="manager-stats-report-viewer">
-                        
+                        {Object.keys(report).map((row) => (
+                            <ReportRow hour={row} value={report[row]}/>
+                        ))}
                     </div>
                     
-                    <button class="manager-stats-x-report">
+                    <button onClick={XReport} class="manager-stats-x-report">
                         Create X Report
                     </button>
 
-                    <button class="manager-stats-z-report">
+                    <button onClick={ZReport} class="manager-stats-z-report">
                         Create Z Report
                     </button>
 
