@@ -161,7 +161,6 @@ body {
     justify-content: flex-end;
     overflow-y: auto;
     scrollbar-width: none; 
-    -webkit-scrollbar{display: none; }
      
 }
 
@@ -177,7 +176,7 @@ body {
     display: flex;
     flex-direction: column;
     border-radius: 12px;
-    position: fixed;
+    margin-top: 2.5rem;
 
 }
 
@@ -318,8 +317,7 @@ body {
     padding: 0 20px;
         overflow-y: auto; 
     scrollbar-width: none; 
-    -webkit-scrollbar{display: none; }
-    
+    height: 100vh ;
 }
 
 .menu-item {
