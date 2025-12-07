@@ -38,7 +38,7 @@ function App() {
             new google.translate.TranslateElement(
                 {
                     pageLanguage: 'en',
-                    includedLanguages: "en,es,fr,de,zh",
+                    includedLanguages: "af,ar,az,be,bg,bn,bs,ca,cs,cy,da,de,el,en,es,et,fa,fi,fr,ga,gl,gu,ha,hi,hr,ht,hu,id,ig,is,it,iw,ja,ka,kk,km,kn,ko,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,ne,nl,no,ny,pa,pl,ps,pt,ro,ru,rw,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tk,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh,zu"
                 },
                 "google_translate_element"
             );
@@ -72,6 +72,9 @@ function App() {
                         <Route path="/employee/manager/menu/:id" element={<ManagerMenuEditPage/>}></Route>
                         <Route path="/employee/cashier" element={<CashierPage/>}></Route>
                     </Routes>
+                <div id= "translate-wrapper">
+                <div id="google_translate_element"></div> 
+                </div>
                 </BrowserRouter>
             </div>
         </>
