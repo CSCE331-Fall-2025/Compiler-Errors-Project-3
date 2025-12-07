@@ -22,8 +22,8 @@ const {
     getInventory,
     addOrder,
     getIngredientList,
-    getWeatherAPI,
-    getPlacesAPI
+    getPlacesAPI,
+    getWeatherAPI
     } = functions;
 
 //Inside App, npm run dev
@@ -200,16 +200,6 @@ app.get("/api/Manager/fetchData", async (req, res) => {
     }
 });
 
-app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
-    try {
-        const name = req.body.name;
-        // TODO
-    } catch (err) {
-        console.log(err.message);
-        res.status(500).json({error: err.message});
-    }
-});
-
 app.get("/api/OrderMenu/fetchMenu", async (req, res) => {
     try {
         const menu = await createMenuItemArray();
@@ -277,13 +267,39 @@ app.post("/api/Manager/updateEmployee", upload.single("img"), async (req, res) =
         res.status(500).json({error: "Failed to update employee"});
     }
 });
+
+app.get("/api/login/employeeLogin", async (req, res) => {
+    try {
+        const {user} = req.query;
+        const type = await dbConn.employeeAuth(user);
+        res.json(type);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({error: "Failed to fire employee"});
+    }
+});
+
+app.get("/api/weather", async (req, res) => {
+    try {
+        const lat = req.query.lat || 29.7604;
+        const long = req.query.long || -95.3698;
+
+        const weather = await getWeatherAPI(lat, long); 
+
+        res.json(weather);
+    } catch (err) {
+        console.error("Weather API error:", err);
+        res.status(500).json({ error: "Failed to fetch weather" });
+    }
+});
+
 //deleteEmployee
-app.post("/api/Manager/deleteEmployee", async (req, res) => {
+app.get("/api/Manager/deleteEmployee", async (req, res) => {
     try{
-        const {name} = req.body;
+        const {name} = req.query;
         console.log("attempting");
         try{
-            await deleteEmployee(name);
+            await dbConn.deleteEmployee(name);
         }
         catch(err){
             console.error("add error: ", err);
@@ -299,19 +315,18 @@ app.post("/api/Manager/deleteEmployee", async (req, res) => {
 });
 
 //deleteMenuItem
-app.post("/api/Manager/deleteMenuItem", async (req, res) => {
+app.get("/api/Manager/deleteMenuItem", async (req, res) => {
     try{
-        const {name} = req.body;
+        const {name} = req.query;
         console.log("Attempting: ", name);
         try{
-            await deleteMenuItem(name);
+            await dbConn.deleteMenuItem(name);
+            res.json({status: true});
         }
         catch(err){
             console.error("add error: ", err);
             throw err;
         }
-        console.log("Succeeded");
-      res.status(200).json({ message: "Menu item deleted" });
     }
     catch(err){
         console.error(err);
@@ -337,25 +352,6 @@ app.post("/api/Manager/addInventoryItem", async (req, res) => {
     catch(err){
       console.error(err);
       res.status(500).json({error: "Failed to add inventory item"});
-    }
-});
-
-app.post("/api/Manager/updateEmployee", async (req, res) => {
-    try {
-        const { name, newName, role, email, phone } = req.body;
-        console.log("Attempting: ", name, newName, role, email, phone);
-
-        try {
-            await updateEmployee(name, newName, role, email, phone);
-        } catch (err) {
-            console.error("update error: ", err);
-            throw err;
-        }
-
-        console.log("Succeeded");
-        res.status(200).json({ message: "Employee added successfully" });
-    } catch (err) {
-        res.status(500).json({error: err.message});
     }
 });
 
@@ -484,12 +480,10 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
             }
         };
 
-        if(!flag){
-            throw new TypeError('Quantity Exceeds Inventory Stock');
-        }
-        else{
-            await dbConn.addOrders(orders);
-            dbConn.updateInventory(usedIngrMap,inventoryMap);
+        if(flag) {
+            await addOrder(orders);
+            dbConn.updateInventory(usedIngrMap, inventoryMap);
+            response.status(200).json({message: "Order submitted successfully"});
         }
 
     } catch (err) {
@@ -498,17 +492,12 @@ app.post("/api/Cashier/addOrders", async (req, response) => {
     }
 })
 
-app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
+app.get("/api/Manager/deleteInventoryItem", async (req, res) => {
     try {
-        const name = req.body.name;
+        const { name } = req.query;
         //Find item. If it returns empty, then throw error
-        const item = await pool.query('SELECT * FROM inventoryce WHERE name = $1', [name]);
-        if(item.rows.length === 0)
-        {
-            throw TypeError('Error, ingredient does not exist')
-        }
         //Delete from table
-        await dbConn.deleteInventoryItem();
+        await dbConn.deleteInventoryItem(name);
 
         //Get all menu items
         const res = await dbConn.getMenuItems();
@@ -522,7 +511,7 @@ app.post("/api/Manager/deleteInventoryItem", async (req, res) => {
             var flag = false;
             for(const ingr of list){
                 //If ingredient to delete exists in the list, mark down name and flag it for updating 
-                if(ingr === 'Honey'){
+                if(ingr === name){
                     names.push(row.name);
                     flag = true;
                 }
@@ -670,19 +659,6 @@ app.get("/oauth2callback", async (req, res) => {
     }
 });
 
-app.get("/api/weather", async (req, res) => {
-    try {
-        const lat = req.query.lat || 29.7604;
-        const long = req.query.long || -95.3698;
-
-        const weather = await getWeatherAPI(lat, long); 
-
-        res.json(weather);
-    } catch (err) {
-        console.error("Weather API error:", err);
-        res.status(500).json({ error: "Failed to fetch weather" });
-    }
-});
 
 app.get("/api/places", async (req, res) => {
     const lat = req.query.lat || 29.7604; 
@@ -695,6 +671,15 @@ app.get("/api/places", async (req, res) => {
     } catch (err) {
         console.error("Places API error:", err);
         res.status(500).json({ error: "Failed to fetch restaurant locations" });
+    }
+});
+
+app.get("/api/Manager/getXReport", async (req, res) => {
+    try {
+        const result = await dbConn.getXReport();
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: err});
     }
 });
 

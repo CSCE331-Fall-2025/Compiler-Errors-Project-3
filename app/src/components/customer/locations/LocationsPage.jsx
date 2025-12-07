@@ -58,7 +58,7 @@ function LocationsPage() {
 
   return (
     <>
-      <NavBar>
+      <NavBar />
 
       <div className="locations-page">
         <header className="locations-hero">
@@ -84,29 +84,6 @@ function LocationsPage() {
           </div>
 
           <div className="cards">
-
-            <section className="card info-card">
-              <h3>Information</h3>
-              <p className="status open">Open  -  Closes 10PM</p>
-              <address>6027 Stewart Rd<br/>Galveston, TX 77551</address>
-              <p>(346) 291-2298</p>
-              <p>Catering | Delivery | Takeout</p>
-            </section>
-
-            <section className="card hours-card">
-              <h3>Hours</h3>
-              <ul className="hours-list">
-                <li><span>Monday</span><span>9:30am - 10:00pm</span></li>
-                <li><span>Tuesday</span><span>9:30am - 10:00pm</span></li>
-                <li><span>Wednesday</span><span>9:30am - 10:00pm</span></li>
-                <li><span>Thursday</span><span>9:30am - 10:00pm</span></li>
-                <li><span>Friday</span><span>9:30am - 10:30pm</span></li>
-                <li><span>Saturday</span><span>9:30am - 10:30pm</span></li>
-                <li><span>Sunday</span><span>10:00am - 10:00pm</span></li>
-              </ul>
-            </section>
-
-
             <section className="card map-card">
               <Map
                 locations={locations}

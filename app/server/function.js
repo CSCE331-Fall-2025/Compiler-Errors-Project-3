@@ -143,6 +143,7 @@ async function getPlacesAPI(lat, long){
     try {
         const response = await fetch(url);
         const data = await response.json();
+        console.log(data);
 
         const results = data.results;
         /*
@@ -180,6 +181,9 @@ async function translateText(text) {
     console.log("Translated:", data.translation_text);
 }
 
+async function addOrder(orders) {
+    await dbConn.addOrders(orders);
+}
 
 export default {
     createMenuItemArray,
@@ -193,5 +197,6 @@ export default {
     addMenuItem,
     addInventoryItem,
     getWeatherAPI,
-    getPlacesAPI
+    getPlacesAPI,
+    addOrder
 }

@@ -2,6 +2,9 @@ import React, {useEffect, useState} from "react";
 import "../../../css/style.css"
 import ManagerNavBar from "./ManagerNavBar";
 import DataRowEntry from "./ManagerDataRowEntry";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 
 function ManagerDataPage() {
@@ -11,6 +14,20 @@ function ManagerDataPage() {
     const [filterValue, setFilterValue] = useState(null);
     const [limit, setLimit] = useState(100);
     const [rows, setRows] = useState([]);
+
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
+
 
     useEffect(() => {
         async function getRows() {

@@ -56,8 +56,6 @@ function CashierOrderList(){
             newCart.push(order);
         }
 
-        console.log(newCart);
-
         const response = await fetch(
             "http://localhost:3000/api/Cashier/addOrders",
             submitOrders(newCart)

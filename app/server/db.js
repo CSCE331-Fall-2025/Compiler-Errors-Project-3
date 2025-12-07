@@ -304,14 +304,21 @@ async function getReport(reportName)
  * @param {*} date String. Format is 'XXXX-XX-XX' (Year, month, day)
  * @returns Array of order entries
  */
-async function getXReport(currentHour, date) {
+async function getXReport() {
     try {
+        
         const qry = `
             SELECT EXTRACT(HOUR FROM time) AS hour, item, qty, price
             FROM orderhistoryce
-            WHERE "date" = $1 AND EXTRACT(HOUR FROM time) < $2`;
+            WHERE "date" = $1 AND EXTRACT(HOUR FROM time) <= $2`;
             
-        const res = await pool.query(qry, [date, currentHour]);
+        const now = new Date();
+        const res = await pool.query(
+            qry, 
+            [
+                now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate(), 
+                now.getHours()
+            ]);
         return res.rows;
     } catch (err) {
         console.error(err);
@@ -346,17 +353,30 @@ async function addOrders(orderArray){
     const now = new Date();
     const corrMonth = parseInt(now.getMonth())+1;
 
-    var date = now.getFullYear() + '-' + corrMonth.toString() + '-' + now.getDate();
+    var date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
     var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
     var i = 1;
     for(const order of orderArray) {
         res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
         var price = res.rows[0].price;
         pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [id+i, date, time, order.name, order.quantity, price, "pending"]
-        );
+            [id+i, date, time, order.name, order.quantity, price, "pending"]);
         i += 1;
     };
+}
+
+async function employeeAuth(email) {
+    const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
+
+    for(let i = 0; i < res.rows.length; i++) {
+        const row = res.rows[i];
+
+        if (row.email === email || row.username === email) {
+            return row.usertype;
+        }
+    }
+
+    return "DNE";
 }
 
 async function dataQuery(query, params) {
@@ -364,6 +384,7 @@ async function dataQuery(query, params) {
 }
 
 export default {
+    dataQuery,
     dataQuery,
     addOrders,
     addUser,
@@ -394,5 +415,6 @@ export default {
     updateInventory,
     getEmployees,
     getInventory,
-    getXReport
+    getXReport,
+    employeeAuth
 };

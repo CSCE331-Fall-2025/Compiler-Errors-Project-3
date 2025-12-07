@@ -1,20 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import NavBar from '../NavBar';
 import { useNavigate } from "react-router-dom";
 import { validateCustomer } from "../../js/utils";
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from "../contexts/AuthContext";
 import "../../css/checkout.css";
 
 function LoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const nav = useNavigate();
+
+    const { authCashier, authManager, authKitchen, isManager } = useContext(AuthContext);
 
     async function submitForm(e) {
         e.preventDefault();
-        await fetch(
+        const response = await fetch(
             "http://localhost:3000/api/login/validateCustomer",
             validateCustomer(username, password)
         );
+
+        if(response.status) {
+            authCashier(false);
+            authManager(false);
+            authKitchen(false);
+
+            nav("/");
+        }
     }
+
+    const onSuccess = (credentialResponse) => {
+        const decoded = jwtDecode(credentialResponse.credential);
+
+        authCashier(false);
+        authManager(false);
+        authKitchen(false);
+        nav("/"); // we don't really implement customer accounts, so just... redirect to home page on successful login
+    };
+
+    const onError = () => {
+        console.log('Login Failed');
+    };
+
 
     return (
         <main className="login-wrap">
@@ -45,6 +73,8 @@ function LoginField(){
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
+
+                    <GoogleLogin class="google-login" onSuccess={onSuccess} onError={onError}/>
 
                     <div className="actions">
                         <label style={{ fontWeight: 500 }}>

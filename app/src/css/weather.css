@@ -1,0 +1,98 @@
+.weather-container {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100vh;
+    margin: 0 auto;
+}
+
+/* today weather side  */
+
+.weather-today-section{
+    background: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-today-section h1 {
+    padding-top: 20px;
+    align-self: center;
+}
+
+.weather-today-section h2{
+    padding-top:15px ;
+    align-self: center;
+}
+
+.weather-today-icon{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    align-self: center;
+}
+.weather-today-temp{
+    font-size: 56px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    color: #111827;
+    align-self: center;
+
+}
+
+.weather-today-details{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 24px;
+    font-size: 16px;
+    color: #4b5563;
+
+}
+.weather-today-details strong{
+    color:#111827;
+    font-weight: 600;
+
+}
+
+
+/* right side 7day weather */
+
+.weather-forecast-section{
+    background: rgb(248, 248, 248);
+    padding: 3rem;
+    overflow-y: auto;
+
+}
+
+.weather-forecast-section h2{
+    margin-bottom: 2rem;
+    justify-self: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.weather-forecast-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.weather-card{
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid #d57575; 
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.weather-card img{
+    width: 70px;
+    height: 70px;
+    margin:0.75rem;
+
+}
+
+.weather-card-temps div{
+    margin: 0.25rem 0;
+}

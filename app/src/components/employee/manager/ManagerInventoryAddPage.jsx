@@ -5,12 +5,25 @@ import EditableField from "./EditableField";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { addInventoryItem } from "../../../js/utils";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
 
 function ManagerInventoryAddPage() {
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unitPrice, setUnitPrice] = useState("");
     const [minimum, setMinimum] = useState("");
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     async function handleSubmit(e) {
         e.preventDefault();
