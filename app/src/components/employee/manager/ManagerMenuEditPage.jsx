@@ -5,6 +5,8 @@ import EditableField from "./EditableField";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateMenuItem } from "../../../js/utils";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
 
 function ManagerMenuEditPage() {
     const { id } = useParams();
@@ -13,6 +15,17 @@ function ManagerMenuEditPage() {
 
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     useEffect(() => {
         async function getMenu() {

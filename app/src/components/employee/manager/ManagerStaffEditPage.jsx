@@ -5,6 +5,9 @@ import { updateEmployee } from "../../../js/utils";
 import EditableField from "./EditableField";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+
 
 function ManagerStaffEditPage() {
     const { id } = useParams();
@@ -12,6 +15,17 @@ function ManagerStaffEditPage() {
 
     const [employee, setEmployee] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     useEffect(() => {
         async function getEmployees() {

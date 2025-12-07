@@ -3,10 +3,25 @@ import "../../../css/style.css"
 import ManagerNavBar from "./ManagerNavBar";
 import ManagerEmployeeCard from "./ManagerEmployeeCard";
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 function ManagerStaffPage() {
     const [data, setData] = useState([]);
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     useEffect(() => {
         async function getEmployees() {
@@ -17,6 +32,18 @@ function ManagerStaffPage() {
         getEmployees();
     }, []);
 
+    async function onDelete(name) {
+        await fetch(`http://localhost:3000/api/Manager/deleteEmployee?name=${name}`);
+        const newData = [...data];
+        for(let i = 0; i < newData.length; i++) {
+            if(newData[i].name === name) {
+                newData.splice(i, 1);
+                break;
+            }
+        }
+        setData(newData);
+  }
+
     return (
         <>
             <div class="manager-page-root">
@@ -25,7 +52,7 @@ function ManagerStaffPage() {
                     <div class="manager-template-list">
                             {data.map((item) => (
                                 <div class="manager-template-card">
-                                    <ManagerEmployeeCard key={item.name} {...item} />
+                                    <ManagerEmployeeCard key={item.name} {...item} onDelete={onDelete}/>
                                 </div>
                             ))}
                             <div class="manager-template-card">

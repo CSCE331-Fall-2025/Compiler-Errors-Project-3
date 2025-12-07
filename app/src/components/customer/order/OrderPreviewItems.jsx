@@ -5,6 +5,7 @@ import "../../../css/style.css";
 
 function OrderPreviewItems() {
     let { cart } = useContext(CartContext);
+    const { removeFromCart } = useContext(CartContext);
     console.log(cart);
 
     const tempCart = [...cart];
@@ -18,6 +19,10 @@ function OrderPreviewItems() {
         }
     }
 
+    async function remove(){
+        removeFromCart(order);
+    }
+
     return (
         <div class="order-preview-items">
             {cart.length === 0 ? (
@@ -27,6 +32,12 @@ function OrderPreviewItems() {
             <div className="order-details-row" key={index}>
                 <span className="order-details-name">{item.name}</span>
                 <span className="order-details-qty"> {item.price}</span>
+                <button
+                    onClick={() => removeFromCart(item)}
+                    className="checkout-order-remove-button"
+                >
+                    X
+                </button>
             </div>
             ))
         )}

@@ -4,6 +4,8 @@ import ManagerNavBar from "./ManagerNavBar";
 import EditableField from "./EditableField";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
 
 function ManagerStaffAddPage() {
     const [imgPreview, setImgPreview] = useState(null);
@@ -13,6 +15,17 @@ function ManagerStaffAddPage() {
     const [role, setRole] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager && loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
 
     function handleImageSelect(e) {
         const file = e.target.files[0];

@@ -15,20 +15,13 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (name, price, type="Entree") => {
-    // for(let i = 0; i < cart.length; i++) {
-    //   if(cart[i].name === name) {
-    //     const newCart = [...cart];
-    //     newCart[i].quantity += 1;
-    //     setCart(newCart);
-    //     return;
-    //   }
-    // }
 
     let order = {
       name: name,
       price: price,
       quantity: 1,
       side: null,
+      sub: [],
       type: type
     }
 
@@ -39,6 +32,20 @@ export function CartProvider({ children }) {
     for(let i = 0; i < cart.length; i++) {
       if(cart[i] == order) {
         cart[i].side = side;
+        break;
+      }
+    }
+  }
+
+  const addSub = (order, sub) => {
+    for(let i = 0; i < cart.length; i++) {
+      if(cart[i] == order) {
+        if(cart[i].sub.includes(sub)) {
+          cart[i].sub.splice(cart[i].sub.indexOf(sub), 1);
+          break;
+        }
+        cart[i].sub.push(sub);
+        break;
       }
     }
   }
@@ -63,7 +70,7 @@ export function CartProvider({ children }) {
   }
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, replaceCart, addSide }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, replaceCart, addSide, addSub }}>
       {children}
     </CartContext.Provider>
   );

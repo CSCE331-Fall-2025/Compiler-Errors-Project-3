@@ -30,13 +30,18 @@ function CheckoutSummary(){
 
         for(let i = 0; i < names.length; i++) {
             const add = [];
-            const qty = 0;
+            const sub = [];
+            var qty = 0;
 
             for(let j = 0; j < cart.length; j++) {
                 if(cart[j].name === names[i]) {
                     qty += 1;
                     if(cart[j].side != null) {
                         add.push(cart[j].side);
+                    }
+
+                    for(let k = 0; k < cart[j].sub.length; k++) {
+                        sub.push(cart[j].sub[k]);
                     }
                 }
             }
@@ -45,20 +50,20 @@ function CheckoutSummary(){
                 name: names[i],
                 quantity: qty,
                 add: add,
-                sub: []
+                sub: sub
             }
 
             newCart.push(order);
 
-
         }
 
-        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
-        const data = await response.json();
+        console.log(newCart);
 
+        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
+        
         if(response.status == 200) {
             clearCart();
-            // navigate away   
+            navigate("/");   
         }
     }
 
@@ -96,7 +101,7 @@ function CheckoutSummary(){
                 <span>Total</span>
                 <strong id = "summary-total">{"$" + (subtotal*1.0825).toFixed(2)}</strong>
             </div>
-            <button onClick={clearCart} id = "placeOrder" class = "checkout-btn">Place Order</button>
+            <button onClick={placeOrder} id = "placeOrder" class = "checkout-btn">Place Order</button>
         </aside>
     );
 }

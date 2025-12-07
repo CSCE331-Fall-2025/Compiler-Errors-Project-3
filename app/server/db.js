@@ -23,105 +23,77 @@ async function getIngredientList(name){
 //Not to be actually used. Use this as a test site for all connections
 async function testQuery()
 {
-    var res = await getStock();
-    const inventoryMap = new Map(res.rows.map(row => [row.name,Number(row.quantity)]));
-    const usedIngrMap = new Map();
-    try {
-        //Get the orders
-        const orders = new Array();
-        orders.push({
-            name: 'Orange Chicken',
-            quantity: 4,
-            add: new Array(),
-            sub: new Array()
-        });
-        
-        
-        //Get ingredients used
-        orders.forEach(async (order) => {
-            const quantity = order.quantity;
-            //Gets ingredients for order
-            var ingrList = await getIngredientList(order.name);
-            //For each ingredient
-            for(let i = 0; i < ingrList.length; i++){
-                //If ingredient hasn't been used, initialize
-                if(usedIngrMap.get(ingrList[i]) === undefined){
-                    usedIngrMap.set(ingrList[i], 0);
-                }
-                usedIngrMap.set(ingrList[i], usedIngrMap.get(ingrList[i]) + quantity);
-            }
+    const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3-3b/translation", {
+    method: "POST",
+    headers: {
+      "Authorization": `Token ${process.env.NLP_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      text: 'Bread',
+      source: "engl_Latn",
+      target: "spa_Latn"
+        })
+    });
 
-            //Add is sides
-            const addArr = order.add;
-            for(let i = 0; i < addArr.length; i++){
-                ingrList = await getIngredientList(addArr[i]);
-                for(let j = 0; i < ingrList.length; i++)
-                {
-                    if(usedIngrMap.get(ingrList[j]) === undefined){
-                        usedIngrMap.set(ingrList[j], 0);
-                    }
-                    usedIngrMap.set(addArr[j], usedIngrMap.get(ingrList[j]) + quantity);
-                }
-            }
-
-            //Remove quantity amount of some ingredient
-            const subArr = order.sub;
-            for(let i = 0; i < subArr.length; i++){
-                usedIngrMap.set(subArr[i], usedIngrMap.get(subArr[i]) + quantity);
-            }
-        });
-
-        var flag = true;
-        //Check if exceeds stock
-        usedIngrMap.forEach((value, key) => {
-            if(value > inventoryMap.get(key)){
-                flag = false;
-            }
-        });
-
-        //If exceeds, error. Else, add to inventory
-        if(!flag){
-            throw new TypeError('Quantity Exceeds Inventory Stock');
-        }
-        else{
-            await addOrders(orders);
-            updateInventory(usedIngrMap,inventoryMap);
-        }
-
-    } catch (err) {
-        console.log(err.message);
-    }
-
+    console.log(response);
+    //const data = await response.json();
+    //console.log("Translated:", data.translation_text);
 }
 
 //Account Management
 async function validateEmployee(username, password){
-    const res = await pool.query('SELECT * FROM usersce');
+    const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
 
+    var flag = false;
     var userType = 'FAIL';
-    for(let i = 0; i < res.rows.length; i++) {
-        const row = res.rows[i];
-        if((row.username === username || row.email === username) && (row.password === password)) {
-            userType = row.usertype;
-            break;
+    if(password === process.env.OAUTH_SPECIALPASS){
+        for(const row of res.rows){
+            if(!flag){
+                if(row.email === username){
+                    userType = row.usertype;
+                    flag = true;
+                }
+            }
         }
     }
 
+    else{
+        for(const row of res.rows){
+            if(!flag){
+                if((row.username === username  || row.email === username) && row.password === password){
+                    userType = row.usertype;
+                    flag = true;
+                    
+                }
+            }
+        }
+    }
     return userType;
 }
 
 async function validateCustomer(username, password){
     const res = await pool.query('SELECT * FROM customersce');
 
-    flag = false;
-    res.rows.forEach(row => {
-        if(!flag){
-            if((row.name.localeCompare(username) == 0 || row.email.localeCompare(username)) && usersArray.rows[i].password.localeCompare(password) == 0){
-                flag = true;
+    var flag = false;
+    if(password === process.env.OAUTH_SPECIALPASS){
+        for(const row of res.rows){
+            if(!flag){
+                if(row.email === username){
+                    flag = true;
+                }
             }
         }
-    });
-
+    }
+    else{
+        for(const row of res.rows){
+            if(!flag){
+                if((row.username === username || row.email === username) && row.password === password){
+                    flag = true;
+                }
+            }
+        }
+    }
     return flag;
 }
 
@@ -212,6 +184,10 @@ function updateInventoryItem(name, newName, qty, uprice, minimum){
     }
 }
 
+async function deleteInventoryItem(name){
+    pool.query('DELETE FROM inventoryce WHERE name = $1', [name]);
+}
+
 async function checkStock(name){
     try{
         return pool.query('SELECT quantity FROM inventoryce WHERE name = $1', [name]);
@@ -267,8 +243,6 @@ function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
 }
 
 function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
-    console.log("Testing: ", name, newName, price, type, seasonal, calories, ingredients);
-
     if(type.localeCompare('') != 0){
         pool.query('UPDATE menuce SET itemtype = $1 WHERE name = $2', [type, name]);
     }
@@ -292,12 +266,16 @@ function updateMenuItem(name, newName, price, type, seasonal, calories, ingredie
     }
 }
 
+async function updateMenuIngr(name, newList){
+    pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [newList,name]);
+}
+
 function deleteMenuItem(itemName){
     pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
 }
 
 //Misc Functions
-function getReport(reportName)
+async function getReport(reportName)
 {
     var qry;
     if(reportName.localeCompare('Top 5 Menu items')) 
@@ -312,13 +290,41 @@ function getReport(reportName)
         qry = "SELECT SUM(price * qty) AS profit FROM orderhistoryce";
     }
     try{
-        return pool.query(qry);
+        return await pool.query(qry);
     }
     catch(err)
     {
         console.log(err);
     }
 }
+
+/**
+ * 
+ * @param {*} currentHour Integer (1 = 1AM, 24 = 12AM)
+ * @param {*} date String. Format is 'XXXX-XX-XX' (Year, month, day)
+ * @returns Array of order entries
+ */
+async function getXReport() {
+    try {
+        
+        const qry = `
+            SELECT EXTRACT(HOUR FROM time) AS hour, item, qty, price
+            FROM orderhistoryce
+            WHERE "date" = $1 AND EXTRACT(HOUR FROM time) <= $2`;
+            
+        const now = new Date();
+        const res = await pool.query(
+            qry, 
+            [
+                now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate(), 
+                now.getHours()
+            ]);
+        return res.rows;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 function filterOrderHistory(startDate, endDate)
 {
@@ -345,21 +351,41 @@ async function addOrders(orderArray){
     var res = await pool.query('SELECT MAX(id) FROM orderhistoryce');
     const id = res.rows[0].max;
     const now = new Date();
+    const corrMonth = parseInt(now.getMonth())+1;
 
-    var date = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay();
+    var date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
     var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
     var i = 1;
-    orderArray.forEach(async (order) => {
+    for(const order of orderArray) {
         res = await pool.query('SELECT price FROM menuce WHERE name = $1', [order.name]);
         var price = res.rows[0].price;
-        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price) VALUES ($1, $2, $3, $4, $5, $6)',
-            [id+i, date, time, order.name, order.quantity, price]
-        );
+        pool.query('INSERT INTO orderhistoryce (id, date, time, item, qty, price, status) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [id+i, date, time, order.name, order.quantity, price, "pending"]);
         i += 1;
-    });
+    };
+}
+
+async function employeeAuth(email) {
+    const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
+
+    for(let i = 0; i < res.rows.length; i++) {
+        const row = res.rows[i];
+
+        if (row.email === email || row.username === email) {
+            return row.usertype;
+        }
+    }
+
+    return "DNE";
+}
+
+async function dataQuery(query, params) {
+    return await pool.query(query, params);
 }
 
 export default {
+    dataQuery,
+    dataQuery,
     addOrders,
     addUser,
     addCustomer,
@@ -369,9 +395,11 @@ export default {
     getMenuItems,
     addMenuItem,
     updateMenuItem,
+    updateMenuIngr,
     addEmployee,
     addInventoryItem,
     updateInventoryItem,
+    deleteInventoryItem,
     getReport,
     filterOrderHistory, 
     testQuery,
@@ -386,5 +414,7 @@ export default {
     updateEmployeePfp,
     updateInventory,
     getEmployees,
-    getInventory
+    getInventory,
+    getXReport,
+    employeeAuth
 };
