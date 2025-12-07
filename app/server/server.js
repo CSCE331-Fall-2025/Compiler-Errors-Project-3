@@ -22,7 +22,8 @@ const {
     getInventory,
     addOrder,
     getIngredientList,
-    getPlacesAPI
+    getPlacesAPI,
+    getWeatherAPI
     } = functions;
 
 //Inside App, npm run dev
@@ -275,6 +276,20 @@ app.get("/api/login/employeeLogin", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({error: "Failed to fire employee"});
+    }
+});
+
+app.get("/api/weather", async (req, res) => {
+    try {
+        const lat = req.query.lat || 29.7604;
+        const long = req.query.long || -95.3698;
+
+        const weather = await getWeatherAPI(lat, long); 
+
+        res.json(weather);
+    } catch (err) {
+        console.error("Weather API error:", err);
+        res.status(500).json({ error: "Failed to fetch weather" });
     }
 });
 

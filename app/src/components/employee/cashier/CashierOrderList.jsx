@@ -57,13 +57,10 @@ function CashierOrderList(){
 
         }
 
-        console.log(newCart);
-
         const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
         
         if(response.status == 200) {
-            clearCart();
-            navigate("/");   
+            clearCart(); 
         }
     }
 

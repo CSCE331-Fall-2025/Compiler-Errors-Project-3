@@ -24,6 +24,7 @@ import ManagerDataPage from "./components/employee/manager/ManagerDataPage";
 import ManagerStatsPage from "./components/employee/manager/ManagerStatsPage";
 import KitchenPage from "./components/employee/kitchen/KitchenPage";
 import { useEffect } from "react";
+import WeatherPage from "./components/customer/weather/WeatherPage";
 
 
 
@@ -55,7 +56,7 @@ function App() {
                         <Route path="/locations" element={<LocationsPage/>}></Route>
                         <Route path="/login" element={<LoginPage/>}></Route>
                         <Route path="/employee/login" element={<EmployeeLoginPage/>}></Route>
-                        
+                        <Route path="/weather" element={<WeatherPage/>}></Route>
                         <Route path="/employee/Manager" element={<ManagerPage/>}></Route>
                         <Route path="/employee/manager/data" element={<ManagerDataPage/>}></Route>
                         <Route path="/employee/manager/staff" element={<ManagerStaffPage/>}></Route>
