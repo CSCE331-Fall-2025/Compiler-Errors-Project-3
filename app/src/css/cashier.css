@@ -112,6 +112,7 @@ body{
   padding:16px;
   background: #fff;
   border-radius: 10px;
+  border: black 2px solid;
 }
 
 .cashier-menu-item-img-container{
