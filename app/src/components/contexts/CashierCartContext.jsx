@@ -28,22 +28,40 @@ export function CashierCartProvider({ children }) {
       name: name,
       price: price,
       quantity: 1,
-      side: null,
+      side: [], 
       type: type
     }
 
     setCart((prev) => [...prev, order]);
   }
 
-  const addSide = (order, side) => {
-    for(let i = 0; i < cart.length; i++) {
-      if(cart[i] == order) {
-        cart[i].side = side;
+  const addSide = (itemName, sideName) => {
+    setCart(prevCart => {
+      const itemIndex = prevCart.findIndex((item, index) => 
+        item.name === itemName
+      );
+      
+      if (itemIndex === -1) {
+        return prevCart; 
       }
-    }
-  }
 
-  const clearCart = () => setCart([]);
+      const updatedSides = [...prevCart[itemIndex].side, sideName];
+      const updatedItem = {
+        ...prevCart[itemIndex],
+        side: updatedSides,
+      };
+
+      const newCart = prevCart.map((item, index) => 
+        index === itemIndex ? updatedItem : item
+      );
+
+      return newCart;
+    });
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
 
   const removeFromCart = (order) => {
     for(let i = 0; i < cart.length; i++) {

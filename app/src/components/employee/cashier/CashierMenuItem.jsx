@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CartContext } from "../../contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 import CashierMenuSides from "../cashier/CashierMenuSides";
 import "../../../css/cashier.css";
 
 function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true }) {
-    const { addToCart } = useContext(CartContext);
+    const { addToCart } = useContext(CashierCartContext);
     const [data, setData] = useState([]);
-    const { removeFromCart } = useContext(CartContext);
+    const { removeFromCart } = useContext(CashierCartContext);
 
     function add() {
         addToCart(title, price);
@@ -46,7 +46,7 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
             {hasSide && <section class="checkout-order-side-container">
                 Sides
                 {newData.map((item, idx) => (
-                    <CashierMenuSides key={item.title+idx} order={order} item={item.title}/>
+                    <CashierMenuSides key={item.title+idx} order={title} item={item.title}/>
                     // <button type = "button" onClick={addSide} className ="checkout-order-side">
                     //     {item.title}
                     // </button>

@@ -1,11 +1,11 @@
 import React, {useContext} from "react";
-import { CartContext } from "../../contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 
 function CashierMenuSides({order, item}) {
     
-    const { cart, clearCart, addSide } = useContext(CartContext);
+    const { cart, clearCart, addSide } = useContext(CashierCartContext);
     async function chooseSide() {
-        addSide(order, item);
+        addSide(order, item); 
         console.log(cart);
     }
 

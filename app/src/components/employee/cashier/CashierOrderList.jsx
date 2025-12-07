@@ -16,56 +16,59 @@ function CashierOrderList(){
         } else {
             setSubtotal(0.0);
         }
-    });
+    }); 
 
     async function placeOrder() {
         
         const newCart = [];
         const names = [];
-        for(let i = 0; i < cart.length; i++) {
-            if(!names.includes(cart[i].name)) {
+
+        for (let i = 0; i < cart.length; i++) {
+            if (!names.includes(cart[i].name)) {
                 names.push(cart[i].name);
             }
         }
 
-        for(let i = 0; i < names.length; i++) {
+        for (let i = 0; i < names.length; i++) {
             const add = [];
             const sub = [];
-            var qty = 0;
+            let qty = 0;
 
-            for(let j = 0; j < cart.length; j++) {
-                if(cart[j].name === names[i]) {
+            for (let j = 0; j < cart.length; j++) {
+                if (cart[j].name === names[i]) {
                     qty += 1;
-                    if(cart[j].side != null) {
-                        add.push(cart[j].side);
-                    }
 
-                    for(let k = 0; k < cart[j].sub.length; k++) {
-                        sub.push(cart[j].sub[k]);
-                    }
+                    const itemSide = Array.isArray(cart[j].side) ? cart[j].side : [];
+                    if (itemSide.length > 0) add.push(...itemSide);
+
+                    const itemSub = Array.isArray(cart[j].sub) ? cart[j].sub : [];
+                    if (itemSub.length > 0) sub.push(...itemSub);
                 }
             }
 
             const order = {
                 name: names[i],
                 quantity: qty,
-                add: add,
-                sub: sub
-            }
+                add,
+                sub
+            };
 
             newCart.push(order);
-
         }
 
         console.log(newCart);
 
-        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
-        
-        if(response.status == 200) {
+        const response = await fetch(
+            "http://localhost:3000/api/Cashier/addOrders",
+            submitOrders(newCart)
+        );
+
+        if (response.status === 200) {
             clearCart();
-            navigate("/");   
+            navigate("/");
         }
     }
+
 
     return(
         <aside className="cashier-order-list">

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { CartContext } from "../../contexts/CartContext"
+import { CashierCartContext } from "../../contexts/CashierCartContext"
 import "../../../css/cashier.css";
 
 function CashierOrderListItems() {
-    const { cart, addToCart, clearCart } = useContext(CartContext);
-    const { removeFromCart } = useContext(CartContext);
+    const { cart, addToCart, clearCart } = useContext(CashierCartContext);
+    const { removeFromCart } = useContext(CashierCartContext);
     console.log(cart);
 
     const tempCart = [...cart];
@@ -34,7 +34,12 @@ function CashierOrderListItems() {
         ) : (
             outputCart.map((item, index) => (
             <div className="order-details-row" key={index}>
-                <span className="order-details-name">{item.name}</span>
+                <span className="order-details-name">
+                    {item.name}
+                    {item.side.length > 0 && item.side.map((side, sideIndex) => (
+                         <div key={sideIndex} className="side-detail-text">w/ {side}</div>
+                    ))}
+                </span>
                 <span className="order-details-qty">{item.price}</span>
 
                 <button
