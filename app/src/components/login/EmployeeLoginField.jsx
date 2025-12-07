@@ -107,11 +107,7 @@ function EmployeeLoginField(){
                                 Remember me
                             </label>
                         </div>
-                        <div>
-                            <a href="#" style={{ color: "#777", textDecoration: "underline" }}>
-                                Forgot password?
-                            </a>
-                        </div>
+
                     </div>
 
                     <div style={{ marginTop: 18 }}>

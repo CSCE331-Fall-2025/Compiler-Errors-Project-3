@@ -234,19 +234,32 @@ body {
   background: white;
   border-radius: 10px;
   padding: 28px;
-  margin-top: 50px;
+  margin-top: 12vh;
+  width: 80vh; ;
   border: 2px solid black;
   box-shadow: 0 4px 12px lightgrey;
 }
+
 
 .login-card h1 {
   margin: 0 0 18px;
   font-size: 28px;
   font-weight: 800 ;
+  text-align: center;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.login-logo img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
 }
 
 .form-row {
-  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -259,16 +272,13 @@ label {
   padding: 0;
 }
 
+.email-section {
+  width: 100%;
+}
 
-input[type="email"],
-input[type="password"] {
-  width: auto;
-  height: 20px;
-  padding: 12px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
-  background: white;
+.password-section {
+  width: 100%;
+  margin-bottom: 18px;
 }
 
 .forgot-password {
@@ -294,13 +304,20 @@ input[type="password"] {
 }
 
 .actions {
-  display: inline-block;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 8px;
   color: #333;
 }
 
+.switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
 .muted {
   color: #666;
