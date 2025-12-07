@@ -95,7 +95,6 @@ function LocationsPage() {
           </div>
         </main>
       </div>
-      </NavBar>
     </>
   );
 }
