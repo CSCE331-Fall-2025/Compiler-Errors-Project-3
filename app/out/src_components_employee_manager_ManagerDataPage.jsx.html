@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/employee/manager/ManagerDataPage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/employee/manager/ManagerDataPage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useEffect, useState} from "react";
+import "../../../css/style.css"
+import ManagerNavBar from "./ManagerNavBar";
+import DataRowEntry from "./ManagerDataRowEntry";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom"
+
+/**
+ * ManagerDataPage component.
+ *
+ * Renders the manager's data page, including sorting, filtering, and pagination controls,
+ * and displays the fetched rows in a data viewer. Ensures only managers can access this page.
+ *
+ * @component
+ * @returns {JSX.Element} The manager data page UI
+ */
+function ManagerDataPage() {
+    const [page, setPage] = useState(0);
+    const [sort, setSort] = useState("date");
+    const [filterType, setFilterType] = useState("none");
+    const [filterValue, setFilterValue] = useState(null);
+    const [limit, setLimit] = useState(100);
+    const [rows, setRows] = useState([]);
+
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager &amp;&amp; loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
+
+
+    useEffect(() => {
+        async function getRows() {
+            const response = await fetch(
+                `http://localhost:3000/api/Manager/fetchData?sort=${sort}&amp;filterType=${filterType}&amp;filterValue=${filterValue}&amp;limit=${limit}&amp;page=${page}`
+            );
+            setRows(await response.json());
+        }
+        getRows();
+    }, [page, sort, filterType, filterValue, limit]);
+
+    async function filterDefault(v) {
+        if(v === "none") {
+            setFilterValue(null);
+        } else if(v === "item") {
+            setFilterValue("");
+        } else if(
+            v === "year" ||
+            v === "month" ||
+            v === "day" ||
+            v === "hour" ||
+            v === "minute" ||
+            v === "second" ||
+            v === "qty"
+        ) {
+            setFilterValue(0);
+        } else if (v === "price") {
+            setFilterValue(0.0);
+        }
+    }
+
+    async function pageLeft() {
+        if(page != 0) {
+            setPage(page - 1);
+        }
+    }
+
+    async function pageRight() {
+        setPage(page + 1);
+    }
+
+    return (
+    &lt;>
+        &lt;ManagerNavBar/>
+        &lt;div class="manager-data-page">
+            &lt;div class="manager-data-buttons-container">
+                &lt;div class="manager-data-sort-button">
+                    &lt;select onChange={(e) => setSort(e.target.value)} class="manager-data-sort">
+                        &lt;option value="date" selected>Sort by Date&lt;/option>
+                        &lt;option value="time">Sort by TIme&lt;/option>
+                        &lt;option value="item">Sort by Item&lt;/option>
+                        &lt;option value="qty">Sort by Quantity&lt;/option>
+                        &lt;option value="price">Sort by Price&lt;/option>
+                    &lt;/select>
+                &lt;/div>
+
+                &lt;div class="manager-data-filter-button">
+                    &lt;select onChange={(e) => {
+                            filterDefault(e.target.value);
+                            setFilterType(e.target.value);
+                        }} class="manager-data-filter">
+                        &lt;option value="none" select>Filter by...&lt;/option>
+                        &lt;option value="year">Filter by Year&lt;/option>
+                        &lt;option value="month">Filter by Month&lt;/option>
+                        &lt;option value="day">Filter by Day&lt;/option>
+                        &lt;option value="hour">Filter by Hour&lt;/option>
+                        &lt;option value="minute">Filter by Minute&lt;/option>
+                        &lt;option value="second">Filter by Second&lt;/option>
+                        &lt;option value="item">Filter by Item&lt;/option>
+                        &lt;option value="qty">Filter by Quantity&lt;/option>
+                        &lt;option value="price">Filter by Price&lt;/option>
+                    &lt;/select>
+                    
+                    {filterType === "item" ? (
+                        &lt;input
+                            type="text"
+                            value={filterValue}
+                            onChange={(e) => setFilterValue(e.target.value)}
+                            placeholder="Enter item name"
+                        />
+                    ) : filterType === "price" ? (
+                        &lt;input
+                            type="number"
+                            step="0.01"
+                            value={filterValue}
+                            min="0"
+                            onChange={(e) => {
+                                let v = e.target.value;
+
+                                if (v === "") {
+                                    setFilterValue("");
+                                    return;
+                                }
+
+                                if (v.includes(".")) {
+                                    const [intPart, decPart] = v.split(".");
+                                    if (decPart.length > 2) {
+                                        v = intPart + "." + decPart.slice(0, 2);
+                                    }
+                                }
+
+                                v = v.replace(RegExp(`^[0]+(?=[0-9])`), "");
+
+                                setFilterValue(v);
+                            }}
+                            placeholder="Enter price"
+                        />
+                    ) : (
+                        &lt;input
+                            type="number"
+                            value={filterValue}
+                            min="0"
+                            onChange={(e) => {
+                                let v = e.target.value;
+
+                                if (v === "") {
+                                    setFilterValue("");
+                                    return;
+                                }
+
+                                if (v.includes(".")) {
+                                    const [intPart, decPart] = v.split(".");
+                                    v = intPart;
+                                }
+
+                                v = v.replace(RegExp(`^[0]+(?=[0-9])`), "");
+
+                                setFilterValue(v);
+
+                            }}
+                            placeholder="Enter number"
+                        />
+                    )}
+
+                &lt;/div>
+
+                &lt;div class="manager-data-limit-field">
+                    Limit
+                    &lt;input type="number" value={limit} min="0" class="manager-data-limit"
+                        onChange={(e) => {
+                                    let v = e.target.value;
+
+                                    if (v === "") {
+                                        setLimit(0);
+                                        return;
+                                    }
+
+                                    if (v.includes(".")) {
+                                        const [intPart, decPart] = v.split(".");
+                                        v = intPart;
+                                    }
+
+                                    v = v.replace(RegExp(`^[0]+(?=[0-9])`), "");
+
+                                    setLimit(v);
+
+                                }}
+                        placeholder="Enter number"
+                    >
+                    &lt;/input>
+                &lt;/div>
+                &lt;button onClick={pageLeft} class="manager-data-page-left">
+                    &lt;p>{"&lt;"}&lt;/p>
+                &lt;/button>
+
+                &lt;button onClick={pageRight} class="manager-data-page-right">
+                    &lt;p>{">"}&lt;/p> 
+                &lt;/button>
+            &lt;/div>
+
+            &lt;div class="manager-data-viewer-container">
+                &lt;div class="manager-data-viewer-column-header">
+                    &lt;div class="manager-data-date">DATE&lt;/div>
+                    &lt;div class="manager-data-time">TIME&lt;/div>
+                    &lt;div class="manager-data-item">ITEM&lt;/div>
+                    &lt;div class="manager-data-qty">QTY&lt;/div>
+                    &lt;div class="manager-data-price">PRICE&lt;/div>
+                &lt;/div>
+                
+                &lt;div class="manager-data-viewer">
+                    {rows.map((row, idx) => (
+                        &lt;DataRowEntry key={idx} date={row.date.slice(0, 10)} time={row.time} item={row.item} qty={row.qty} price={"$"+row.price.toFixed(2)}/>
+                    ))}
+                &lt;/div>
+                
+            &lt;/div>
+        &lt;/div>
+    &lt;/>
+    );
+}
+
+export default ManagerDataPage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#CashierCartProvider">CashierCartProvider</a></li><li><a href="global.html#CashierMenuItem">CashierMenuItem</a></li><li><a href="global.html#CashierMenuPanel">CashierMenuPanel</a></li><li><a href="global.html#CashierMenuSides">CashierMenuSides</a></li><li><a href="global.html#CashierOrderList">CashierOrderList</a></li><li><a href="global.html#CashierOrderListItems">CashierOrderListItems</a></li><li><a href="global.html#CashierPage">CashierPage</a></li><li><a href="global.html#CheckoutOrderItem">CheckoutOrderItem</a></li><li><a href="global.html#CheckoutOrderSide">CheckoutOrderSide</a></li><li><a href="global.html#CheckoutPage">CheckoutPage</a></li><li><a href="global.html#CheckoutSummary">CheckoutSummary</a></li><li><a href="global.html#DataRowEntry">DataRowEntry</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#EmployeeLoginField">EmployeeLoginField</a></li><li><a href="global.html#EmployeeLoginPage">EmployeeLoginPage</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#HomePage">HomePage</a></li><li><a href="global.html#Hours">Hours</a></li><li><a href="global.html#KitchenPage">KitchenPage</a></li><li><a href="global.html#LocationInfo">LocationInfo</a></li><li><a href="global.html#LocationMap">LocationMap</a></li><li><a href="global.html#LocationsPage">LocationsPage</a></li><li><a href="global.html#LoginField">LoginField</a></li><li><a href="global.html#LoginPage">LoginPage</a></li><li><a href="global.html#ManagerDataPage">ManagerDataPage</a></li><li><a href="global.html#ManagerEmployeeCard">ManagerEmployeeCard</a></li><li><a href="global.html#ManagerInventoryAddPage">ManagerInventoryAddPage</a></li><li><a href="global.html#ManagerInventoryCard">ManagerInventoryCard</a></li><li><a href="global.html#ManagerInventoryEditPage">ManagerInventoryEditPage</a></li><li><a href="global.html#ManagerInventoryPage">ManagerInventoryPage</a></li><li><a href="global.html#ManagerMenuCard">ManagerMenuCard</a></li><li><a href="global.html#ManagerMenuEditPage">ManagerMenuEditPage</a></li><li><a href="global.html#ManagerMenuPage">ManagerMenuPage</a></li><li><a href="global.html#ManagerNavBar">ManagerNavBar</a></li><li><a href="global.html#ManagerPage">ManagerPage</a></li><li><a href="global.html#ManagerStaffAddPage">ManagerStaffAddPage</a></li><li><a href="global.html#ManagerStaffEditPage">ManagerStaffEditPage</a></li><li><a href="global.html#ManagerStaffPage">ManagerStaffPage</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#OrderCard">OrderCard</a></li><li><a href="global.html#OrderMenuitem">OrderMenuitem</a></li><li><a href="global.html#OrderPage">OrderPage</a></li><li><a href="global.html#OrderPanel">OrderPanel</a></li><li><a href="global.html#OrderPreview">OrderPreview</a></li><li><a href="global.html#OrderPreviewItems">OrderPreviewItems</a></li><li><a href="global.html#OrderPreviewPane">OrderPreviewPane</a></li><li><a href="global.html#StaticMenuPage">StaticMenuPage</a></li><li><a href="global.html#WeatherPage">WeatherPage</a></li><li><a href="global.html#addCustomer">addCustomer</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventoryItem">addInventoryItem</a></li><li><a href="global.html#addMenuItem">addMenuItem</a></li><li><a href="global.html#addOrder">addOrder</a></li><li><a href="global.html#addOrders">addOrders</a></li><li><a href="global.html#addUser">addUser</a></li><li><a href="global.html#checkStock">checkStock</a></li><li><a href="global.html#createMenuItemArray">createMenuItemArray</a></li><li><a href="global.html#dataQuery">dataQuery</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventoryItem">deleteInventoryItem</a></li><li><a href="global.html#deleteMenuItem">deleteMenuItem</a></li><li><a href="global.html#employeeAuth">employeeAuth</a></li><li><a href="global.html#fetchIngredients">fetchIngredients</a></li><li><a href="global.html#filterOrderHistory">filterOrderHistory</a></li><li><a href="global.html#getEmployees">getEmployees</a></li><li><a href="global.html#getIngredientList">getIngredientList</a></li><li><a href="global.html#getIngredients">getIngredients</a></li><li><a href="global.html#getInventory">getInventory</a></li><li><a href="global.html#getMenuItems">getMenuItems</a></li><li><a href="global.html#getPlacesAPI">getPlacesAPI</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getStock">getStock</a></li><li><a href="global.html#getWeatherAPI">getWeatherAPI</a></li><li><a href="global.html#getXReport">getXReport</a></li><li><a href="global.html#submitOrders">submitOrders</a></li><li><a href="global.html#testQuery">testQuery</a></li><li><a href="global.html#translateText">translateText</a></li><li><a href="global.html#updateEmployee">updateEmployee</a></li><li><a href="global.html#updateEmployeeEmail">updateEmployeeEmail</a></li><li><a href="global.html#updateEmployeeName">updateEmployeeName</a></li><li><a href="global.html#updateEmployeePfp">updateEmployeePfp</a></li><li><a href="global.html#updateEmployeePhoneNum">updateEmployeePhoneNum</a></li><li><a href="global.html#updateEmployeeType">updateEmployeeType</a></li><li><a href="global.html#updateInventory">updateInventory</a></li><li><a href="global.html#updateInventoryItem">updateInventoryItem</a></li><li><a href="global.html#updateMenuIngr">updateMenuIngr</a></li><li><a href="global.html#updateMenuItem">updateMenuItem</a></li><li><a href="global.html#validateCustomer">validateCustomer</a></li><li><a href="global.html#validateEmployee">validateEmployee</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Dec 07 2025 18:44:02 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

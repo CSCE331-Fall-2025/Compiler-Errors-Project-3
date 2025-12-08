@@ -6,9 +6,17 @@ import ManagerInventoryCard from "./ManagerInventoryCard";
 import { deleteInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-
+/**
+ * ManagerInventoryPage component.
+ *
+ * Displays a list of all inventory items for the manager. Allows deletion of items
+ * and provides a link to add new inventory items.
+ *
+ * @component
+ * @returns {JSX.Element} Inventory management page
+ */
 function ManagerInventoryPage() {
     const [data, setData] = useState([]);
 

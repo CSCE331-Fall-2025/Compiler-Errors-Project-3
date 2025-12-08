@@ -5,79 +5,79 @@ import { useNavigate } from 'react-router-dom';
 import "../../../css/cashier.css";
 import { submitOrders } from "../../../js/utils";
 
-function CashierOrderList(){
+/**
+ * Displays the cashier's current order list, subtotal, and allows placing the order.
+ *
+ * @component
+ * @example
+ * return <CashierOrderList />;
+ */
+function CashierOrderList() {
     const { cart, clearCart } = useContext(CashierCartContext);
     const [subtotal, setSubtotal] = useState(0.0);
     const navigate = useNavigate();
 
+    // Update subtotal whenever cart changes
     useEffect(() => {
-        if(cart.length > 0){
-            setSubtotal(cart.reduce((acc, c) => acc + parseFloat(c.price.replace("$", "")), 0).toFixed(2));
-        } else {
-            setSubtotal(0.0);
-        }
-    });
+        const total = cart.length > 0 
+            ? cart.reduce((acc, c) => acc + parseFloat(c.price.replace("$", "")), 0) 
+            : 0.0;
+        setSubtotal(total.toFixed(2));
+    }, [cart]);
 
+    /**
+     * Consolidates cart items and sends them to the server, then clears the cart on success.
+     */
     async function placeOrder() {
-        
         const newCart = [];
-        const names = [];
-        for(let i = 0; i < cart.length; i++) {
-            if(!names.includes(cart[i].name)) {
-                names.push(cart[i].name);
-            }
-        }
+        const names = [...new Set(cart.map(c => c.name))]; // unique names
 
-        for(let i = 0; i < names.length; i++) {
+        names.forEach(name => {
+            let qty = 0;
             const add = [];
             const sub = [];
-            var qty = 0;
 
-            for(let j = 0; j < cart.length; j++) {
-                if(cart[j].name === names[i]) {
+            cart.forEach(item => {
+                if (item.name === name) {
                     qty += 1;
-                    if(cart[j].side != null) {
-                        add.push(cart[j].side);
-                    }
-
-                    for(let k = 0; k < cart[j].sub.length; k++) {
-                        sub.push(cart[j].sub[k]);
-                    }
+                    if (item.side) add.push(item.side);
+                    if (item.sub?.length) sub.push(...item.sub);
                 }
-            }
+            });
 
-            const order = {
-                name: names[i],
-                quantity: qty,
-                add: add,
-                sub: sub
-            }
+            newCart.push({ name, quantity: qty, add, sub });
+        });
 
-            newCart.push(order);
+        const response = await fetch(
+            'http://localhost:3000/api/Cashier/addOrders', 
+            submitOrders(newCart)
+        );
 
-        }
-
-        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
-        
-        if(response.status == 200) {
-            clearCart(); 
+        if (response.status === 200) {
+            clearCart();
         }
     }
 
-    return(
+    return (
         <aside className="cashier-order-list">
-            <h1>Order details</h1>
+            <h1>Order Details</h1>
+
             <div id="cashierOrderItems" className="cashierOrderItems">
-                {/* items will be added here or served by server side */}
                 <div className="summary-row">
                     <span>Items</span>
-                    <CashierOrderListItems/>
+                    <CashierOrderListItems />
+                </div>
+                <div className="summary-row">
+                    <span>Subtotal</span>
+                    <span>${subtotal}</span>
                 </div>
             </div>
+
             <button onClick={placeOrder} id="placeOrder" className="checkout-btn">
                 Place Order
             </button>
         </aside>
     );
 }
+
 export default CashierOrderList;

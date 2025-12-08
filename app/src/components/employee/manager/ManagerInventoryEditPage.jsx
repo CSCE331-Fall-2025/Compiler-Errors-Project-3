@@ -8,7 +8,16 @@ import { updateInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
-
+/**
+ * ManagerInventoryEditPage component.
+ *
+ * Allows a manager to edit an existing inventory item.
+ * Fetches the item based on the URL parameter, and provides editable fields for
+ * name, quantity, unit price, and minimum stock. Updates are sent to the server.
+ *
+ * @component
+ * @returns {JSX.Element} Inventory edit page
+ */
 function ManagerInventoryEditPage() {
     const { id } = useParams();
     const nav = useNavigate();

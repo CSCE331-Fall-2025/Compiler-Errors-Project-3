@@ -5,6 +5,15 @@ import Map from "./LocationMap";
 
 const initialCenter = { lat: 29.2882, lng: -94.8105 };
 
+/**
+ * LocationsPage component displays all restaurant locations, a search bar,
+ * and a map showing the locations as markers.
+ *
+ * @component
+ *
+ * @example
+ * return <LocationsPage />;
+ */
 function LocationsPage() {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +23,12 @@ function LocationsPage() {
   const [searchAddress, setSearchAddress] = useState("");
   const [submittedAddress, setSubmittedAddress] = useState("");
 
+  /**
+   * Loads restaurant locations from the API and updates state.
+   * @param {Object} center - Latitude and longitude to center the map.
+   * @param {number} center.lat - Latitude coordinate.
+   * @param {number} center.lng - Longitude coordinate.
+   */
   const loadLocations = useCallback(async (center) => {
     setLoading(true);
     setError(null);
@@ -43,11 +58,21 @@ function LocationsPage() {
     loadLocations(initialCenter);
   }, [loadLocations]);
 
+  /**
+   * Callback called when a new address is geocoded to coordinates.
+   * @param {Object} coords - Latitude and longitude of the geocoded address.
+   * @param {number} coords.lat - Latitude coordinate.
+   * @param {number} coords.lng - Longitude coordinate.
+   */
   const handleAddressGeocoded = (coords) => {
     if (!coords) return;
     loadLocations(coords);
   };
 
+  /**
+   * Handles the form submit for address search.
+   * @param {React.FormEvent<HTMLFormElement>} e - Form submission event.
+   */
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSubmittedAddress(searchAddress);

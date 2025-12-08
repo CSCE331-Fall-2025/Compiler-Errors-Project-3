@@ -10,7 +10,17 @@ import thunderstormIcon from "../weather/Thunderstorm.png";
 import drizzleIcon from "../weather/Drizzle.png";
 import "../../../css/weather.css";
 
-
+/**
+ * Page component that displays current weather and a 7-day forecast.
+ *
+ * Fetches weather data from the backend API and shows relevant icons, temperatures,
+ * and conditions. Includes a weekly forecast with highs, lows, and descriptions.
+ *
+ * @component
+ *
+ * @example
+ * return <WeatherPage />;
+ */
 function WeatherPage() {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -26,6 +36,10 @@ function WeatherPage() {
     };
 
     useEffect(() => {
+        /**
+         * Fetches weather data from the API.
+         * Updates `weather`, `loading`, and `error` state.
+         */
         async function loadWeather() {
             try {
                 const res = await fetch("http://localhost:3000/api/weather");

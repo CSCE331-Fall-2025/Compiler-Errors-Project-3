@@ -2,7 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/style.css"
 
-
+/**
+ * ManagerEmployeeCard component.
+ *
+ * Displays an employee card with name, role, contact info, image, and a delete button.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.name - Employee's full name.
+ * @param {string} props.type - Employee's role/type (e.g., Cashier, Manager).
+ * @param {string} props.email - Employee's email address.
+ * @param {string} props.phone - Employee's phone number.
+ * @param {string} props.img - Employee's image in base64 format.
+ * @param {Function} props.onDelete - Callback when the delete button is clicked.
+ * @returns {JSX.Element} The employee card UI
+ */
 function ManagerEmployeeCard({ name, type, email, phone, img, onDelete}) {
   return (
     <div class="card-wrapper">

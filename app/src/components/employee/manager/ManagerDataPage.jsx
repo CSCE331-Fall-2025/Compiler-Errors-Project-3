@@ -6,7 +6,15 @@ import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom"
 
-
+/**
+ * ManagerDataPage component.
+ *
+ * Renders the manager's data page, including sorting, filtering, and pagination controls,
+ * and displays the fetched rows in a data viewer. Ensures only managers can access this page.
+ *
+ * @component
+ * @returns {JSX.Element} The manager data page UI
+ */
 function ManagerDataPage() {
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("date");

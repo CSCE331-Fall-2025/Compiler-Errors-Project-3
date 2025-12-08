@@ -4,6 +4,11 @@ import "../../../css/checkout.css"
 import CheckoutSummary from './CheckoutSummary';
 import OrderPanel from "./CheckoutOrderPanel";
 
+/**
+ * Renders the full checkout page layout, including the navigation bar,
+ * order panel, and order summary.
+ * @returns {JSX.Element} The checkout page component.
+ */
 function CheckoutPage() {
     return (
         <>

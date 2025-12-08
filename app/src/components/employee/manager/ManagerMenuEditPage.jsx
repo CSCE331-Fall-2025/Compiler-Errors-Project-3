@@ -8,6 +8,16 @@ import { updateMenuItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerMenuEditPage component.
+ *
+ * Provides an interface for managers to edit menu items, including title, calories,
+ * type, seasonal flag, price, and image. Fetches the menu item by ID and allows
+ * updates via EditableField components and file upload.
+ *
+ * @component
+ * @returns {JSX.Element} Menu edit page
+ */
 function ManagerMenuEditPage() {
     const { id } = useParams();
 

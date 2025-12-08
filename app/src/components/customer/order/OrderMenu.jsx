@@ -3,10 +3,22 @@ import "../../../css/style.css";
 import { useEffect, useState } from 'react';
 import OrderMenuItem from './OrderMenuItem';
 
+/**
+ * Menu component fetches the restaurant menu and displays it.
+ * Filters out items with type "Side".
+ *
+ * @component
+ *
+ * @example
+ * return <Menu />;
+ */
 function Menu() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+        /**
+         * Fetches menu data from the API and updates state.
+         */
         async function getMenu() {
             const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
             const data = await response.json();
@@ -16,6 +28,7 @@ function Menu() {
         getMenu();
     }, []);
 
+    // Remove items of type "Side"
     for(let i = 0; i < data.length; i++) {
         if(data[i].type === "Side") {
             data.splice(i, 1);

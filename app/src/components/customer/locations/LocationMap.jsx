@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 // Map container styles
 const containerStyle = {
   width: '100%',
-  height: '300px' 
+  height: '300px'
 };
 
 // Default Houston
@@ -12,6 +12,22 @@ const defaultCenter = { lat: 29.7604, lng: -95.3698 };
 
 const libraries = ["places"]; 
 
+/**
+ * Displays a Google Map with markers for given restaurant locations.
+ *
+ * @component
+ * @param {Object[]} locations - Array of location objects to display on the map.
+ * @param {Object} locations[].geometry.location - Coordinates for each location.
+ * @param {number} locations[].geometry.location.lat - Latitude of the location.
+ * @param {number} locations[].geometry.location.lng - Longitude of the location.
+ *
+ * @example
+ * const locations = [
+ *   { geometry: { location: { lat: 29.7604, lng: -95.3698 } } },
+ *   { geometry: { location: { lat: 29.7499, lng: -95.3584 } } }
+ * ];
+ * return <LocationMap locations={locations} />;
+ */
 function LocationMap({ locations }) {
 
   const center = useMemo(() => {
@@ -23,6 +39,7 @@ function LocationMap({ locations }) {
   }, [locations]);
 
   const onLoad = useCallback(function callback(map) {
+    // Can be used to do something once the map loads
   }, []);
 
   return (
@@ -36,7 +53,6 @@ function LocationMap({ locations }) {
         zoom={10} // Adjust zoom level for better viewing of nearby locations
         onLoad={onLoad}
       >
-        {/* Map over the locations and place a Marker for each one */}
         {locations.map((loc, index) => (
           <Marker
             key={index}

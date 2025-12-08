@@ -4,15 +4,14 @@ import dotenv from 'dotenv';
 import findConfig from 'find-config';
 dotenv.config({ path: findConfig('.env') });
 
-//Required APIs, Google Translate, Auth (google or otherwise), Place (done), Weather (done)
-
+/**
+ * Builds an array of menu item objects with formatted fields.
+ * @returns {Array}
+ */
 async function createMenuItemArray()
 {
-    //res.rows[i]."type" gets the value of that field
-    //Gets name, price, and ingredients
     const res = await dbConn.getMenuItems();
 
-    //For each row
     let menuItemArray = res.rows.map(row => ({
         img: row.img ? row.img.toString("base64") : null,
         alt: row.name,
@@ -26,15 +25,23 @@ async function createMenuItemArray()
     return menuItemArray;
 }
 
+/**
+ * Retrieves a list of ingredient names for a menu item.
+ * @param {string} name
+ * @returns {Promise<string[]>}
+ */
 async function getIngredientList(name){ 
     const res = await dbConn.getIngredients(name);
     return res.rows[0].ingredients.split(", ");
 }
 
+/**
+ * Retrieves formatted employee data.
+ * @returns {Array}
+ */
 async function getEmployees() {
     const res = await dbConn.getEmployees();
 
-    //For each row
     let employees = res.rows.map(row => ({
         name: row.name,
         type: row.employeetype,
@@ -46,10 +53,13 @@ async function getEmployees() {
     return employees;
 }
 
+/**
+ * Retrieves inventory items.
+ * @returns {Array}
+ */
 async function getInventory() {
     const res = await dbConn.getInventory();
 
-    //For each row
     let inventory = res.rows.map(row => ({
         name: row.name,
         quantity: row.quantity,
@@ -60,10 +70,29 @@ async function getInventory() {
     return inventory;
 }
 
+/**
+ * Adds a new employee.
+ * @param {string} name
+ * @param {string} role
+ * @param {string} email
+ * @param {string} phone
+ * @param {*} img
+ * @returns {Promise<void>}
+ */
 async function addEmployee(name, role, email, phone, img) {
     await dbConn.addEmployee(name, role, email, phone, img);
 }
 
+/**
+ * Updates an employee record.
+ * @param {string} name Existing employee name
+ * @param {string} newName Updated name
+ * @param {string} role Updated role
+ * @param {string} email Updated email
+ * @param {string} phone Updated phone number
+ * @param {*} img Updated profile image buffer
+ * @returns {Promise<void>}
+ */
 async function updateEmployee(name, newName, role, email, phone, img) {
     const res1 = await dbConn.updateEmployeeType(name, role);
     const res2 = await dbConn.updateEmployeeEmail(name, email);
@@ -76,56 +105,75 @@ async function updateEmployee(name, newName, role, email, phone, img) {
     const res5 = await dbConn.updateEmployeeName(name, newName);
 }
 
+/**
+ * Updates an inventory item.
+ * @param {string} name
+ * @param {string} newName
+ * @param {number|string} qty
+ * @param {number|string} uprice
+ * @param {number|string} minimum
+ * @returns {Promise<void>}
+ */
 async function updateInventoryItem(name, newName, qty, uprice, minimum) {
     await dbConn.updateInventoryItem(name, newName, qty, uprice, minimum);
 }
 
+/**
+ * Updates a menu item.
+ * @param {string} name
+ * @param {string} newName
+ * @param {number|string} price
+ * @param {string} type
+ * @param {boolean|string} seasonal
+ * @param {number|string} calories
+ * @param {*} img
+ * @returns {Promise<void>}
+ */
 async function updateMenuItem(name, newName, price, type, seasonal, calories, img) {
     await dbConn.updateMenuItem(name, newName, price, type, seasonal, calories, "", img);
 }
 
+/**
+ * Adds a new menu item.
+ * @param {string} name
+ * @param {number} calories
+ * @param {string} type
+ * @param {number} price
+ * @param {boolean} seasonal
+ * @param {string} ingredients
+ * @param {*} imgbuf
+ * @returns {Promise<void>}
+ */
 async function addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf) {
     await dbConn.addMenuItem(name, calories, type, price, seasonal, ingredients, imgbuf);
 }
 
+/**
+ * Adds an inventory item.
+ * @param {string} name
+ * @param {number} qty
+ * @param {number} uprice
+ * @param {number} min
+ * @returns {Promise<void>}
+ */
 async function addInventoryItem(name, qty, uprice, min) {
     await dbConn.addInventoryItem(name, qty, uprice, min);
 }
 
-//External API calls
+/**
+ * Retrieves weather information from OpenWeather API.
+ * Defaults to Houston, TX if no coordinates given.
+ * @param {number} [lat=29.7604]
+ * @param {number} [long=-95.3698]
+ * @returns {Promise<any>}
+ */
 async function getWeatherAPI(lat = 29.7604, long = -95.3698){
     const apiKey = process.env.WEATHERAPI_KEY;
-    //Houston Lat and Long: 29.7604, -95.3698
-    //Defaults to Houston if no input
     const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&appid=${apiKey}&exclude=${'minutely','hourly','alerts'}&units=imperial`;
 
     try {
-        //Fetch query from API and send response to data
         const response = await fetch(url);
         const data = await response.json();
-        
-        /*
-        Current Fields: (data.current)
-            temp - Temperature (Configured for Imperial/Fahrenheit)
-            humidity - Humidity in %
-            weather - Array of objects
-                weather.main - Weather type
-                weather.description - Further details on weather type
-            feels_like - Feels Like X degrees (Configured for Imperial/Fahrenheit)
-        Daily Fields: (data.daily[X]; 0 is today)
-            temp - Now an array of fields
-                temp.morn - Morning time temp
-                temp.day - Temp during the day
-                temp.eve - Evening time temp
-                temp.night - Night time temp
-                temp.min - Low of X degrees
-                temp.max - High of X degrees
-            weather - Same as Current
-        Alerts Fields: (data.alert[X])
-            sender_name - who sent the alert
-            event - Name of the alert
-            description - Wall of text from the sender
-        */
         return data;
     } catch (error) {
         console.error('Error fetching weather:', error);
@@ -133,12 +181,15 @@ async function getWeatherAPI(lat = 29.7604, long = -95.3698){
 
 }
 
+/**
+ * Retrieves Google Places API results for Panda Express.
+ * @param {number} lat
+ * @param {number} long
+ * @returns {Promise<any[]>}
+ */
 async function getPlacesAPI(lat, long){
     const apiKey = process.env.PLACEAPI_KEY;
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&radius=${50000}&key=${apiKey}`;
-
-    //Location Constraint url
-    //const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&location=${lat},${lng}&radius=${50000}&key=${apiKey}`;
 
     try {
         const response = await fetch(url);
@@ -146,23 +197,17 @@ async function getPlacesAPI(lat, long){
         console.log(data);
 
         const results = data.results;
-        /*
-        Fields:
-            name - Name of place. SHOULD always be 'Panda Express'
-            formatted_address - Address, with road, city, state + zip code, country
-            rating - rating according to google. 0.0 to 5.0 I presume (to reflect stars)
-            opening_hours - contains an object with a field that is called open_now. That's it?
-            photo_reference - Base 64 string I think
-            types - Array containing all tags of that location (meal_delivery, meal_takeaway, etc)
-         */
         return results;
     } catch (error) {
         console.error('Error fetching places:', error);
     }
 }
 
-//PLEASE BE CAREFUL USING THIS, I DON'T THINK I HAVE TOO MANY CALLS BEFORE IT STARTS COSTING ME
-//Might not work lol
+/**
+ * Translates text to Spanish using NLP Cloud.
+ * @param {string} text
+ * @returns {Promise<void>}
+ */
 async function translateText(text) {
     const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3.3b/translation", {
         method: "POST",
@@ -181,6 +226,11 @@ async function translateText(text) {
     console.log("Translated:", data.translation_text);
 }
 
+/**
+ * Adds a list of orders to the system.
+ * @param {Array<{name:string,quantity:number}>} orders
+ * @returns {Promise<void>}
+ */
 async function addOrder(orders) {
     await dbConn.addOrders(orders);
 }
