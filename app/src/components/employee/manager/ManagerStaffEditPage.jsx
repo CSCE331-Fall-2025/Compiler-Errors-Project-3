@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../css/style.css"
+import "../../../css/style.css";
 import ManagerNavBar from "./ManagerNavBar";
 import { updateEmployee } from "../../../js/utils";
 import EditableField from "./EditableField";
@@ -8,7 +8,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
-
+/**
+ * ManagerStaffEditPage component.
+ *
+ * Allows editing of a single staff member's information, including profile image, name, role, email, and phone.
+ *
+ * @component
+ * @returns {JSX.Element} Edit staff page
+ */
 function ManagerStaffEditPage() {
     const { id } = useParams();
     const nav = useNavigate();
@@ -22,10 +29,9 @@ function ManagerStaffEditPage() {
         if(!isManager && loaded) {
             nav("/403");
         }
+    }, [isManager, loaded, nav]);
 
-    });
-
-    if(!isManager) { return; }
+    if(!isManager) { return null; }
 
     useEffect(() => {
         async function getEmployees() {
@@ -47,34 +53,30 @@ function ManagerStaffEditPage() {
         getEmployees();
     }, [id, nav]);
 
-    if(loading) { return null; }
-
-    if(!employee) { return null; }
-
+    if(loading || !employee) { return null; }
 
     async function editName(name) {
         await fetch("http://localhost:3000/api/Manager/updateEmployee", 
             updateEmployee(employee.name, name, employee.type, employee.email, employee.phone));
-        setEmployee(({...employee, name: name}));
+        setEmployee({...employee, name});
     }
 
     async function editType(type) {
         await fetch("http://localhost:3000/api/Manager/updateEmployee", 
             updateEmployee(employee.name, employee.name, type, employee.email, employee.phone));
-        setEmployee(({...employee, type: type}));
+        setEmployee({...employee, type});
     }
 
     async function editEmail(email) {
         await fetch("http://localhost:3000/api/Manager/updateEmployee", 
             updateEmployee(employee.name, employee.name, employee.type, email, employee.phone));
-        setEmployee(({...employee, email: email}));
-        
+        setEmployee({...employee, email});
     }
 
     async function editPhone(phone) {
         await fetch("http://localhost:3000/api/Manager/updateEmployee", 
             updateEmployee(employee.name, employee.name, employee.type, employee.email, phone));
-        setEmployee(({...employee, phone: phone}));
+        setEmployee({...employee, phone});
     }
 
     async function editImage(img) {
@@ -109,20 +111,20 @@ function ManagerStaffEditPage() {
     return (
         <>
             <ManagerNavBar/>
-            <div class="edit-page">
-                <div class="edit-card-template">
+            <div className="edit-page">
+                <div className="edit-card-template">
                     <div className="staff-edit-img-wrapper" onClick={() => document.getElementById("staff-img-input").click()}>
                         <img className="staff-edit-img" src={`data:image/png;base64,${employee.img}`} alt=""/>
                     </div>
                     <input id="staff-img-input" type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageUpload}/>
                     
-                    <EditableField value={employee.name} onSave={editName} className={"edit-employee-name"}/>
-                    <EditableField value={employee.type} onSave={editType} className={"edit-employee-role"}/>
+                    <EditableField value={employee.name} onSave={editName} className="edit-employee-name"/>
+                    <EditableField value={employee.type} onSave={editType} className="edit-employee-role"/>
 
                     <div className="staff-edit-contact">Contact</div>
 
-                    <EditableField value={employee.email} onSave={editEmail} className={"edit-employee-email"}/>
-                    <EditableField value={employee.phone} onSave={editPhone} className={"edit-employee-phone"}/>
+                    <EditableField value={employee.email} onSave={editEmail} className="edit-employee-email"/>
+                    <EditableField value={employee.phone} onSave={editPhone} className="edit-employee-phone"/>
                 </div>
             </div>
         </>

@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../css/style.css"
+import "../../../css/style.css";
 import ManagerNavBar from "./ManagerNavBar";
 import EditableField from "./EditableField";
 import { useEffect, useState } from 'react';
@@ -7,7 +7,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerStaffAddPage component.
+ *
+ * Renders a form to add a new staff member with profile image, name, role, email, and phone number.
+ *
+ * @component
+ * @returns {JSX.Element} Add staff page
+ */
 function ManagerStaffAddPage() {
+    const nav = useNavigate();
+
     const [imgPreview, setImgPreview] = useState(null);
     const [imgFile, setImgFile] = useState(null);
 
@@ -22,15 +32,13 @@ function ManagerStaffAddPage() {
         if(!isManager && loaded) {
             nav("/403");
         }
+    }, [isManager, loaded, nav]);
 
-    });
-
-    if(!isManager) { return; }
+    if(!isManager) { return null; }
 
     function handleImageSelect(e) {
         const file = e.target.files[0];
         if (!file) return;
-
         setImgFile(file);
         setImgPreview(URL.createObjectURL(file));
     }
@@ -49,14 +57,12 @@ function ManagerStaffAddPage() {
         });
     }
 
-    
     const formatPhone = (value) => {
         const digits = value.replace(/\D/g, "");
 
         if (digits.length === 0) return "";
         if (digits.length < 4) return `(${digits}`;
         if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-
         return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
     };
 
@@ -73,7 +79,6 @@ function ManagerStaffAddPage() {
                     <div className="add-card">
                         <label className="staff-add-pfp-container">
                             <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleImageSelect}/>
-
                             <div className="staff-add-pfp-circle">
                                 {imgPreview ? (
                                     <img src={imgPreview} alt="pfp" />
@@ -99,7 +104,6 @@ function ManagerStaffAddPage() {
             </div>
         </>
     );
-
 }
 
 export default ManagerStaffAddPage;

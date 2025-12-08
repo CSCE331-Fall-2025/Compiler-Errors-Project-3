@@ -5,9 +5,17 @@ import ManagerNavBar from "./ManagerNavBar";
 import ManagerMenuCard from "./ManagerMenuCard";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-
+/**
+ * ManagerMenuPage component.
+ *
+ * Displays a list of menu items for the manager with options to delete or add new items.
+ * Fetches menu data on mount and allows item deletion.
+ *
+ * @component
+ * @returns {JSX.Element} Menu management page
+ */
 function ManagerMenuPage() {
     const [data, setData] = useState([]);
 
@@ -34,15 +42,15 @@ function ManagerMenuPage() {
     }, []);
 
     async function onDelete(name) {
-    await fetch(`http://localhost:3000/api/Manager/deleteMenuItem?name=${name}`);
-    const newData = [...data];
-    for(let i = 0; i < newData.length; i++) {
-        if(newData[i].title === name) {
-            newData.splice(i, 1);
-            break;
+        await fetch(`http://localhost:3000/api/Manager/deleteMenuItem?name=${name}`);
+        const newData = [...data];
+        for(let i = 0; i < newData.length; i++) {
+            if(newData[i].title === name) {
+                newData.splice(i, 1);
+                break;
+            }
         }
-    }
-    setData(newData);
+        setData(newData);
     }
 
     return (
@@ -64,6 +72,6 @@ function ManagerMenuPage() {
             </div>
         </>
     );
-    }
+}
 
 export default ManagerMenuPage;

@@ -6,6 +6,15 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom"
 
+/**
+ * CashierPage component.
+ *
+ * Displays the cashier interface, including the order list and menu panel.
+ * Redirects to the 403 page if the user is not a cashier.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered cashier page
+ */
 function CashierPage(){
 
     const { isCashier, loaded } = useContext(AuthContext);

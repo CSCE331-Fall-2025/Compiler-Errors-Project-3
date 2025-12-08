@@ -2,7 +2,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/style.css"
 
-
+/**
+ * ManagerMenuCard component.
+ *
+ * Displays a menu item card for managers, showing image, title, calories,
+ * type, seasonal flag, price, and provides a delete button.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.img - Base64 image string of the menu item
+ * @param {string} props.alt - Alt text for the image
+ * @param {string} props.title - Title of the menu item
+ * @param {string} props.cal - Calories information
+ * @param {string} props.price - Price of the item
+ * @param {string} props.type - Type of the menu item (Entree, Side, Beverage)
+ * @param {boolean} props.seasonal - Whether the item is seasonal
+ * @param {function} props.onDelete - Callback to delete the menu item
+ * @returns {JSX.Element} Menu item card
+ */
 function ManagerMenuCard({ img, alt, title, cal, price, type, seasonal, onDelete }) {
   return (
     <div class="card-wrapper">

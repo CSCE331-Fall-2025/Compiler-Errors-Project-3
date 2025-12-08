@@ -2,7 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../../css/style.css"
 
-
+/**
+ * ManagerInventoryCard component.
+ *
+ * Displays a single inventory item with name, stock quantity, unit price, and minimum threshold.
+ * Includes a delete button with confirmation.
+ *
+ * @component
+ * @param {Object} props
+ * @param {string} props.name - Name of the inventory item.
+ * @param {number} props.quantity - Current stock quantity.
+ * @param {number} props.unit_price - Unit price of the item.
+ * @param {number} props.minimum - Minimum stock threshold.
+ * @param {function} props.onDelete - Callback invoked when deleting the item.
+ * @returns {JSX.Element} Inventory item card
+ */
 function ManagerInventoryCard({ name, quantity, unit_price, minimum, onDelete }) {
   return (
     <div class="card-wrapper">

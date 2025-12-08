@@ -1,9 +1,17 @@
 import React from "react";
-import NavBar from "../../NavBar"
-import OrderMenu from "./OrderMenu"
+import NavBar from "../../NavBar";
+import OrderMenu from "./OrderMenu";
 import OrderPreviewPane from "./OrderPreviewPane";
-import "../../../css/style.css"
+import "../../../css/style.css";
 
+/**
+ * Displays the customer order page with the menu and order preview pane.
+ *
+ * @component
+ *
+ * @example
+ * return <OrderPage />;
+ */
 function OrderPage() {
     return (
         <>
@@ -14,7 +22,6 @@ function OrderPage() {
                 <OrderMenu></OrderMenu>
                 <OrderPreviewPane></OrderPreviewPane>
             </div>
-
         </>
     );
 }

@@ -109,7 +109,7 @@ form {
 
 input, select {
   padding: 8px;
-  flex: 1 1 200px;
+  /* flex: 1 1 200px; */
   border: 1px solid #ccc;
   border-radius: 5px;
 }

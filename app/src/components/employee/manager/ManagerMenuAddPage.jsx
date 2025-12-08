@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerMenuAddPage component.
+ *
+ * Renders a form for the manager to add a new menu item, including image upload,
+ * nutritional info, type, price, seasonal flag, and selection of inventory ingredients.
+ *
+ * @component
+ * @returns {JSX.Element} Add Menu Item page
+ */
 export default function ManagerMenuAddPage() {
     const nav = useNavigate();
 

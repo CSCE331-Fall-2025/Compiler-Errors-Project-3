@@ -5,9 +5,16 @@ import { Link } from "react-router-dom";
 import ManagerNavBar from "./ManagerNavBar";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-
+/**
+ * ManagerPage component.
+ *
+ * Renders the main portal for the manager with links to all manager sections.
+ *
+ * @component
+ * @returns {JSX.Element} Manager portal page
+ */
 function ManagerPage() {
     const { isManager, loaded } = useContext(AuthContext);
     const nav = useNavigate();

@@ -12,7 +12,12 @@ var pool = new Pool({
     ssl: false,
 });
 
-//Used for testing addOrders in testQuery
+/**
+ * Used for testing addOrders in testQuery.
+ * Retrieves ingredient list for a menu item.
+ * @param {string} name Menu item name
+ * @returns {Promise<string[]>} Array of ingredient names
+ */
 async function getIngredientList(name){ 
     const res = await getIngredients(name);
     var temp = res.rows[0].ingredients;
@@ -20,7 +25,11 @@ async function getIngredientList(name){
     return temp2;
 }
 
-//Not to be actually used. Use this as a test site for all connections
+/**
+ * Testing site for verifying external API connections.
+ * Not used in production.
+ * @returns {Promise<void>}
+ */
 async function testQuery()
 {
     const response = await fetch("https://api.nlpcloud.io/v1/nllb-200-3-3b/translation", {
@@ -37,11 +46,14 @@ async function testQuery()
     });
 
     console.log(response);
-    //const data = await response.json();
-    //console.log("Translated:", data.translation_text);
 }
 
-//Account Management
+/**
+ * Validates an employee login request.
+ * @param {string} username Username or email
+ * @param {string} password Raw password
+ * @returns {Promise<string>} User type or 'FAIL'
+ */
 async function validateEmployee(username, password){
     const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
 
@@ -64,7 +76,6 @@ async function validateEmployee(username, password){
                 if((row.username === username  || row.email === username) && row.password === password){
                     userType = row.usertype;
                     flag = true;
-                    
                 }
             }
         }
@@ -72,6 +83,12 @@ async function validateEmployee(username, password){
     return userType;
 }
 
+/**
+ * Validates a customer login request.
+ * @param {string} username Username or email
+ * @param {string} password Raw password
+ * @returns {Promise<boolean>} Whether login is valid
+ */
 async function validateCustomer(username, password){
     const res = await pool.query('SELECT * FROM customersce');
 
@@ -97,6 +114,13 @@ async function validateCustomer(username, password){
     return flag;
 }
 
+/**
+ * Adds a new customer to the database.
+ * @param {string} name Customer full name
+ * @param {string} email Email address
+ * @param {string} password Raw password
+ * @returns {Promise<void>}
+ */
 async function addCustomer(name, email, password){
     try{
         var id = await pool.query('SELECT MAX(id) FROM customersce');
@@ -108,6 +132,14 @@ async function addCustomer(name, email, password){
     }
 }
 
+/**
+ * Adds a user account (employees only).
+ * @param {string} username Username
+ * @param {string} password Raw password
+ * @param {string} usertype Role
+ * @param {string} email Email address
+ * @returns {Promise<void>}
+ */
 async function addUser(username, password, usertype, email){
     try{
         pool.query('INSERT INTO  (username, password, usertype, email) VALUES ($1, $2, $3, $4)', [username, password, usertype, email]);
@@ -116,11 +148,17 @@ async function addUser(username, password, usertype, email){
     }
 }
 
-//Employee Management
+/**
+ * Adds an employee record.
+ * @param {string} [name=''] Name
+ * @param {string} [employeetype=''] Employee type
+ * @param {string} [email=''] Email
+ * @param {string} [phonenum=''] Phone number
+ * @param {*} img Image data / URL
+ * @returns {Promise<any>}
+ */
 async function addEmployee(name = '', employeetype = '', email = '', phonenum = '', img)
 {
-
-    // TO BE IMPLEMENTED: Add img column to database, add img to INSERT. 
     try
     {
         return pool.query('INSERT INTO employeesce (name, employeetype, email, phonenum, img) VALUES ($1, $2, $3, $4, $5)', [name, employeetype, email, phonenum, img]);
@@ -131,44 +169,99 @@ async function addEmployee(name = '', employeetype = '', email = '', phonenum = 
     }
 }
 
+/**
+ * Updates employee name.
+ * @param {string} targetName Current name
+ * @param {string} name New name
+ * @returns {Promise<void>}
+ */
 async function updateEmployeeName(targetName, name = ''){
     pool.query('UPDATE employeesce SET name = $1 WHERE name = $2', [name, targetName]);
 }
 
+/**
+ * Updates employee type.
+ * @param {string} targetName Current name
+ * @param {string} employeetype New type
+ * @returns {Promise<void>}
+ */
 async function updateEmployeeType(targetName, employeetype = ''){
     pool.query('UPDATE employeesce SET employeetype = $1 WHERE name = $2', [employeetype, targetName]);
 }
 
-async function updateEmployeeEmail(targetName, email = '', phonenum = ''){
+/**
+ * Updates employee email.
+ * @param {string} targetName Current name
+ * @param {string} email New email
+ * @returns {Promise<void>}
+ */
+async function updateEmployeeEmail(targetName, email = ''){
     pool.query('UPDATE employeesce SET email = $1 WHERE name = $2', [email, targetName]);
 }
 
+/**
+ * Updates employee phone number.
+ * @param {string} targetName Current name
+ * @param {string} phonenum New phone number
+ * @returns {Promise<void>}
+ */
 async function updateEmployeePhoneNum(targetName, phonenum){
     pool.query('UPDATE employeesce SET phonenum = $1 WHERE name = $2', [phonenum, targetName]);
 }
 
+/**
+ * Updates employee profile image.
+ * @param {string} targetName Current name
+ * @param {*} img Image data
+ * @returns {Promise<void>}
+ */
 async function updateEmployeePfp(targetName, img){
     pool.query('UPDATE employeesce SET img = $1 WHERE name = $2', [img, targetName]);
 }
 
+/**
+ * Deletes an employee by name.
+ * @param {string} name Employee name
+ * @returns {Promise<void>}
+ */
 function deleteEmployee(name){
     pool.query('DELETE FROM employeesce WHERE name = $1', [name]);
 }
 
-//Managing Inventory
+/**
+ * Adds a new inventory item.
+ * @param {string} name Item name
+ * @param {number} qty Quantity
+ * @param {number} unit_price Unit price
+ * @param {number} minimum Minimum allowed quantity
+ * @returns {Promise<void>}
+ */
 function addInventoryItem(name, qty, unit_price, minimum)
 {
     pool.query('INSERT INTO inventoryce (name, quantity, unit_price, minimum) VALUES ($1, $2, $3, $4)', [name, qty, unit_price, minimum]);
 }
 
-//Used in updating orders
+/**
+ * Updates inventory values after orders.
+ * @param {Map<string, number>} usedIngrMap Ingredients used
+ * @param {Map<string, number>} inventoryMap Current inventory
+ * @returns {void}
+ */
 function updateInventory(usedIngrMap, inventoryMap){
     for(const [key,value] of usedIngrMap){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [inventoryMap.get(key) - value, key]);
     };
 }
 
-//Used in manager side
+/**
+ * Updates fields for an inventory item.
+ * @param {string} name Original item name
+ * @param {string} newName New name (optional)
+ * @param {number|string} qty New quantity
+ * @param {number|string} uprice New unit price
+ * @param {number|string} minimum New minimum
+ * @returns {void}
+ */
 function updateInventoryItem(name, newName, qty, uprice, minimum){
     if(typeof qty !== 'string'){
         pool.query('UPDATE inventoryce SET quantity = $1 WHERE name = $2', [qty, name]);
@@ -184,10 +277,20 @@ function updateInventoryItem(name, newName, qty, uprice, minimum){
     }
 }
 
+/**
+ * Deletes an inventory item.
+ * @param {string} name Item name
+ * @returns {Promise<void>}
+ */
 async function deleteInventoryItem(name){
     pool.query('DELETE FROM inventoryce WHERE name = $1', [name]);
 }
 
+/**
+ * Retrieves stock level for an item.
+ * @param {string} name Item name
+ * @returns {Promise<any>}
+ */
 async function checkStock(name){
     try{
         return pool.query('SELECT quantity FROM inventoryce WHERE name = $1', [name]);
@@ -196,6 +299,10 @@ async function checkStock(name){
     }
 }
 
+/**
+ * Retrieves all stock items.
+ * @returns {Promise<any>}
+ */
 async function getStock(){
     try{
         return pool.query('SELECT name, quantity, minimum FROM inventoryce');
@@ -204,7 +311,10 @@ async function getStock(){
     }
 }
 
-//Menu Management
+/**
+ * Gets all menu items.
+ * @returns {Promise<any>}
+ */
 async function getMenuItems(){
     try{
         return await pool.query('SELECT * FROM menuce');
@@ -213,6 +323,10 @@ async function getMenuItems(){
     }
 }
 
+/**
+ * Gets all employees.
+ * @returns {Promise<any>}
+ */
 async function getEmployees(){
     try{
         return await pool.query('SELECT * FROM employeesce');
@@ -221,6 +335,10 @@ async function getEmployees(){
     }
 }
 
+/**
+ * Gets all inventory items.
+ * @returns {Promise<any>}
+ */
 async function getInventory(){
     try{
         return await pool.query('SELECT * FROM inventoryce');
@@ -229,6 +347,11 @@ async function getInventory(){
     }
 }
 
+/**
+ * Retrieves ingredient list for a menu item.
+ * @param {string} name Menu item name
+ * @returns {Promise<any>}
+ */
 async function getIngredients(name){
     try{
         return await pool.query('SELECT ingredients FROM menuce WHERE name = $1', [name]);
@@ -237,11 +360,34 @@ async function getIngredients(name){
     }
 }
 
+/**
+ * Adds a menu item.
+ * @param {string} name
+ * @param {number} calories
+ * @param {string} type
+ * @param {number} price
+ * @param {boolean} seasonal
+ * @param {string} ingredients
+ * @param {*} img
+ * @returns {void}
+ */
 function addMenuItem(name, calories, type, price, seasonal, ingredients, img){
     pool.query('INSERT INTO menuce (name, price, ingredients, itemtype, isseasonal, calories, img) VALUES ($1, $2, $3, $4, $5, $6, $7)', 
         [name, price, ingredients, type, seasonal, calories, img]);
 }
 
+/**
+ * Updates a menu item.
+ * @param {string} name Original name
+ * @param {string} newName Updated name
+ * @param {number|string} price
+ * @param {string} type
+ * @param {boolean|string} seasonal
+ * @param {number|string} calories
+ * @param {string} ingredients
+ * @param {*} img
+ * @returns {void}
+ */
 function updateMenuItem(name, newName, price, type, seasonal, calories, ingredients, img){
     if(type.localeCompare('') != 0){
         pool.query('UPDATE menuce SET itemtype = $1 WHERE name = $2', [type, name]);
@@ -266,15 +412,30 @@ function updateMenuItem(name, newName, price, type, seasonal, calories, ingredie
     }
 }
 
+/**
+ * Updates ingredient list for a menu item.
+ * @param {string} name Menu item name
+ * @param {string} newList New ingredients list
+ * @returns {Promise<void>}
+ */
 async function updateMenuIngr(name, newList){
     pool.query('UPDATE menuce SET ingredients = $1 WHERE name = $2', [newList,name]);
 }
 
+/**
+ * Deletes a menu item.
+ * @param {string} itemName Name of menu item
+ * @returns {Promise<void>}
+ */
 function deleteMenuItem(itemName){
     pool.query('DELETE FROM menuce WHERE name = $1', [itemName]);
 }
 
-//Misc Functions
+/**
+ * Runs a predefined report.
+ * @param {string} reportName Report type
+ * @returns {Promise<any>}
+ */
 async function getReport(reportName)
 {
     var qry;
@@ -299,10 +460,8 @@ async function getReport(reportName)
 }
 
 /**
- * 
- * @param {*} currentHour Integer (1 = 1AM, 24 = 12AM)
- * @param {*} date String. Format is 'XXXX-XX-XX' (Year, month, day)
- * @returns Array of order entries
+ * Retrieves X-report (orders up to current hour).
+ * @returns {Promise<any[]>}
  */
 async function getXReport() {
     try {
@@ -325,7 +484,12 @@ async function getXReport() {
     }
 }
 
-
+/**
+ * Filters order history between two dates.
+ * @param {string} startDate YYYY-MM-DD
+ * @param {string} endDate YYYY-MM-DD
+ * @returns {Promise<any>}
+ */
 function filterOrderHistory(startDate, endDate)
 {
     try
@@ -339,13 +503,10 @@ function filterOrderHistory(startDate, endDate)
 }
 
 /**
- * Adds orders to orderhistoryce
- * 
- * Each order must have the 6 following fields:
- * 
- * id, date, time, item, qty, price
- * 
- * @param {*} orderArray Array of orders
+ * Adds orders to orderhistoryce.
+ * Each order must contain: id, date, time, item, qty, price.
+ * @param {Array<{name:string, quantity:number}>} orderArray
+ * @returns {Promise<void>}
  */
 async function addOrders(orderArray){
     var res = await pool.query('SELECT MAX(id) FROM orderhistoryce');
@@ -365,6 +526,11 @@ async function addOrders(orderArray){
     };
 }
 
+/**
+ * Returns employee type based on email or username.
+ * @param {string} email Email or username
+ * @returns {Promise<string>} User type, or "DNE"
+ */
 async function employeeAuth(email) {
     const res = await pool.query('SELECT username, password, usertype, email FROM usersce');
 
@@ -379,12 +545,17 @@ async function employeeAuth(email) {
     return "DNE";
 }
 
+/**
+ * Generic database query wrapper.
+ * @param {string} query SQL query
+ * @param {Array<any>} params Parameter array
+ * @returns {Promise<any>}
+ */
 async function dataQuery(query, params) {
     return await pool.query(query, params);
 }
 
 export default {
-    dataQuery,
     dataQuery,
     addOrders,
     addUser,

@@ -1,67 +1,74 @@
 import React from "react";
-import "../../../css/style.css"
+import "../../../css/style.css";
 import ManagerNavBar from "./ManagerNavBar";
 import ManagerEmployeeCard from "./ManagerEmployeeCard";
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
+/**
+ * ManagerStaffPage component.
+ *
+ * Displays a list of all employees with the ability to delete or navigate to edit/add pages.
+ *
+ * @component
+ * @returns {JSX.Element} Manager staff page
+ */
 function ManagerStaffPage() {
     const [data, setData] = useState([]);
     const nav = useNavigate();
-
     const { isManager, loaded } = useContext(AuthContext);
 
     useEffect(() => {
-        if(!isManager && loaded) {
+        if (!isManager && loaded) {
             nav("/403");
         }
+    }, [isManager, loaded, nav]);
 
-    });
-
-    if(!isManager) { return; }
+    if (!isManager) { return null; }
 
     useEffect(() => {
         async function getEmployees() {
-            const response = await fetch('http://localhost:3000/api/Manager/fetchEmployees');
-            const data = await response.json();
-            setData(data);
+            try {
+                const response = await fetch('http://localhost:3000/api/Manager/fetchEmployees');
+                const data = await response.json();
+                setData(data);
+            } catch (err) {
+                console.error("Failed to fetch employees:", err);
+            }
         }
         getEmployees();
     }, []);
 
     async function onDelete(name) {
-        await fetch(`http://localhost:3000/api/Manager/deleteEmployee?name=${name}`);
-        const newData = [...data];
-        for(let i = 0; i < newData.length; i++) {
-            if(newData[i].name === name) {
-                newData.splice(i, 1);
-                break;
-            }
+        try {
+            await fetch(`http://localhost:3000/api/Manager/deleteEmployee?name=${name}`);
+            setData(prev => prev.filter(emp => emp.name !== name));
+        } catch (err) {
+            console.error("Failed to delete employee:", err);
         }
-        setData(newData);
-  }
+    }
 
     return (
-        <>
-            <div class="manager-page-root">
-                <ManagerNavBar/>
-                <div class="manager-template-page">
-                    <div class="manager-template-list">
-                            {data.map((item) => (
-                                <div class="manager-template-card">
-                                    <ManagerEmployeeCard key={item.name} {...item} onDelete={onDelete}/>
-                                </div>
-                            ))}
-                            <div class="manager-template-card">
-                                <Link to="/employee/manager/staff/add"><div class="manager-add-card">+</div></Link>
-                            </div>
+        <div className="manager-page-root">
+            <ManagerNavBar/>
+            <div className="manager-template-page">
+                <div className="manager-template-list">
+                    {data.map(item => (
+                        <div className="manager-template-card" key={item.name}>
+                            <ManagerEmployeeCard {...item} onDelete={onDelete}/>
+                        </div>
+                    ))}
+                    <div className="manager-template-card">
+                        <Link to="/employee/manager/staff/add">
+                            <div className="manager-add-card">+</div>
+                        </Link>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

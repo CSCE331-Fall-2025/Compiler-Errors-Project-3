@@ -8,6 +8,14 @@ import { addInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerInventoryAddPage component.
+ *
+ * Page for managers to add new inventory items. Allows input of item name, quantity, unit price, and restock minimum.
+ *
+ * @component
+ * @returns {JSX.Element} The inventory add page UI
+ */
 function ManagerInventoryAddPage() {
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");

@@ -3,11 +3,20 @@ import NavBar from "../NavBar";
 import "../../css/checkout.css";
 import EmployeeLoginField from "./EmployeeLoginField";
 
-function EmployeeLoginPage(){
-    return(
+/**
+ * EmployeeLoginPage renders the page for employee login.
+ * It includes the navigation bar and the EmployeeLoginField component.
+ *
+ * @component
+ *
+ * @example
+ * return <EmployeeLoginPage />;
+ */
+function EmployeeLoginPage() {
+    return (
         <>
-            <NavBar></NavBar> 
-            <EmployeeLoginField></EmployeeLoginField>
+            <NavBar />
+            <EmployeeLoginField />
         </>
     );
 }

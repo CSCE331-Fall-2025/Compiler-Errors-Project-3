@@ -7,6 +7,16 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from "../contexts/AuthContext";
 import "../../css/checkout.css";
 
+/**
+ * LoginField renders a login form for customers.
+ * Supports standard email/password login as well as Google OAuth login.
+ * On successful login, redirects to the home page.
+ *
+ * @component
+ *
+ * @example
+ * return <LoginField />;
+ */
 function LoginField(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -36,44 +46,56 @@ function LoginField(){
         authCashier(false);
         authManager(false);
         authKitchen(false);
-        nav("/"); // we don't really implement customer accounts, so just... redirect to home page on successful login
+        nav("/");
     };
 
     const onError = () => {
         console.log('Login Failed');
     };
 
-
     return (
         <main className="login-wrap">
             <section className="login-card" role="region" aria-label="Sign in">
+                <div className="login-logo">
+                    <img src="/images/pakistan.png" alt="Logo" />
+                </div>
+
                 <h1>Sign in to your customer account</h1>
 
                 <form onSubmit={submitForm}>
-                    <div className="form-row">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            id="email"
-                            type="text"
-                            placeholder="you@example.com"
-                            required
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
+                    <div className="email-section">
+                        <div className="form-row">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                id="email"
+                                type="text"
+                                placeholder="you@example.com"
+                                required
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
                     </div>
 
-                    <div className="form-row">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            type="password"
-                            placeholder="Password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                    <div className="password-section">
+                        <div className="form-row">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                placeholder="Password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
                     </div>
 
+                    <div className="switch">
+                        <label>
+                            - or -
+                        </label>
+                    </div>
                     <GoogleLogin class="google-login" onSuccess={onSuccess} onError={onError}/>
 
                     <div className="actions">
@@ -82,9 +104,6 @@ function LoginField(){
                             Remember me
                         </label>
 
-                        <a href="#" style={{ color: "#777", textDecoration: "underline" }}>
-                            Forgot password?
-                        </a>
                     </div>
 
                     <div style={{ marginTop: 18 }}>

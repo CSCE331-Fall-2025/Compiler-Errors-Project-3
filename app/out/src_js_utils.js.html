@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/js/utils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/js/utils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Creates a POST request payload for adding an employee.
+ * @param {string} name - Employee name.
+ * @param {string} role - Employee role.
+ * @param {string} email - Employee email.
+ * @param {string} phone - Employee phone number.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function addEmployee(name, role, email, phone) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            role,
+            email,
+            phone
+        }),
+    };
+
+    return json;
+}
+
+/**
+ * Creates a POST request payload for updating an employee.
+ * @param {string} name - Current employee name.
+ * @param {string} newName - Updated employee name.
+ * @param {string} role - Updated employee role.
+ * @param {string} email - Updated employee email.
+ * @param {string} phone - Updated employee phone number.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function updateEmployee(name, newName, role, email, phone) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            role,
+            email,
+            phone
+        }),
+    };
+
+    return json;
+}
+
+/**
+ * Creates a POST request payload for adding a menu item.
+ * @param {string} name - Menu item name.
+ * @param {number} price - Menu item price.
+ * @param {string[]} ingredients - Ingredient list.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function addMenuItem(name, price, ingredients) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            price,
+            ingredients
+        }),
+    };
+
+    return json;
+}
+
+/**
+ * Creates a POST request payload for updating a menu item.
+ * @param {string} name - Current menu item name.
+ * @param {string} newName - Updated menu item name.
+ * @param {number} price - Updated price.
+ * @param {string} type - Updated type/category.
+ * @param {boolean} seasonal - Whether item is seasonal.
+ * @param {number} cal - Updated calorie count.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function updateMenuItem(name, newName, price, type, seasonal, cal) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            price,
+            type,
+            seasonal,
+            cal
+        }),
+    };
+
+    return json;
+}
+
+/**
+ * Creates a POST request payload for updating an inventory item.
+ * @param {string} name - Current inventory item name.
+ * @param {string} newName - Updated item name.
+ * @param {number} qty - Updated quantity.
+ * @param {number} uprice - Updated unit price.
+ * @param {number} minimum - Updated minimum stock threshold.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function updateInventoryItem(name, newName, qty, uprice, minimum) {
+
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name,
+            newName,
+            qty,
+            uprice,
+            minimum
+        }),
+    };
+
+    return json;
+}
+
+/**
+ * Creates a POST request payload for deleting an employee.
+ * @param {string} name - Employee name.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function deleteEmployee(name){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for deleting a menu item.
+ * @param {string} name - Menu item name.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function deleteMenuItem(name){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for deleting an inventory item.
+ * @param {string} name - Inventory item name.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function deleteInventoryItem(name){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for adding an inventory item.
+ * @param {string} name - Item name.
+ * @param {number} qty - Quantity.
+ * @param {number} unit_price - Unit price.
+ * @param {number} minimum - Minimum threshold.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function addInventoryItem(name, qty, unit_price, minimum){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name,
+            qty,
+            unit_price,
+            minimum
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for submitting multiple orders.
+ * @param {Object[]} orders - Array of order objects.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function submitOrders(orders) {
+     const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(orders)
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for validating an employee login.
+ * @param {string} username - Username.
+ * @param {string} password - Password.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function validateEmployee(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for validating a customer login.
+ * @param {string} username - Username.
+ * @param {string} password - Password.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function validateCustomer(username, password){
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            username,
+            password
+        }),
+    }
+    return json;
+}
+
+/**
+ * Creates a POST request payload for requesting an ingredient list.
+ * @param {string} name - Menu item name.
+ * @returns {{method:string,headers:Object,body:string}} POST request config.
+ */
+export function fetchIngredients(name) {
+    const json = {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify({
+            name
+        }),
+    }
+    return json;   
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#CashierCartProvider">CashierCartProvider</a></li><li><a href="global.html#CashierMenuItem">CashierMenuItem</a></li><li><a href="global.html#CashierMenuPanel">CashierMenuPanel</a></li><li><a href="global.html#CashierMenuSides">CashierMenuSides</a></li><li><a href="global.html#CashierOrderList">CashierOrderList</a></li><li><a href="global.html#CashierOrderListItems">CashierOrderListItems</a></li><li><a href="global.html#CashierPage">CashierPage</a></li><li><a href="global.html#CheckoutOrderItem">CheckoutOrderItem</a></li><li><a href="global.html#CheckoutOrderSide">CheckoutOrderSide</a></li><li><a href="global.html#CheckoutPage">CheckoutPage</a></li><li><a href="global.html#CheckoutSummary">CheckoutSummary</a></li><li><a href="global.html#DataRowEntry">DataRowEntry</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#EmployeeLoginField">EmployeeLoginField</a></li><li><a href="global.html#EmployeeLoginPage">EmployeeLoginPage</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#HomePage">HomePage</a></li><li><a href="global.html#Hours">Hours</a></li><li><a href="global.html#KitchenPage">KitchenPage</a></li><li><a href="global.html#LocationInfo">LocationInfo</a></li><li><a href="global.html#LocationMap">LocationMap</a></li><li><a href="global.html#LocationsPage">LocationsPage</a></li><li><a href="global.html#LoginField">LoginField</a></li><li><a href="global.html#LoginPage">LoginPage</a></li><li><a href="global.html#ManagerDataPage">ManagerDataPage</a></li><li><a href="global.html#ManagerEmployeeCard">ManagerEmployeeCard</a></li><li><a href="global.html#ManagerInventoryAddPage">ManagerInventoryAddPage</a></li><li><a href="global.html#ManagerInventoryCard">ManagerInventoryCard</a></li><li><a href="global.html#ManagerInventoryEditPage">ManagerInventoryEditPage</a></li><li><a href="global.html#ManagerInventoryPage">ManagerInventoryPage</a></li><li><a href="global.html#ManagerMenuCard">ManagerMenuCard</a></li><li><a href="global.html#ManagerMenuEditPage">ManagerMenuEditPage</a></li><li><a href="global.html#ManagerMenuPage">ManagerMenuPage</a></li><li><a href="global.html#ManagerNavBar">ManagerNavBar</a></li><li><a href="global.html#ManagerPage">ManagerPage</a></li><li><a href="global.html#ManagerStaffAddPage">ManagerStaffAddPage</a></li><li><a href="global.html#ManagerStaffEditPage">ManagerStaffEditPage</a></li><li><a href="global.html#ManagerStaffPage">ManagerStaffPage</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#OrderCard">OrderCard</a></li><li><a href="global.html#OrderMenuitem">OrderMenuitem</a></li><li><a href="global.html#OrderPage">OrderPage</a></li><li><a href="global.html#OrderPanel">OrderPanel</a></li><li><a href="global.html#OrderPreview">OrderPreview</a></li><li><a href="global.html#OrderPreviewItems">OrderPreviewItems</a></li><li><a href="global.html#OrderPreviewPane">OrderPreviewPane</a></li><li><a href="global.html#StaticMenuPage">StaticMenuPage</a></li><li><a href="global.html#WeatherPage">WeatherPage</a></li><li><a href="global.html#addCustomer">addCustomer</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventoryItem">addInventoryItem</a></li><li><a href="global.html#addMenuItem">addMenuItem</a></li><li><a href="global.html#addOrder">addOrder</a></li><li><a href="global.html#addOrders">addOrders</a></li><li><a href="global.html#addUser">addUser</a></li><li><a href="global.html#checkStock">checkStock</a></li><li><a href="global.html#createMenuItemArray">createMenuItemArray</a></li><li><a href="global.html#dataQuery">dataQuery</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventoryItem">deleteInventoryItem</a></li><li><a href="global.html#deleteMenuItem">deleteMenuItem</a></li><li><a href="global.html#employeeAuth">employeeAuth</a></li><li><a href="global.html#fetchIngredients">fetchIngredients</a></li><li><a href="global.html#filterOrderHistory">filterOrderHistory</a></li><li><a href="global.html#getEmployees">getEmployees</a></li><li><a href="global.html#getIngredientList">getIngredientList</a></li><li><a href="global.html#getIngredients">getIngredients</a></li><li><a href="global.html#getInventory">getInventory</a></li><li><a href="global.html#getMenuItems">getMenuItems</a></li><li><a href="global.html#getPlacesAPI">getPlacesAPI</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getStock">getStock</a></li><li><a href="global.html#getWeatherAPI">getWeatherAPI</a></li><li><a href="global.html#getXReport">getXReport</a></li><li><a href="global.html#submitOrders">submitOrders</a></li><li><a href="global.html#testQuery">testQuery</a></li><li><a href="global.html#translateText">translateText</a></li><li><a href="global.html#updateEmployee">updateEmployee</a></li><li><a href="global.html#updateEmployeeEmail">updateEmployeeEmail</a></li><li><a href="global.html#updateEmployeeName">updateEmployeeName</a></li><li><a href="global.html#updateEmployeePfp">updateEmployeePfp</a></li><li><a href="global.html#updateEmployeePhoneNum">updateEmployeePhoneNum</a></li><li><a href="global.html#updateEmployeeType">updateEmployeeType</a></li><li><a href="global.html#updateInventory">updateInventory</a></li><li><a href="global.html#updateInventoryItem">updateInventoryItem</a></li><li><a href="global.html#updateMenuIngr">updateMenuIngr</a></li><li><a href="global.html#updateMenuItem">updateMenuItem</a></li><li><a href="global.html#validateCustomer">validateCustomer</a></li><li><a href="global.html#validateEmployee">validateEmployee</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Dec 07 2025 18:44:02 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
