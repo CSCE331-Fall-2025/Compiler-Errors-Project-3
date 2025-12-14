@@ -33,6 +33,7 @@ function Hero() {
                             <img
                                 src="/images/Orange Chicken gif.gif"
                                 className="popular-food-image"
+                                alt="Plate of crispy orange chicken in sweet and tangy sauce"
                             />
                         </div>
                     </div>
