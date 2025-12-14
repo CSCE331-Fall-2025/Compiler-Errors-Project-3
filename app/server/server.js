@@ -664,6 +664,8 @@ app.get("/api/places", async (req, res) => {
     const lat = req.query.lat || 29.7604; 
     const lng = req.query.lng || -95.3698; 
 
+    console.log(lat, lng);
+
     try {
         const places = await getPlacesAPI(lat, lng); 
         
