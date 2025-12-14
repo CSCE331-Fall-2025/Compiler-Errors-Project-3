@@ -69,7 +69,7 @@ export default function ManagerMenuAddPage() {
     useEffect(() => {
         async function getInventory() {
             try {
-                const res = await fetch("http://localhost:3000/api/Manager/fetchInventory");
+                const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory");
                 const data = await res.json();
 
                 setInventory(data || []);
@@ -112,7 +112,7 @@ export default function ManagerMenuAddPage() {
         formData.append("ingredients", ingredientsString);
 
         try {
-            const res = await fetch("http://localhost:3000/api/Manager/addMenuItem", {
+            const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addMenuItem", {
                 method: "POST",
                 body: formData
             });

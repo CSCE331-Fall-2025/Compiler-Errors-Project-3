@@ -36,7 +36,7 @@ function EmployeeLoginField() {
         let result = "FAIL";
 
         await fetch(
-            "http://localhost:3000/api/login/validateEmployee",
+            "https://compiler-errors-project-3-backend.onrender.com/api/login/validateEmployee",
             validateEmployee(username, password)
         )
         .then(res => res.json())
@@ -68,7 +68,7 @@ function EmployeeLoginField() {
         const decoded = jwtDecode(credentialResponse.credential);
 
         const response = await fetch(
-            `http://localhost:3000/api/login/employeeLogin?user=${decoded.email}`
+            `https://compiler-errors-project-3-backend.onrender.com/api/login/employeeLogin?user=${decoded.email}`
         );
         const type = await response.json();
 

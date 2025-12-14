@@ -43,7 +43,7 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
     // Fetch menu data on component mount
     useEffect(() => {
         async function getMenu() {
-            const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/OrderMenu/fetchMenu');
             const data = await response.json();
             setData(data);
         }

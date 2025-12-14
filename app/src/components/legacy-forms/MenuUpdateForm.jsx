@@ -17,7 +17,7 @@ function MenuUpdateForm() {
     async function submitForm(e) {
         e.preventDefault(); 
 
-        await fetch("http://localhost:3000/api/Manager/updateMenuItem", updateMenuItem(name, newName, price, ingredients));
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuItem", updateMenuItem(name, newName, price, ingredients));
     }
 
     return (

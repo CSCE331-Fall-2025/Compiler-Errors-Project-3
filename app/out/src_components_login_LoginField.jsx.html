@@ -58,7 +58,7 @@ function LoginField() {
     async function submitForm(e) {
         e.preventDefault();
         const response = await fetch(
-            "http://localhost:3000/api/login/validateCustomer",
+            "https://compiler-errors-project-3-backend.onrender.com/api/login/validateCustomer",
             validateCustomer(username, password)
         );
 

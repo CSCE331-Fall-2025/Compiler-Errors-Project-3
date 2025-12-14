@@ -34,7 +34,7 @@ function ManagerInventoryPage() {
     
     useEffect(() => {
         async function getInventory() {
-            const response = await fetch('http://localhost:3000/api/Manager/fetchInventory');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory');
             const data = await response.json();
             setData(data);
         }
@@ -42,7 +42,7 @@ function ManagerInventoryPage() {
     }, []);
 
     async function onDelete(name) {
-        await fetch(`http://localhost:3000/api/Manager/deleteInventoryItem?name=${name}`);
+        await fetch(`https://compiler-errors-project-3-backend.onrender.com/api/Manager/deleteInventoryItem?name=${name}`);
         const newData = [...data];
         for(let i = 0; i < newData.length; i++) {
             if(newData[i].name === name) {

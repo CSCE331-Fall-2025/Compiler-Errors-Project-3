@@ -33,7 +33,7 @@ function ManagerStatsPage() {
             }
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/Manager/fetchStats?startDate=${startDate}&endDate=${endDate}`
+                    `https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchStats?startDate=${startDate}&endDate=${endDate}`
                 );
                 const data = await response.json();
                 setRows(data);
@@ -47,7 +47,7 @@ function ManagerStatsPage() {
     // X Report
     async function XReport() {
         try {
-            const response = await fetch("http://localhost:3000/api/Manager/getXReport");
+            const response = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/getXReport");
             const data = await response.json();
             const reportData = {};
             for (let i = 0; i < 24; i++) reportData[i] = 0;
