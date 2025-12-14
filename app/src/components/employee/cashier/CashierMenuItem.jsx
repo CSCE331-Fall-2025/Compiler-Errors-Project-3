@@ -3,38 +3,15 @@ import { CashierCartContext } from "../../contexts/CashierCartContext";
 import CashierMenuSides from "../cashier/CashierMenuSides";
 import "../../../css/cashier.css";
 
-/**
- * CashierMenuItem component displays a menu item in the cashier view.
- * It shows the item details, price, and optionally allows selecting sides.
- * 
- * @param {Object} props
- * @param {string} props.img - Base64 or URL of the menu item image.
- * @param {string} props.alt - Alt text for the image.
- * @param {string} props.title - Name of the menu item.
- * @param {number|string} props.cal - Calories of the item (optional).
- * @param {number|string} props.price - Price of the menu item.
- * @param {Object} props.order - Current order object for adding sides.
- * @param {boolean} [props.hasSide=true] - Determines if sides should be displayed.
- * 
- * @component
- *
- * @example
- * return <CashierMenuItem title="Orange Chicken" price={8.99} order={order} />;
- */
 function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true }) {
-    const { addToCart, removeFromCart } = useContext(CashierCartContext);
+    const { addToCart } = useContext(CashierCartContext);
     const [data, setData] = useState([]);
+    const { removeFromCart } = useContext(CashierCartContext);
 
-    /**
-     * Adds the main item to the cart.
-     */
     function add() {
         addToCart(title, price);
     }
 
-    /**
-     * Adds a side item to the cart. Currently logs to console.
-     */
     function addSide() {
         console.log("side added");
         addToCart(title, price);
@@ -50,8 +27,13 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
         getMenu();
     }, []);
 
-    // Filter sides from menu data
-    const newData = data.filter(item => item.type === "Side");
+    const newData = [];
+
+    for(let i = 0; i < data.length; i++) {
+        if(data[i].type === "Side") {
+            newData.push(data[i]);
+        }
+    }
 
     return (
         <div className="cashier-menu-item">
@@ -66,7 +48,11 @@ function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true })
                 <section className="checkout-order-side-container">
                     Sides
                     {newData.map((item, idx) => (
-                        <CashierMenuSides key={item.title + idx} order={order} item={item.title} />
+                        <CashierMenuSides
+                            key={`${item.title}-${idx}`}
+                            order={title}
+                            item={item.title}
+                        />
                     ))}
                 </section>
             )}
