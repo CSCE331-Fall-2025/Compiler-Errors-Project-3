@@ -189,7 +189,12 @@ async function getWeatherAPI(lat = 29.7604, long = -95.3698){
  */
 async function getPlacesAPI(lat, long){
     const apiKey = process.env.PLACEAPI_KEY;
-    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent('Panda Express')}&radius=${50000}&key=${apiKey}`;
+    const url =
+    `https://maps.googleapis.com/maps/api/place/textsearch/json` +
+    `?query=${encodeURIComponent('Panda Express')}` +
+    `&location=${lat},${long}` +
+    `&radius=50000` +
+    `&key=${apiKey}`;
 
     try {
         const response = await fetch(url);
