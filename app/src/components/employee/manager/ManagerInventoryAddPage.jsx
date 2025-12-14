@@ -8,6 +8,14 @@ import { addInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerInventoryAddPage component.
+ *
+ * Page for managers to add new inventory items. Allows input of item name, quantity, unit price, and restock minimum.
+ *
+ * @component
+ * @returns {JSX.Element} The inventory add page UI
+ */
 function ManagerInventoryAddPage() {
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -28,7 +36,7 @@ function ManagerInventoryAddPage() {
     async function handleSubmit(e) {
         e.preventDefault();
         
-        const res = await fetch("http://localhost:3000/api/Manager/addInventoryItem",
+        const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addInventoryItem",
             addInventoryItem(name, quantity, unitPrice, minimum)
         );
     }

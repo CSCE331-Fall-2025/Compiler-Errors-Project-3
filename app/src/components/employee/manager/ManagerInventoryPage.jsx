@@ -6,9 +6,17 @@ import ManagerInventoryCard from "./ManagerInventoryCard";
 import { deleteInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-
+/**
+ * ManagerInventoryPage component.
+ *
+ * Displays a list of all inventory items for the manager. Allows deletion of items
+ * and provides a link to add new inventory items.
+ *
+ * @component
+ * @returns {JSX.Element} Inventory management page
+ */
 function ManagerInventoryPage() {
     const [data, setData] = useState([]);
 
@@ -26,7 +34,7 @@ function ManagerInventoryPage() {
     
     useEffect(() => {
         async function getInventory() {
-            const response = await fetch('http://localhost:3000/api/Manager/fetchInventory');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory');
             const data = await response.json();
             setData(data);
         }
@@ -34,7 +42,7 @@ function ManagerInventoryPage() {
     }, []);
 
     async function onDelete(name) {
-        await fetch(`http://localhost:3000/api/Manager/deleteInventoryItem?name=${name}`);
+        await fetch(`https://compiler-errors-project-3-backend.onrender.com/api/Manager/deleteInventoryItem?name=${name}`);
         const newData = [...data];
         for(let i = 0; i < newData.length; i++) {
             if(newData[i].name === name) {

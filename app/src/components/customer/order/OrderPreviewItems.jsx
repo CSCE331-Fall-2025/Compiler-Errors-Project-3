@@ -2,16 +2,23 @@ import React, { useContext } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import "../../../css/style.css";
 
-
+/**
+ * Displays individual items in the customer's order preview.
+ * Allows removal of items from the cart.
+ *
+ * @component
+ *
+ * @example
+ * return <OrderPreviewItems />;
+ */
 function OrderPreviewItems() {
     let { cart } = useContext(CartContext);
     const { removeFromCart } = useContext(CartContext);
-    console.log(cart);
 
     const tempCart = [...cart];
     const outputCart = [];
 
-    for(let i = 0; i < cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
         for (let j = 0; j < cart[i].quantity; j++) {
             const copy = { ...tempCart[i] };
             copy.quantity = 1;
@@ -19,28 +26,24 @@ function OrderPreviewItems() {
         }
     }
 
-    async function remove(){
-        removeFromCart(order);
-    }
-
     return (
         <div class="order-preview-items">
             {cart.length === 0 ? (
-            <div className="empty-cart">Your cart is empty.</div>
-        ) : (
-            outputCart.map((item, index) => (
-            <div className="order-details-row" key={index}>
-                <span className="order-details-name">{item.name}</span>
-                <span className="order-details-qty"> {item.price}</span>
-                <button
-                    onClick={() => removeFromCart(item)}
-                    className="checkout-order-remove-button"
-                >
-                    X
-                </button>
-            </div>
-            ))
-        )}
+                <div class="empty-cart">Your cart is empty.</div>
+            ) : (
+                outputCart.map((item, index) => (
+                    <div class="order-details-row" key={index}>
+                        <span class="order-details-name">{item.name}</span>
+                        <span class="order-details-qty">{item.price}</span>
+                        <button
+                            onClick={() => removeFromCart(item)}
+                            class="checkout-order-remove-button"
+                        >
+                            X
+                        </button>
+                    </div>
+                ))
+            )}
         </div>
     );
 }

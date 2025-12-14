@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerMenuAddPage component.
+ *
+ * Renders a form for the manager to add a new menu item, including image upload,
+ * nutritional info, type, price, seasonal flag, and selection of inventory ingredients.
+ *
+ * @component
+ * @returns {JSX.Element} Add Menu Item page
+ */
 export default function ManagerMenuAddPage() {
     const nav = useNavigate();
 
@@ -32,7 +41,7 @@ export default function ManagerMenuAddPage() {
     useEffect(() => {
         async function getInventory() {
             try {
-                const res = await fetch("http://localhost:3000/api/Manager/fetchInventory");
+                const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory");
                 const data = await res.json();
 
                 setInventory(data || []);
@@ -75,7 +84,7 @@ export default function ManagerMenuAddPage() {
         formData.append("ingredients", ingredientsString);
 
         try {
-            const res = await fetch("http://localhost:3000/api/Manager/addMenuItem", {
+            const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addMenuItem", {
                 method: "POST",
                 body: formData
             });

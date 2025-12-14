@@ -8,6 +8,16 @@ import { updateMenuItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
+/**
+ * ManagerMenuEditPage component.
+ *
+ * Provides an interface for managers to edit menu items, including title, calories,
+ * type, seasonal flag, price, and image. Fetches the menu item by ID and allows
+ * updates via EditableField components and file upload.
+ *
+ * @component
+ * @returns {JSX.Element} Menu edit page
+ */
 function ManagerMenuEditPage() {
     const { id } = useParams();
 
@@ -29,7 +39,7 @@ function ManagerMenuEditPage() {
 
     useEffect(() => {
         async function getMenu() {
-            const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/OrderMenu/fetchMenu');
             const data = await response.json();
             
             const match = data.find(e =>
@@ -62,25 +72,25 @@ function ManagerMenuEditPage() {
     }
 
     async function editName(name) {
-        await fetch("http://localhost:3000/api/Manager/updateMenuItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuItem", 
             updateMenuItem(item.title, name, item.price, item.type, item.seasonal, item.cal));
         setItem(({...item, title: name}));
     }
     
     async function editCal(calories) {
-        await fetch("http://localhost:3000/api/Manager/updateMenuItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuItem", 
             updateMenuItem(item.title, item.title, item.price, item.type, item.seasonal, calories));
         setItem(({...item, cal: calories}));
     }
     
     async function editType(type) {
-        await fetch("http://localhost:3000/api/Manager/updateMenuItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuItem", 
             updateMenuItem(item.title, item.title, item.price, type, item.seasonal, item.cal));
         setItem(({...item, type: type}));
     }
 
     async function editPrice(cost) {
-        await fetch("http://localhost:3000/api/Manager/updateMenuItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuItem", 
             updateMenuItem(item.title, item.title, cost, item.type, item.seasonal, item.cal));
         setItem(({...item, price: cost}));
     }
@@ -95,7 +105,7 @@ function ManagerMenuEditPage() {
         formData.append("type", item.type);
         formData.append("cal", item.cal);
 
-        await fetch("http://localhost:3000/api/Manager/updateMenuitem", {
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateMenuitem", {
             method: "POST",
             body: formData
         });

@@ -22,7 +22,7 @@ function LocationsPage() {
     const lng = center?.lng ?? initialCenter.lng;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/places`);
+      const res = await fetch(`https://compiler-errors-project-3-backend.onrender.com/api/places?lat=${lat}&lng=${lng}`);
       const data = await res.json();
 
       if (!Array.isArray(data) || data.length === 0) {
@@ -43,10 +43,10 @@ function LocationsPage() {
     loadLocations(initialCenter);
   }, [loadLocations]);
 
-  const handleAddressGeocoded = (coords) => {
+  const handleAddressGeocoded = useCallback((coords) => {
     if (!coords) return;
     loadLocations(coords);
-  };
+  }, [loadLocations]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

@@ -9,7 +9,7 @@ function EmployeeDeleteForm() {
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/Manager/deleteEmployee", deleteEmployee(name));
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/deleteEmployee", deleteEmployee(name));
     }
 
     return (

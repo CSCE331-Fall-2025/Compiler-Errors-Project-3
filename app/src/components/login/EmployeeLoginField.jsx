@@ -1,77 +1,104 @@
-import React, { useContext } from 'react'
-import NavBar from '../NavBar'
+import React, { useContext } from 'react';
+import NavBar from '../NavBar';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateEmployee } from "../../js/utils";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from "../contexts/AuthContext";
-import "../../css/checkout.css"
+import "../../css/checkout.css";
 
-function EmployeeLoginField(){
+/**
+ * EmployeeLoginField provides a login form for employees.
+ * Supports email/password authentication and Google OAuth login.
+ * Sets employee permissions in the AuthContext and navigates to appropriate pages.
+ *
+ * @component
+ *
+ * @example
+ * return <EmployeeLoginField />;
+ */
+function EmployeeLoginField() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { authCashier, authManager, authKitchen} = useContext(AuthContext);
+    const { authCashier, authManager, authKitchen } = useContext(AuthContext);
     const nav = useNavigate();
 
+    /**
+     * Handles email/password login form submission.
+     * Validates the employee and sets context permissions based on role.
+     *
+     * @param {React.FormEvent<HTMLFormElement>} e - Form submission event
+     */
     async function submitForm(e) {
-        e.preventDefault(); 
+        e.preventDefault();
         
-        var result = "FAIL";
+        let result = "FAIL";
 
-        await fetch("http://localhost:3000/api/login/validateEmployee", validateEmployee(username, password))
+        await fetch(
+            "https://compiler-errors-project-3-backend.onrender.com/api/login/validateEmployee",
+            validateEmployee(username, password)
+        )
         .then(res => res.json())
         .then(data => {
             result = data.result;
         });
 
-        if(result.toUpperCase() === "MANAGER") {
+        if (result.toUpperCase() === "MANAGER") {
             authManager(true);
             authCashier(true);
             authKitchen(true);
-
             nav("/Employee/Manager");
-        } else if(result.toUpperCase() === "CASHIER") {
+        } else if (result.toUpperCase() === "CASHIER") {
             authCashier(true);
             authManager(false);
             authKitchen(false);
-
             nav("/Employee/Cashier");
         }
-
     }
 
+    /**
+     * Handles successful Google OAuth login.
+     * Decodes the JWT and sets context permissions based on employee role.
+     *
+     * @param {Object} credentialResponse - Google login response object
+     * @param {string} credentialResponse.credential - JWT token returned by Google
+     */
     const onSuccess = async (credentialResponse) => {
         const decoded = jwtDecode(credentialResponse.credential);
 
-        
-        const response = await fetch(`http://localhost:3000/api/login/employeeLogin?user=${decoded.email}`);
+        const response = await fetch(
+            `https://compiler-errors-project-3-backend.onrender.com/api/login/employeeLogin?user=${decoded.email}`
+        );
         const type = await response.json();
-        if(type.toUpperCase() === "MANAGER") {
+
+        if (type.toUpperCase() === "MANAGER") {
             authManager(true);
             authCashier(true);
             authKitchen(true);
-
             nav("/Employee/Manager");
-
         } else if (type.toUpperCase() === "CASHIER") {
             authCashier(true);
             authManager(false);
             authKitchen(false);
-
             nav("/Employee/Cashier");
         }
     };
 
+    /**
+     * Handles failed Google OAuth login attempts.
+     */
     const onError = () => {
         console.log('Login Failed');
     };
-
 
     return (
         <main className="login-wrap">
             <section className="login-card" role="region" aria-label="Sign in">
                 <h1>Sign in to your employee account</h1>
+                <div className="login-logo">
+                    <img src="/images/pakistan.png" alt="Logo" />
+                </div>
 
                 <form onSubmit={submitForm}>
                     <div className="form-row">
@@ -98,7 +125,7 @@ function EmployeeLoginField(){
                         />
                     </div>
 
-                    <GoogleLogin class="google-login" onSuccess={onSuccess} onError={onError}/>
+                    <GoogleLogin class="google-login" onSuccess={onSuccess} onError={onError} />
 
                     <div className="actions">
                         <div>

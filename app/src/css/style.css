@@ -1440,3 +1440,18 @@ body {
     .step-item { width: 100%; }
 }
 
+/* google translate thing  */
+#translate-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 40px;            
+    overflow: hidden;
+    background: transparent !important;
+    padding: 5px 10px;
+}
+
+body {
+    top: 0 !important;
+}

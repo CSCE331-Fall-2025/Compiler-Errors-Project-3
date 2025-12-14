@@ -2,7 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../css/style.css"
 
-
+/**
+ * Hero section for the home page.
+ * Displays the main call-to-action ("Order Now") and a highlighted popular menu item.
+ *
+ * @returns {JSX.Element} The hero and featured-item section.
+ */
 function Hero() {
     return (
         <>

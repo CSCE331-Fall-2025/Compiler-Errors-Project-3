@@ -8,7 +8,16 @@ import { updateInventoryItem } from "../../../js/utils";
 import { useContext } from 'react';
 import { AuthContext } from "../../contexts/AuthContext";
 
-
+/**
+ * ManagerInventoryEditPage component.
+ *
+ * Allows a manager to edit an existing inventory item.
+ * Fetches the item based on the URL parameter, and provides editable fields for
+ * name, quantity, unit price, and minimum stock. Updates are sent to the server.
+ *
+ * @component
+ * @returns {JSX.Element} Inventory edit page
+ */
 function ManagerInventoryEditPage() {
     const { id } = useParams();
     const nav = useNavigate();
@@ -29,7 +38,7 @@ function ManagerInventoryEditPage() {
 
     useEffect(() => {
         async function getInventory() {
-            const response = await fetch('http://localhost:3000/api/Manager/fetchInventory');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory');
             const data = await response.json();
             const match = data.find(e =>
                 e.name === id
@@ -52,25 +61,25 @@ function ManagerInventoryEditPage() {
     if(!item) { return null; }
 
     async function editName(name) {
-        await fetch("http://localhost:3000/api/Manager/updateInventoryItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateInventoryItem", 
                     updateInventoryItem(item.name, name, item.quantity, item.unit_price, item.minimum));
         setItem(({...item, name: name}));
     }
     
     async function editQty(qty) {
-        await fetch("http://localhost:3000/api/Manager/updateInventoryItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateInventoryItem", 
                     updateInventoryItem(item.name, item.name, qty, item.unit_price, item.minimum));
         setItem(({...item, quantity: qty}));
     }
     
     async function editUnitPrice(uprice) {
-        await fetch("http://localhost:3000/api/Manager/updateInventoryItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateInventoryItem", 
                     updateInventoryItem(item.name, item.name, item.quantity, uprice, item.minimum));
         setItem(({...item, unit_price: uprice}));
     }
     
     async function editMinimum(min) {
-        await fetch("http://localhost:3000/api/Manager/updateInventoryItem", 
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateInventoryItem", 
                     updateInventoryItem(item.name, item.name, item.quantity, item.unit_price, min));
         setItem(({...item, minimum: min}));
     }

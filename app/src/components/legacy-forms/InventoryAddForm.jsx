@@ -11,7 +11,7 @@ function InventoryAddForm() {
     async function submitForm(e) {
         e.preventDefault(); 
         
-        await fetch("http://localhost:3000/api/Manager/addInventoryItem", addInventoryItem(name, qty, unit_price));
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addInventoryItem", addInventoryItem(name, qty, unit_price));
     }
     
     return (

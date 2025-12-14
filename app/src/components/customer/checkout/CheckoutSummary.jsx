@@ -4,24 +4,40 @@ import "../../../css/checkout.css";
 import { submitOrders } from '../../../js/utils';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Displays the order summary during checkout and handles order submission.
+ * @returns {JSX.Element} Checkout summary component.
+ */
 function CheckoutSummary(){
     const { cart, clearCart } = useContext(CartContext);
     const [subtotal, setSubtotal] = useState(0.0);
     const navigate = useNavigate();
 
+    /**
+     * Recalculates the subtotal whenever the cart changes.
+     */
     useEffect(() => {
         if(cart.length > 0){
-            setSubtotal(cart.reduce((acc, c) => acc + parseFloat(c.price.replace("$", "")), 0).toFixed(2));
+            setSubtotal(
+                cart
+                    .reduce((acc, c) => acc + parseFloat(c.price.replace("$", "")), 0)
+                    .toFixed(2)
+            );
         } else {
             setSubtotal(0.0);
         }
     });
 
-
+    /**
+     * Builds the final order payload, sends it to the backend,
+     * clears the cart upon success, and navigates to the home page.
+     * @returns {Promise<void>}
+     */
     async function placeOrder() {
         
         const newCart = [];
         const names = [];
+
         for(let i = 0; i < cart.length; i++) {
             if(!names.includes(cart[i].name)) {
                 names.push(cart[i].name);
@@ -51,15 +67,17 @@ function CheckoutSummary(){
                 quantity: qty,
                 add: add,
                 sub: sub
-            }
+            };
 
             newCart.push(order);
-
         }
 
         console.log(newCart);
 
-        const response = await fetch('http://localhost:3000/api/Cashier/addOrders', submitOrders(newCart));
+        const response = await fetch(
+            'https://compiler-errors-project-3-backend.onrender.com/api/Cashier/addOrders',
+            submitOrders(newCart)
+        );
         
         if(response.status == 200) {
             clearCart();

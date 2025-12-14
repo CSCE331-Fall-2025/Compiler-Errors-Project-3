@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/employee/manager/ManagerMenuAddPage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/employee/manager/ManagerMenuAddPage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react";
+import ManagerNavBar from "./ManagerNavBar";
+import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { AuthContext } from "../../contexts/AuthContext";
+
+/**
+ * ManagerMenuAddPage component.
+ *
+ * Renders a form for the manager to add a new menu item, including image upload,
+ * nutritional info, type, price, seasonal flag, and selection of inventory ingredients.
+ *
+ * @component
+ * @returns {JSX.Element} Add Menu Item page
+ */
+export default function ManagerMenuAddPage() {
+    const nav = useNavigate();
+
+    const { isManager, loaded } = useContext(AuthContext);
+
+    useEffect(() => {
+        if(!isManager &amp;&amp; loaded) {
+            nav("/403");
+        }
+
+    });
+
+    if(!isManager) { return; }
+
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [name, setName] = useState("");
+    const [calories, setCalories] = useState("");
+    const [type, setType] = useState("Entree");
+    const [price, setPrice] = useState("");
+    const [seasonal, setSeasonal] = useState(false);
+
+    const [inventory, setInventory] = useState([]);
+    const [selected, setSelected] = useState(new Set());;
+
+    useEffect(() => {
+        async function getInventory() {
+            try {
+                const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/fetchInventory");
+                const data = await res.json();
+
+                setInventory(data || []);
+            } catch (err) {
+                console.error("fetch inventory", err);
+            }
+        }
+        getInventory();
+    }, []);
+
+    function handleImagePick(e) {
+        const f = e.target.files &amp;&amp; e.target.files[0];
+        if (!f) return;
+        setImageFile(f);
+        setImagePreview(URL.createObjectURL(f));
+    }
+
+    function toggleIngredient(name) {
+        setSelected(prev => {
+            const copy = new Set(prev);
+            if (copy.has(name)) copy.delete(name);
+            else copy.add(name);
+            return copy;
+        });
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const ingredients = Array.from(selected);
+        const ingredientsString = ingredients.join(", ");
+
+        const formData = new FormData();
+        if (imageFile) formData.append("img", imageFile);
+        
+        formData.append("name", name);
+        formData.append("calories", calories);
+        formData.append("type", type);
+        formData.append("price", price);
+        formData.append("seasonal", seasonal ? "true" : "false");
+        formData.append("ingredients", ingredientsString);
+
+        try {
+            const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addMenuItem", {
+                method: "POST",
+                body: formData
+            });
+            
+            if (!res.ok) throw new Error("add failed");
+            
+            nav("/employee/manager/menu");
+        } catch (err) {
+            console.error("submit failed", err);
+        }
+    }
+
+  return (
+    &lt;>
+        &lt;ManagerNavBar />
+        &lt;div className="edit-page">
+        &lt;div className="edit-menu-card">
+            &lt;h2 className="menu-add-title">Add Menu Item&lt;/h2>
+
+            &lt;form className="menu-add-split" onSubmit={handleSubmit}>
+
+            &lt;div className="menu-left">
+                &lt;label className="image-box-label">
+                &lt;input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImagePick}
+                    style={{ display: "none" }}
+                />
+                &lt;div className="image-box" title="Click to select image">
+                    {imagePreview ? (
+                    &lt;img src={imagePreview} alt="preview" />
+                    ) : (
+                    &lt;div className="image-box-placeholder">Select Image&lt;/div>
+                    )}
+                &lt;/div>
+                &lt;/label>
+
+                &lt;label className="field">
+                &lt;span className="field-label">Name&lt;/span>
+                &lt;input value={name} onChange={(e) => setName(e.target.value)} />
+                &lt;/label>
+
+                &lt;label className="field">
+                &lt;span className="field-label">Calories&lt;/span>
+                &lt;input type="number" value={calories} onChange={(e) => setCalories(e.target.value)} />
+                &lt;/label>
+
+                &lt;label className="field">
+                &lt;span className="field-label">Type&lt;/span>
+                &lt;select value={type} onChange={(e) => setType(e.target.value)}>
+                    &lt;option value="Entree">Entree&lt;/option>
+                    &lt;option value="Beverage">Beverage&lt;/option>
+                    &lt;option value="Side">Side&lt;/option>
+                &lt;/select>
+                &lt;/label>
+
+                &lt;label className="field">
+                &lt;span className="field-label">Price&lt;/span>
+                &lt;input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} />
+                &lt;/label>
+
+                &lt;label className="field">
+                &lt;span className="field-label">Seasonal&lt;/span>
+                &lt;select value={seasonal ? "true" : "false"} onChange={(e) => setSeasonal(e.target.value === "true")}>
+                    &lt;option value="false">No&lt;/option>
+                    &lt;option value="true">Yes&lt;/option>
+                &lt;/select>
+                &lt;/label>
+
+            &lt;/div>
+
+            &lt;div className="menu-right">
+                &lt;div className="ingredients-header">
+                &lt;div className="ingredients-title">Ingredients&lt;/div>
+                &lt;div className="ingredients-sub">Click tiles to toggle selection&lt;/div>
+                &lt;/div>
+
+                &lt;div className="ingredients-grid">
+                {inventory.map(inv => {
+                    const nameKey = typeof inv.name === "string" ? inv.name : String(inv.name);
+                    const isSelected = selected.has(nameKey);
+                    return (
+                    &lt;button
+                        type="button"
+                        key={inv.id ?? nameKey}
+                        className={`ingredient-tile ${isSelected ? "selected" : ""}`}
+                        onClick={() => toggleIngredient(nameKey)}
+                    >
+                        {nameKey}
+                    &lt;/button>
+                    );
+                })}
+                &lt;/div>
+                
+                &lt;div className="submit-row">
+                    &lt;button type="submit" className="submit-btn">Add Item&lt;/button>
+                &lt;/div>
+            &lt;/div>
+            &lt;/form>
+        &lt;/div>
+        &lt;/div>
+    &lt;/>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#CartProvider">CartProvider</a></li><li><a href="global.html#CashierCartProvider">CashierCartProvider</a></li><li><a href="global.html#CashierMenuItem">CashierMenuItem</a></li><li><a href="global.html#CashierMenuPanel">CashierMenuPanel</a></li><li><a href="global.html#CashierMenuSides">CashierMenuSides</a></li><li><a href="global.html#CashierOrderList">CashierOrderList</a></li><li><a href="global.html#CashierOrderListItems">CashierOrderListItems</a></li><li><a href="global.html#CashierPage">CashierPage</a></li><li><a href="global.html#CheckoutOrderItem">CheckoutOrderItem</a></li><li><a href="global.html#CheckoutOrderSide">CheckoutOrderSide</a></li><li><a href="global.html#CheckoutPage">CheckoutPage</a></li><li><a href="global.html#CheckoutSummary">CheckoutSummary</a></li><li><a href="global.html#DataRowEntry">DataRowEntry</a></li><li><a href="global.html#EditableField">EditableField</a></li><li><a href="global.html#EmployeeLoginField">EmployeeLoginField</a></li><li><a href="global.html#EmployeeLoginPage">EmployeeLoginPage</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#HomePage">HomePage</a></li><li><a href="global.html#Hours">Hours</a></li><li><a href="global.html#KitchenPage">KitchenPage</a></li><li><a href="global.html#LocationInfo">LocationInfo</a></li><li><a href="global.html#LocationMap">LocationMap</a></li><li><a href="global.html#LocationsPage">LocationsPage</a></li><li><a href="global.html#LoginField">LoginField</a></li><li><a href="global.html#LoginPage">LoginPage</a></li><li><a href="global.html#ManagerDataPage">ManagerDataPage</a></li><li><a href="global.html#ManagerEmployeeCard">ManagerEmployeeCard</a></li><li><a href="global.html#ManagerInventoryAddPage">ManagerInventoryAddPage</a></li><li><a href="global.html#ManagerInventoryCard">ManagerInventoryCard</a></li><li><a href="global.html#ManagerInventoryEditPage">ManagerInventoryEditPage</a></li><li><a href="global.html#ManagerInventoryPage">ManagerInventoryPage</a></li><li><a href="global.html#ManagerMenuCard">ManagerMenuCard</a></li><li><a href="global.html#ManagerMenuEditPage">ManagerMenuEditPage</a></li><li><a href="global.html#ManagerMenuPage">ManagerMenuPage</a></li><li><a href="global.html#ManagerNavBar">ManagerNavBar</a></li><li><a href="global.html#ManagerPage">ManagerPage</a></li><li><a href="global.html#ManagerStaffAddPage">ManagerStaffAddPage</a></li><li><a href="global.html#ManagerStaffEditPage">ManagerStaffEditPage</a></li><li><a href="global.html#ManagerStaffPage">ManagerStaffPage</a></li><li><a href="global.html#Menu">Menu</a></li><li><a href="global.html#NavBar">NavBar</a></li><li><a href="global.html#OrderCard">OrderCard</a></li><li><a href="global.html#OrderMenuitem">OrderMenuitem</a></li><li><a href="global.html#OrderPage">OrderPage</a></li><li><a href="global.html#OrderPanel">OrderPanel</a></li><li><a href="global.html#OrderPreview">OrderPreview</a></li><li><a href="global.html#OrderPreviewItems">OrderPreviewItems</a></li><li><a href="global.html#OrderPreviewPane">OrderPreviewPane</a></li><li><a href="global.html#StaticMenuPage">StaticMenuPage</a></li><li><a href="global.html#WeatherPage">WeatherPage</a></li><li><a href="global.html#addCustomer">addCustomer</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventoryItem">addInventoryItem</a></li><li><a href="global.html#addMenuItem">addMenuItem</a></li><li><a href="global.html#addOrder">addOrder</a></li><li><a href="global.html#addOrders">addOrders</a></li><li><a href="global.html#addUser">addUser</a></li><li><a href="global.html#checkStock">checkStock</a></li><li><a href="global.html#createMenuItemArray">createMenuItemArray</a></li><li><a href="global.html#dataQuery">dataQuery</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventoryItem">deleteInventoryItem</a></li><li><a href="global.html#deleteMenuItem">deleteMenuItem</a></li><li><a href="global.html#employeeAuth">employeeAuth</a></li><li><a href="global.html#fetchIngredients">fetchIngredients</a></li><li><a href="global.html#filterOrderHistory">filterOrderHistory</a></li><li><a href="global.html#getEmployees">getEmployees</a></li><li><a href="global.html#getIngredientList">getIngredientList</a></li><li><a href="global.html#getIngredients">getIngredients</a></li><li><a href="global.html#getInventory">getInventory</a></li><li><a href="global.html#getMenuItems">getMenuItems</a></li><li><a href="global.html#getPlacesAPI">getPlacesAPI</a></li><li><a href="global.html#getReport">getReport</a></li><li><a href="global.html#getStock">getStock</a></li><li><a href="global.html#getWeatherAPI">getWeatherAPI</a></li><li><a href="global.html#getXReport">getXReport</a></li><li><a href="global.html#submitOrders">submitOrders</a></li><li><a href="global.html#testQuery">testQuery</a></li><li><a href="global.html#translateText">translateText</a></li><li><a href="global.html#updateEmployee">updateEmployee</a></li><li><a href="global.html#updateEmployeeEmail">updateEmployeeEmail</a></li><li><a href="global.html#updateEmployeeName">updateEmployeeName</a></li><li><a href="global.html#updateEmployeePfp">updateEmployeePfp</a></li><li><a href="global.html#updateEmployeePhoneNum">updateEmployeePhoneNum</a></li><li><a href="global.html#updateEmployeeType">updateEmployeeType</a></li><li><a href="global.html#updateInventory">updateInventory</a></li><li><a href="global.html#updateInventoryItem">updateInventoryItem</a></li><li><a href="global.html#updateMenuIngr">updateMenuIngr</a></li><li><a href="global.html#updateMenuItem">updateMenuItem</a></li><li><a href="global.html#validateCustomer">validateCustomer</a></li><li><a href="global.html#validateEmployee">validateEmployee</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sun Dec 07 2025 18:44:02 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

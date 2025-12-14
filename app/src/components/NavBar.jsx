@@ -2,6 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../css/style.css"
 
+/**
+ * Navigation bar component for the customer-facing site.
+ * Renders links to main public pages such as Home, Menu, Locations, Weather, and Login.
+ *
+ * @returns {JSX.Element} The navigation bar UI.
+ */
 function NavBar() {
   return (
     <nav className="navbar-white">

@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import "../../../css/locations.css"
 
 const containerStyle = {
   width: '100%',
-  height: '400px'
+  height: '450px'
 };
 
 const initialDefaultCenter = { lat: 29.7604, lng: -95.3698 };
 const libraries = ["places"];
 
 function LocationMap({ locations, searchAddress, initialCenter = initialDefaultCenter, onAddressGeocoded }) {
+  console.log("Test");
   const [mapCenter, setMapCenter] = useState(initialCenter);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const geocoderRef = useRef(null);
@@ -27,7 +29,7 @@ function LocationMap({ locations, searchAddress, initialCenter = initialDefaultC
     if (!searchAddress || searchAddress.trim() === "") {
       setMapCenter(initialCenter);
       return;
-    }
+  }
 
     geocoderRef.current.geocode({ address: searchAddress }, (results, status) => {
       if (status === "OK" && results.length > 0) {
@@ -41,12 +43,12 @@ function LocationMap({ locations, searchAddress, initialCenter = initialDefaultC
         onAddressGeocoded(initialCenter);
       }
     });
-  }, [searchAddress, apiReady, initialCenter, onAddressGeocoded]);
+  }, [searchAddress, apiReady, onAddressGeocoded]);
 
 
   return (
     <LoadScript
-      googleMapsApiKey={"AIzaSyD9CQzryA0YqZ6m5Nqlsexm55_WPDt4Jps"} // Need to find a way to hide this
+      googleMapsApiKey={"AIzaSyBtIx8vlMlLNy-aTmlQ-HHnp4ozmrKqAio"} // Need to find a way to hide this
       libraries={libraries}
     >
       <GoogleMap
