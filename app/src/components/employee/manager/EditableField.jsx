@@ -25,14 +25,14 @@ function EditableField({ value, onSave, className, format, parse }) {
     );
 
     useEffect(() => {
-        setDraft(value);
+        setDraft(format ? format(value) : value);
     }, [value, format]);
 
     const finish = () => {
         setEditing(false);
         const parsed = parse ? parse(draft) : draft;
 
-        if (parsed !== value && parsed != null) {
+        if (parsed !== value && parsed != null && parsed !== "") {
             onSave(parsed);
         }
     };
@@ -43,7 +43,7 @@ function EditableField({ value, onSave, className, format, parse }) {
                 <input
                     autoFocus
                     value={draft}
-                    onChange={(e) => setDraft(e.target.value == null ? "" : e.target.value)}
+                    onChange={(e) => setDraft(e.target.value == null ? "" : (format ? format(e.target.value) : e.target.value))}
                     onBlur={finish}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") finish();

@@ -16,6 +16,23 @@ import { useNavigate } from "react-router-dom";
 function KitchenPage() {
     const [orders, setOrders] = useState([]);
 
+    const { kitchenAccess, loaded } = useContext(AuthContext);
+    const nav = useNavigate();
+    
+    useEffect(() => {
+        if(!kitchenAccess && loaded) {
+            nav("/403");
+        }
+    });
+
+    useEffect(() => {
+            if(!kitchenAccess && loaded) {
+                nav("/403");
+            }
+    }, [kitchenAccess]);
+
+    if(!kitchenAccess) { return; }
+
     /**
      * Fetches the list of pending orders from the backend.
      */

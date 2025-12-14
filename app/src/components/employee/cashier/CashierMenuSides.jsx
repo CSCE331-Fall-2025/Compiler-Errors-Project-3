@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CartContext } from "../../contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 
 /**
  * Button component for adding a side item to a specific order in the cashier cart.
@@ -14,7 +14,7 @@ import { CartContext } from "../../contexts/CartContext";
  * return <CashierMenuSides order={order} item="Fried Rice" />;
  */
 function CashierMenuSides({ order, item }) {
-    const { cart, addSide } = useContext(CartContext);
+    const { cart, addSide } = useContext(CashierCartContext);
 
     /**
      * Adds the side item to the order and logs the current cart state.

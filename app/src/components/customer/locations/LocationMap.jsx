@@ -44,7 +44,7 @@ function LocationMap({ locations }) {
 
   return (
     <LoadScript 
-      googleMapsApiKey={'AIzaSyD9CQzryA0YqZ6m5Nqlsexm55_WPDt4Jps'} 
+      googleMapsApiKey={'AIzaSyBtIx8vlMlLNy-aTmlQ-HHnp4ozmrKqAio'} 
       libraries={libraries}
     >
       <GoogleMap
