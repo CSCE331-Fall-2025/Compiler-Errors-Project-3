@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CartContext } from "../../contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 import "../../../css/cashier.css";
 
 /**
@@ -8,7 +8,7 @@ import "../../../css/cashier.css";
  * @component
  */
 function CashierOrderListItems() {
-    const { cart, removeFromCart } = useContext(CartContext);
+    const { cart, removeFromCart } = useContext(CashierCartContext);
 
     // Flatten cart items according to their quantity
     const outputCart = cart.flatMap(item =>

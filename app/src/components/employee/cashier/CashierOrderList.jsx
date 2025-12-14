@@ -19,6 +19,7 @@ function CashierOrderList() {
 
     // Update subtotal whenever cart changes
     useEffect(() => {
+        console.log("Trying");
         const total = cart.length > 0 
             ? cart.reduce((acc, c) => acc + parseFloat(c.price.replace("$", "")), 0) 
             : 0.0;

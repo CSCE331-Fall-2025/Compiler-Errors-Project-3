@@ -34,6 +34,8 @@ export function AuthProvider({ children }) {
         return v === null ? false : JSON.parse(v);
     });
 
+    const [zReport, setZReport] = useState(true);
+
     const [loaded, setLoaded] = useState(false);
 
     /** Set loaded = true on first mount */
@@ -62,6 +64,8 @@ export function AuthProvider({ children }) {
 
     const authKitchen = (bool) => setKitchenAccess(bool);
 
+    const disableZReport = () => setZReport(false);
+
     return (
         <AuthContext.Provider
             value={{
@@ -69,9 +73,11 @@ export function AuthProvider({ children }) {
                 isCashier,
                 isManager,
                 kitchenAccess,
+                zReport,
                 authCashier,
                 authManager,
-                authKitchen
+                authKitchen,
+                disableZReport
             }}
         >
             {children}

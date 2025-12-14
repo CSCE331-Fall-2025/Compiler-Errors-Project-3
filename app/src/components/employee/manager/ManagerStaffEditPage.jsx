@@ -108,6 +108,15 @@ function ManagerStaffEditPage() {
         editImage(file);
     };
 
+    const formatPhone = (value) => {
+        const digits = value.replace(/\D/g, "");
+
+        if (digits.length === 0) return "";
+        if (digits.length < 4) return `(${digits}`;
+        if (digits.length < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+        return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    };
+
     return (
         <>
             <ManagerNavBar/>
@@ -124,7 +133,7 @@ function ManagerStaffEditPage() {
                     <div className="staff-edit-contact">Contact</div>
 
                     <EditableField value={employee.email} onSave={editEmail} className="edit-employee-email"/>
-                    <EditableField value={employee.phone} onSave={editPhone} className="edit-employee-phone"/>
+                    <EditableField value={employee.phone} onSave={editPhone} format={formatPhone} className="edit-employee-phone"/>
                 </div>
             </div>
         </>

@@ -49,8 +49,9 @@ export function CashierCartProvider({ children }) {
   const clearCart = () => setCart([]);
 
   const removeFromCart = (order) => {
+    console.log(order, cart);
     for(let i = 0; i < cart.length; i++) {
-      if(cart[i] == order) {
+      if(cart[i].name === order.name) {
         const newCart = [...cart];
         newCart.splice(i, 1);
         setCart(newCart);

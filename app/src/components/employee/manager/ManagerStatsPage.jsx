@@ -14,7 +14,7 @@ function ManagerStatsPage() {
     const [report, setReport] = useState({});
 
     const nav = useNavigate();
-    const { isManager, loaded } = useContext(AuthContext);
+    const { isManager, loaded, zReport, disableZReport } = useContext(AuthContext);
 
     useEffect(() => {
         if (!isManager && loaded) {
@@ -60,7 +60,13 @@ function ManagerStatsPage() {
 
     // Z Report
     async function ZReport() {
+        if(!zReport) {
+            window.confirm("Cannot create more than one Z report per day");
+            return;
+        }
+
         if (window.confirm("Create Z report?")) {
+            disableZReport();
             XReport();
         }
     }

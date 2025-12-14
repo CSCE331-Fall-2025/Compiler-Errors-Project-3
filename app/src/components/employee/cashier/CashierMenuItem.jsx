@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CartContext } from "../../contexts/CartContext";
+import { CashierCartContext } from "../../contexts/CashierCartContext";
 import CashierMenuSides from "../cashier/CashierMenuSides";
 import "../../../css/cashier.css";
 
@@ -22,7 +22,7 @@ import "../../../css/cashier.css";
  * return <CashierMenuItem title="Orange Chicken" price={8.99} order={order} />;
  */
 function CashierMenuItem({ img, alt, title, cal, price, order, hasSide = true }) {
-    const { addToCart, removeFromCart } = useContext(CartContext);
+    const { addToCart, removeFromCart } = useContext(CashierCartContext);
     const [data, setData] = useState([]);
 
     /**
