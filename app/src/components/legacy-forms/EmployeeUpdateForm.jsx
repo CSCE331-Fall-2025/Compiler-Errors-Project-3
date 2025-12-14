@@ -28,7 +28,7 @@ function EmployeeUpdateForm() {
     async function submitForm(e) {
         e.preventDefault(); 
 
-        await fetch("http://localhost:3000/api/Manager/updateEmployee", updateEmployee(name, newName, role, email, phone));
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/updateEmployee", updateEmployee(name, newName, role, email, phone));
     }
 
 

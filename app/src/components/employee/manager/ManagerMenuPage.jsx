@@ -34,7 +34,7 @@ function ManagerMenuPage() {
 
     useEffect(() => {
         async function getMenu() {
-            const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/OrderMenu/fetchMenu');
             const data = await response.json();
             setData(data);
         }
@@ -42,7 +42,7 @@ function ManagerMenuPage() {
     }, []);
 
     async function onDelete(name) {
-        await fetch(`http://localhost:3000/api/Manager/deleteMenuItem?name=${name}`);
+        await fetch(`https://compiler-errors-project-3-backend.onrender.com/api/Manager/deleteMenuItem?name=${name}`);
         const newData = [...data];
         for(let i = 0; i < newData.length; i++) {
             if(newData[i].title === name) {

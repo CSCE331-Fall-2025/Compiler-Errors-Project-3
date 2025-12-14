@@ -79,7 +79,7 @@ function ManagerStaffAddPage() {
         formData.append("phone", phone);
         if (imgFile) formData.append("img", imgFile);
 
-        await fetch("http://localhost:3000/api/Manager/addEmployee", {
+        await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addEmployee", {
             method: "POST",
             body: formData
         });

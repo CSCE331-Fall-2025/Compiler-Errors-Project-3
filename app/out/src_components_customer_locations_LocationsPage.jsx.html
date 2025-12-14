@@ -65,7 +65,7 @@ function LocationsPage() {
     const lng = center?.lng ?? initialCenter.lng;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/places`);
+      const res = await fetch(`https://compiler-errors-project-3-backend.onrender.com/api/places`);
       const data = await res.json();
 
       if (!Array.isArray(data) || data.length === 0) {

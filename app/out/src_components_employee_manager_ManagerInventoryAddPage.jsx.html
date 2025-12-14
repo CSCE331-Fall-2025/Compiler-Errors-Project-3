@@ -64,7 +64,7 @@ function ManagerInventoryAddPage() {
     async function handleSubmit(e) {
         e.preventDefault();
         
-        const res = await fetch("http://localhost:3000/api/Manager/addInventoryItem",
+        const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/Manager/addInventoryItem",
             addInventoryItem(name, quantity, unitPrice, minimum)
         );
     }

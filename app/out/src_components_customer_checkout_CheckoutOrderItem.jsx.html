@@ -63,13 +63,13 @@ function CheckoutOrderItem({ order, title, price, hasSide = false }) {
     useEffect(() => {
         async function getData() {
             // Fetch full menu data (used to extract side items)
-            const response = await fetch('http://localhost:3000/api/OrderMenu/fetchMenu');
+            const response = await fetch('https://compiler-errors-project-3-backend.onrender.com/api/OrderMenu/fetchMenu');
             const menuJson = await response.json();
             setData(menuJson);
 
             // Fetch ingredient list for the specific item
             const ingRes = await fetch(
-                'http://localhost:3000/api/OrderMenu/fetchIngredients',
+                'https://compiler-errors-project-3-backend.onrender.com/api/OrderMenu/fetchIngredients',
                 fetchIngredients(title)
             );
             const ingJson = await ingRes.json();

@@ -42,7 +42,7 @@ function WeatherPage() {
          */
         async function loadWeather() {
             try {
-                const res = await fetch("http://localhost:3000/api/weather");
+                const res = await fetch("https://compiler-errors-project-3-backend.onrender.com/api/weather");
                 const data = await res.json();
                 console.log("Weather data:", data);
 
