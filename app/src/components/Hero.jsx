@@ -16,7 +16,7 @@ function Hero() {
             <section className="popular-section" aria-labelledby="popular-title">
                 <div className="popular-content-grid">
                     <div className="popular-left">
-                        <h1></h1>
+                        <h1>‎</h1>
                         <h2 id="popular-title" className="popular-title">
                             Popular item
                         </h2>
