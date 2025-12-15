@@ -25,6 +25,7 @@ import ManagerStatsPage from "./components/employee/manager/ManagerStatsPage";
 import KitchenPage from "./components/employee/kitchen/KitchenPage";
 import { useEffect } from "react";
 import WeatherPage from "./components/customer/weather/WeatherPage";
+import _403 from "./403";
 
 /**
  * Main application component responsible for initializing Google Translate
@@ -79,6 +80,7 @@ function App() {
                         <Route path="/employee/manager/data" element={<ManagerDataPage />} />
                         <Route path="/employee/manager/stats" element={<ManagerStatsPage />} />
                         <Route path="/employee/kitchen" element={<KitchenPage />} />
+                        <Route path="/403" element={<_403/>}></Route>
                     </Routes>
                 </div>
 
