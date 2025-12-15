@@ -1455,3 +1455,14 @@ body {
 body {
     top: 0 !important;
 }
+
+.page-403 {
+    widtH: 100vw;
+    height: 100vh;
+    background-image: url("/images/403.webp");
+    background-size: fill;
+    background-position: center;
+    background-color: black;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
